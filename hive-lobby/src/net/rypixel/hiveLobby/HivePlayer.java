@@ -2,6 +2,7 @@ package net.rypixel.hiveLobby;
 
 import java.util.ArrayList;
 
+import org.bukkit.entity.Boat;
 import org.bukkit.entity.Player;
 
 public class HivePlayer {
@@ -19,19 +20,42 @@ public class HivePlayer {
 	
 	public boolean playersVisible;
 	
-	public void addFriend(String UUID) {
-		if (friends == "") {
-			friends = UUID;
+	public String addFriend(String UUID) {
+		ArrayList<String> friendList = Functions.ArrayToListConversion(friends.split(","));
+		boolean alreadyAdded = false;
+		for (String p : friendList) {
+			if (p == UUID) {
+				alreadyAdded = true;
+			}
+		}
+		if (!alreadyAdded) {
+			if (friends == "") {
+				friends = UUID;
+			} else {
+				friends += "," + UUID;
+			}
+			return "success";
 		} else {
-			friends += "," + UUID;
+			return "This person has already been added!";
 		}
 	}
 	
-	public void removeFriend(String UUID) {
+	public String removeFriend(String UUID) {
 		//String[] friendList = ;
 		ArrayList<String> friendList = Functions.ArrayToListConversion(friends.split(","));
-		friendList.remove(UUID);
-		friends = Functions.ListToCSV(friendList);
+		boolean added = false;
+		for (String p : friendList) {
+			if (p == UUID) {
+				added = true;
+			}
+		}
+		if (added) {
+			friendList.remove(UUID);
+			friends = Functions.ListToCSV(friendList);
+			return "success";
+		} else {
+			return "This person is not on your friends list!";
+		}
 	}
 	
 	public String getUUID() {
