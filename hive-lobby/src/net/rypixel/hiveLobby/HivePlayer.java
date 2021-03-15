@@ -1,5 +1,8 @@
 package net.rypixel.hiveLobby;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.entity.Player;
 
 public class HivePlayer {
@@ -17,8 +20,22 @@ public class HivePlayer {
 	
 	public boolean playersVisible;
 	
-	public void addFriend() {
-		
+	public void addFriend(String UUID) {
+		if (friends == "") {
+			friends = UUID;
+		} else {
+			friends += "," + UUID;
+		}
 	}
 	
+	public void removeFriend(String UUID) {
+		//String[] friendList = ;
+		ArrayList<String> friendList = Functions.ArrayToListConversion(friends.split(","));
+		friendList.remove(UUID);
+		friends = Functions.ListToCSV(friendList);
+	}
+	
+	public String getUUID() {
+		return mcPlayer.getUniqueId().toString();
+	}
 }
