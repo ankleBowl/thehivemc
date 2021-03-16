@@ -9,7 +9,7 @@ public class Constants {
 	public static Vector[] launchpads2 = new Vector[8];
 	public static Vector[] launchpads3 = new Vector[8];
 	
-	public void init() {
+	public static void init() {
 		launchpads1[0] = new Vector(-20.5, 21, 0.5);
 		launchpads1[1] = new Vector(-14.5, 21, -14.5);
 		launchpads1[2] = new Vector(0.5, 21, -19.5);

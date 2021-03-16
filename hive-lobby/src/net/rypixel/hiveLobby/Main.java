@@ -24,6 +24,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public void onEnable() {
 		Bukkit.getPluginManager().registerEvents(this, this);
+		Constants.init();
 		initWorlds();
 		initSQL();
 	}
@@ -67,7 +68,8 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public void initWorlds() {
 		for (int i = 0; i < lobbies.length; i++) {
-			lobbies[i] = new LobbyWorld(Functions.createNewWorld(Bukkit.getWorld("world"), String.valueOf(i)));
+			lobbies[i] = new LobbyWorld(Functions.createNewWorld(Bukkit.getWorld("world"), String.valueOf(i)), this);
+			lobbies[i].init();
 		}
 	}
 }
