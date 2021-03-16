@@ -8,6 +8,9 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
@@ -52,6 +55,26 @@ public class Main extends JavaPlugin implements Listener {
 				hp.mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[i].world));
 				lobbies[i].playerList.add(hp);
 				i = 1000;
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onDamage(EntityDamageEvent event) {
+		event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onInteract(PlayerInteractEvent event) {
+		if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			if (event.getItem() != null) {
+				switch (event.getItem().getType()) {
+				case BOOK:
+					event.getPlayer().openInventory(Constants.lobbySelector(lobbies.length));
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}

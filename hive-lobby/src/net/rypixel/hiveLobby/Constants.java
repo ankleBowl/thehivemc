@@ -3,7 +3,9 @@ package net.rypixel.hiveLobby;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
@@ -59,7 +61,24 @@ public class Constants {
 		lore.add(ChatColor.AQUA + "► Hold and right-click");
 		lobbySelectorMeta.setLore(lore);
 		lobbySelector.setItemMeta(lobbySelectorMeta);
-		
+	}
+	
+	public static Inventory lobbySelector(int slotNumber) {
+		Inventory inv = Bukkit.createInventory(null, 54, "Hub Selector");
+		int i = 10;
+		for (int c = 0; c < slotNumber; c++) {
+			if (c == 7) {
+				i += 2;
+			}
+			if (c == 14) {
+				i += 2;
+			}
+			if (c == 21) {
+				i += 2;
+			}
+			inv.setItem(i + c, new ItemStack(Material.DIRT));
+		}
+		return inv;
 	}
 	
 }
