@@ -5,3 +5,7 @@ author: ankleBowl
 api-version: 1.8
 depend: [MySQL]
 commands:
+    p:
+    party:
+    f:
+    friend:

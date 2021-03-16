@@ -5,6 +5,8 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,6 +15,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
@@ -34,8 +37,24 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	public void onDisable() {
+		Bukkit.getConsoleSender().sendMessage("/kick @a");
 		MySQL.disconnect();
 	}
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if (sender instanceof Player) {
+			HivePlayer player = playerMap.get((Player) sender);
+			if (label.equalsIgnoreCase("friend") || label.equalsIgnoreCase("f")) {
+				if (args[0].equalsIgnoreCase("list")) {
+					
+				}
+			} else if (label.equalsIgnoreCase("party") || label.equalsIgnoreCase("p")) {
+				
+			}
+		}
+        return false;
+    }
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
@@ -50,6 +69,8 @@ public class Main extends JavaPlugin implements Listener {
 			hp.tokens = Integer.parseInt(SQL.get("tokens", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString());
 			hp.luckyCrates = Integer.parseInt(SQL.get("luckyCrates", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString());
 			hp.ownedCosmetics = SQL.get("cosmetics", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString();
+			
+			MySQL.update("UPDATE playerInfo SET lobby=\"Lobby\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		} else {
 			MySQL.update("Insert into playerInfo values (\"" + event.getPlayer().getUniqueId().toString() + "\", \"\", \"None\", 0, 0, \"\", \"lobby\");");
 			hp.mcPlayer.sendMessage(ChatColor.GOLD + "Welcome to your first time on The Rive server! Use the compass to select a game, and have fun!");
@@ -65,6 +86,13 @@ public class Main extends JavaPlugin implements Listener {
 				i = 1000;
 			}
 		}
+	}
+	
+	@EventHandler
+	public void onPlayerLeave(PlayerQuitEvent event) {
+		HivePlayer hp = playerMap.get(event.getPlayer());
+		MySQL.update("UPDATE playerInfo SET lobby=\"Offline\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		playerMap.remove(event.getPlayer());
 	}
 	
 	@EventHandler
