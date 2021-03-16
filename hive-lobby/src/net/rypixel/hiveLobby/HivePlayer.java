@@ -102,6 +102,14 @@ public class HivePlayer {
 			inParty = true;
 			isPartyOwner = true;
 			partyOwner = mcPlayer.getUniqueId().toString();
+			
+			mcPlayer.sendMessage("");
+			mcPlayer.sendMessage("");
+			mcPlayer.sendMessage(ChatColor.BOLD + "" + ChatColor.GREEN + "Welcome to your Party!");
+			mcPlayer.sendMessage("");
+			mcPlayer.sendMessage(ChatColor.GOLD + "[Party Rules]" + ChatColor.BLUE + "   [Rive Discord]   " + ChatColor.YELLOW + "[Invite Player]");
+			mcPlayer.sendMessage("");
+			mcPlayer.sendMessage("");
 		}
 	}
 	
@@ -127,6 +135,9 @@ public class HivePlayer {
 	
 	public void inviteToParty(String uuid) {
 		MySQL.update("UPDATE playerInfo SET requests=\"" + "partyinvite:" + mcPlayer.getUniqueId().toString() + ":" + mcPlayer.getDisplayName() + "\" WHERE UUID=\"" + uuid + "\"");
+		
+		String playerName = SQL.get("playerName", "UUID", "=", uuid, "playerInfo").toString();
+		mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.GRAY + "〡" + ChatColor.GREEN + "Invited " + playerName + " to your current party. They have 30 seconds to accept");
 	}
 	
 	public void leaveParty() {

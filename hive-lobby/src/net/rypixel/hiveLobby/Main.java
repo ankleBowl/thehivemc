@@ -18,6 +18,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -34,6 +35,8 @@ public class Main extends JavaPlugin implements Listener {
 	public static BukkitTask requestRunnable;
 	
 	public LobbyWorld[] lobbies = new LobbyWorld[10];
+	
+	public Plugin plugin = this;
 	
 	public void onEnable() {
 		Bukkit.getPluginManager().registerEvents(this, this);
@@ -220,6 +223,13 @@ public class Main extends JavaPlugin implements Listener {
 				    		hp.requests = request;
 					    	hp.mcPlayer.sendMessage("You got a party invite from " + requestArr[2] + "!");
 					    	MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
+					    	new BukkitRunnable(){
+					    	    public void run(){
+					    	        if (hp.requests.split(",")[0].equals("partyinvite")) {
+					    	        	hp.requests = "";
+					    	        }
+					    	    }
+					    	}.runTaskLater(plugin, 600L);
 				    	} else if (requestArr[0].equals("partyjoined")) {
 				    		hp.mcPlayer.sendMessage(requestArr[2] + "accepted your party request!");
 				    		MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
