@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,6 +55,9 @@ public class Main extends JavaPlugin implements Listener {
 			if (lobbies[i].playerList.size() < 20) {
 				hp.mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[i].world));
 				lobbies[i].playerList.add(hp);
+				hp.serverId = i;
+				hp.currentMap = "lobby";
+				hp.currentWorld = "lobby";
 				i = 1000;
 			}
 		}
@@ -75,6 +79,18 @@ public class Main extends JavaPlugin implements Listener {
 				default:
 					break;
 				}
+			}
+		}
+	}
+	
+	public void onInventoryClick(InventoryClickEvent event) {
+		if (event.getInventory().getTitle().equalsIgnoreCase("Hub Selector")) {
+			if (event.getCurrentItem() != null) {
+				String strId = event.getCurrentItem().getItemMeta().getDisplayName();
+				int serverId = Integer.parseInt(strId);
+				playerMap.get(event.getWhoClicked()).mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[serverId].world));
+				lobbies[playerMap.get(event.getWhoClicked()).serverId].playerList.remove(playerMap.get(event.getWhoClicked()));
+				lobbies[serverId].playerList.add(playerMap.get(event.getWhoClicked()));
 			}
 		}
 	}

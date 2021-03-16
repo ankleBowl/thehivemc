@@ -76,7 +76,11 @@ public class Constants {
 			if (c == 21) {
 				i += 2;
 			}
-			inv.setItem(i + c, new ItemStack(Material.DIRT));
+			ItemStack iron = new ItemStack(Material.IRON_BLOCK, 1);
+			ItemMeta ironMeta = iron.getItemMeta();
+			ironMeta.setDisplayName(String.valueOf(c + 1));
+			iron.setItemMeta(ironMeta);
+			inv.setItem(i + c, iron);
 		}
 		return inv;
 	}
