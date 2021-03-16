@@ -71,8 +71,28 @@ public class Main extends JavaPlugin implements Listener {
 					String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
 					player.acceptFriend(uuid);
 				}
+				if (args[0].equalsIgnoreCase("remove")) {				
+					String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
+					player.removeFriend(uuid);
+				}
 			} else if (label.equalsIgnoreCase("party") || label.equalsIgnoreCase("p")) {
-				
+				if (args[0].equalsIgnoreCase("invite")) {
+					String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
+					if (!player.inParty) {
+						player.createParty();
+						player.inviteToParty(uuid);
+					} else if (player.inParty) {
+						if (player.isPartyOwner) {
+							player.inviteToParty(uuid);
+						} else {
+							player.mcPlayer.sendMessage(ChatColor.RED + "You are not the party owner!");
+						}
+					}
+				}
+				if (args[0].equalsIgnoreCase("join")) {
+					String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
+					player.joinParty(uuid);
+				}
 			}
 		}
         return false;
@@ -156,21 +176,34 @@ public class Main extends JavaPlugin implements Listener {
 	public void requests() {
 		requestRunnable = new BukkitRunnable() {
 		    public void run() {
-		    	String toUUID = SQL.get("UUID", "requests", "!=", "", "playerInfo").toString(); //gets people who have requests
-		    	if (toUUID != null && Functions.checkForUUID(toUUID)) { //checks to see if they are on the server
-			    	String request = SQL.get("requests", "UUID", "=", toUUID, "playerInfo").toString();
-			    	HivePlayer hp = playerMap.get(Bukkit.getPlayer(UUID.fromString(toUUID)));
-			    	String[] requestArr = request.split(":");
-			    	if (requestArr[0].equals("friend")) {
-				    	hp.requests = request;
-				    	hp.mcPlayer.sendMessage("You got a friend request from " + requestArr[2] + "!");
-				    	MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
-			    	} else if (requestArr[0].equals("friendback")) {
-			    		String name = SQL.get("playerName", "UUID", "=", requestArr[1], "playerInfo").toString();
-			    		hp.mcPlayer.sendMessage(name + " accepted your friend request!");
-			    		hp.forceAddFriend(requestArr[1]);
-			    		MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
+		    	try {
+			    	String toUUID = SQL.get("UUID", "requests", "!=", "", "playerInfo").toString(); //gets people who have requests
+			    	if (toUUID != null && Functions.checkForUUID(toUUID)) { //checks to see if they are on the server
+				    	String request = SQL.get("requests", "UUID", "=", toUUID, "playerInfo").toString();
+				    	HivePlayer hp = playerMap.get(Bukkit.getPlayer(UUID.fromString(toUUID)));
+				    	String[] requestArr = request.split(":");
+				    	if (requestArr[0].equals("friend")) {
+					    	hp.requests = request;
+					    	hp.mcPlayer.sendMessage("You got a friend request from " + requestArr[2] + "!");
+					    	MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
+				    	} else if (requestArr[0].equals("friendback")) {
+				    		String name = SQL.get("playerName", "UUID", "=", requestArr[1], "playerInfo").toString();
+				    		hp.mcPlayer.sendMessage(name + " accepted your friend request!");
+				    		hp.forceAddFriend(requestArr[1]);
+				    		MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
+				    	} else if (requestArr[0].equals("removefriend")) {
+				    		hp.removeFriend(requestArr[1]);
+				    	} else if (requestArr[0].equals("partyinvite")) {
+				    		hp.requests = request;
+					    	hp.mcPlayer.sendMessage("You got a party invite from " + requestArr[2] + "!");
+					    	MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
+				    	} else if (requestArr[0].equals("partyjoined")) {
+				    		hp.mcPlayer.sendMessage(requestArr[2] + "accepted your party request!");
+				    		MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
+				    	}
 			    	}
+		    	} catch(NullPointerException e) {
+		    		
 		    	}
 		    }
 		}.runTaskTimer(this, 0L, 10L);
@@ -186,6 +219,7 @@ public class Main extends JavaPlugin implements Listener {
 		Config.setSSL(true);
 		MySQL.connect();
 		MySQL.update("CREATE TABLE IF NOT EXISTS playerInfo(UUID varchar(64) PRIMARY KEY, friends varchar(740), playerRank varchar(16), tokens int, luckyCrates int, cosmetics varchar(9999), lobby varchar(32), playerName varchar(20), requests varchar(9999));");
+		MySQL.update("CREATE TABLE IF NOT EXISTS parties(owner varchar(64) PRIMARY KEY, members varchar(999))");
 	}
 	
 	public void initWorlds() {

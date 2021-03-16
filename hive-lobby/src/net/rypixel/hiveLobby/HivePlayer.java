@@ -19,6 +19,10 @@ public class HivePlayer {
 	public String requests = "";
 	public int serverId = 0;
 	
+	public boolean inParty;
+	public boolean isPartyOwner;
+	public String partyMembers;
+	
 	public String friends = ""; //Comma seperated UUIDs
 	public int tokens = 0;
 	public int luckyCrates = 0;
@@ -63,17 +67,18 @@ public class HivePlayer {
 	}
 	
 	public String removeFriend(String UUID) {
-		//String[] friendList = ;
 		ArrayList<String> friendList = Functions.ArrayToListConversion(friends.split(","));
 		boolean added = false;
 		for (String p : friendList) {
-			if (p == UUID) {
+			if (p.contains(UUID)) {
 				added = true;
 			}
 		}
 		if (added) {
 			friendList.remove(UUID);
 			friends = Functions.ListToCSV(friendList);
+			MySQL.update("UPDATE playerInfo SET friends=\"" + friends + "\" WHERE UUID=\"" + mcPlayer.getUniqueId().toString() + "\"");
+			MySQL.update("UPDATE playerInfo SET requests=\"" + "removefriend:" + mcPlayer.getUniqueId().toString() + "\" WHERE UUID=\"" + UUID + "\"");
 			return "success";
 		} else {
 			return "This person is not on your friends list!";
@@ -87,5 +92,44 @@ public class HivePlayer {
 	
 	public String getUUID() {
 		return mcPlayer.getUniqueId().toString();
+	}
+	
+	public void createParty() {
+		if (!inParty) {
+			MySQL.update("Insert into parties values (\"" + mcPlayer.getUniqueId().toString() + "\", \"\");");
+			inParty = true;
+			isPartyOwner = true;
+		}
+	}
+	
+	public void joinParty(String uuid) {
+		if (!inParty) {
+			String[] request = requests.split(":");
+			if (request[0].equalsIgnoreCase("partyinvite")) {
+				if (uuid.equalsIgnoreCase(request[1])) {
+					inParty = true;
+					partyMembers = SQL.get("members", "owner", "=", uuid, "parties").toString();
+					if (partyMembers.toCharArray().length < 16) {
+						partyMembers = mcPlayer.getUniqueId().toString();
+					} else {
+						partyMembers += "," + mcPlayer.getUniqueId().toString();
+					}
+					MySQL.update("UPDATE parties SET members=\"" + partyMembers + "\" WHERE UUID=\"" + uuid + "\"");
+					MySQL.update("UPDATE playerInfo SET requests=\"" + "partyjoined:" + mcPlayer.getUniqueId().toString() + ":" + mcPlayer.getDisplayName() + "\" WHERE owner=\"" + uuid + "\"");
+				}
+			}
+		}
+	}
+	
+	public void inviteToParty(String uuid) {
+		MySQL.update("UPDATE playerInfo SET requests=\"" + "partyinvite:" + mcPlayer.getUniqueId().toString() + ":" + mcPlayer.getDisplayName() + "\" WHERE UUID=\"" + uuid + "\"");
+	}
+	
+	public void removeFromParty() {
+		
+	}
+	
+	public void disbandParty() {
+		
 	}
 }
