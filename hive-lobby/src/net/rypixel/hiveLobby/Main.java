@@ -208,8 +208,8 @@ public class Main extends JavaPlugin implements Listener {
 				    		MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
 				    	} else if (requestArr[0].equals("leaveparty")) {
 				    		hp.mcPlayer.sendMessage("The party has been disbanded!");
-				    		hp.leaveParty();
 				    		MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
+				    		hp.leaveParty();
 				    	}
 			    	}
 		    	} catch(NullPointerException e) {
