@@ -36,7 +36,9 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		HivePlayer hp = new HivePlayer(event.getPlayer());
-		hp.mcPlayer.setGameMode(GameMode.CREATIVE);
+		hp.mcPlayer.getInventory().clear();
+		hp.mcPlayer.getInventory().setItem(8, Constants.lobbySelector);
+		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
 		playerMap.put(event.getPlayer(), hp);
 		if (SQL.exists("UUID", event.getPlayer().getUniqueId().toString(), "playerInfo")) {
 			//player.mysteryDust = Integer.parseInt(SQL.get("mysteryDust", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString());

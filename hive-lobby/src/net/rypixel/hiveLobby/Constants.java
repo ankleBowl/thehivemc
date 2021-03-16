@@ -1,13 +1,22 @@
 
 package net.rypixel.hiveLobby;
 
+import java.util.ArrayList;
+
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
+
+import net.md_5.bungee.api.ChatColor;
 
 public class Constants {
 
 	public static Vector[] launchpads1 = new Vector[8];
 	public static Vector[] launchpads2 = new Vector[8];
 	public static Vector[] launchpads3 = new Vector[10];
+	
+	public static ItemStack lobbySelector;
 	
 	public static void init() {
 		launchpads1[0] = new Vector(-20.5, 21, 0.5);
@@ -38,6 +47,19 @@ public class Constants {
 		launchpads3[7] = new Vector(68.5, 18, -40.5);
 		launchpads3[8] = new Vector(68.5, 18, 0.5);
 		launchpads3[9] = new Vector(68.5, 18, 41.5);
+		
+		lobbySelector = new ItemStack(Material.BOOK, 1);
+		ItemMeta lobbySelectorMeta = lobbySelector.getItemMeta();
+		lobbySelectorMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.YELLOW + "Hub" + ChatColor.AQUA + " Selector");
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add(" ");
+		lore.add(ChatColor.GRAY + "Opens up a menu that");
+		lore.add(ChatColor.GRAY + "allows you to switch between");
+		lore.add(ChatColor.GRAY + "Hive hubs!");
+		lore.add(ChatColor.AQUA + "► Hold and right-click");
+		lobbySelectorMeta.setLore(lore);
+		lobbySelector.setItemMeta(lobbySelectorMeta);
+		
 	}
 	
 }
