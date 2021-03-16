@@ -1,0 +1,7 @@
+main: net.rypixel.hiveLobby.Main
+name: Hive
+version: 1.0
+author: ankleBowl
+api-version: 1.8
+depend: [MySQL]
+commands:

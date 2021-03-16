@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,16 +23,19 @@ public class Main extends JavaPlugin implements Listener {
 	public LobbyWorld[] lobbies = new LobbyWorld[10];
 	
 	public void onEnable() {
+		Bukkit.getPluginManager().registerEvents(this, this);
+		initWorlds();
 		initSQL();
 	}
 	
 	public void onDisable() {
-		
+		MySQL.disconnect();
 	}
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		HivePlayer hp = new HivePlayer(event.getPlayer());
+		hp.mcPlayer.setGameMode(GameMode.CREATIVE);
 		playerMap.put(event.getPlayer(), hp);
 		if (SQL.exists("UUID", event.getPlayer().getUniqueId().toString(), "playerInfo")) {
 			//player.mysteryDust = Integer.parseInt(SQL.get("mysteryDust", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString());
@@ -42,9 +46,9 @@ public class Main extends JavaPlugin implements Listener {
 		
 		for (int i = 0; i < lobbies.length; i++) {
 			if (lobbies[i].playerList.size() < 20) {
-				i = 1000;
 				hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(lobbies[i].world));
 				lobbies[i].playerList.add(hp);
+				i = 1000;
 			}
 		}
 	}
@@ -58,12 +62,12 @@ public class Main extends JavaPlugin implements Listener {
 		Config.setPort("3306");
 		Config.setSSL(true);
 		MySQL.connect();
-		MySQL.update("CREATE TABLE IF NOT EXISTS playerInfo(UUID varchar(64) PRIMARY KEY, friends varchar(740), playerRank varchar(16), tokens int, luckyCrates int, cosmetics varchar(9999);");
+		MySQL.update("CREATE TABLE IF NOT EXISTS playerInfo(UUID varchar(64) PRIMARY KEY, friends varchar(740), playerRank varchar(16), tokens int, luckyCrates int, cosmetics varchar(9999));");
 	}
 	
 	public void initWorlds() {
 		for (int i = 0; i < lobbies.length; i++) {
-			lobbies[i] = new LobbyWorld(Functions.createNewWorld(Bukkit.getWorld("world"), "0"));
+			lobbies[i] = new LobbyWorld(Functions.createNewWorld(Bukkit.getWorld("world"), String.valueOf(i)));
 		}
 	}
 }
