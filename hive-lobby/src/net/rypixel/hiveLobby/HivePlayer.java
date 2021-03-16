@@ -8,8 +8,8 @@ import org.bukkit.entity.Player;
 public class HivePlayer {
 
 	public Player mcPlayer;
-	public String currentWorld = "";
-	public String currentMap = "";
+	public String currentWorld = "lobby";
+	public String currentMap = "lobby";
 	public String playerRank = "";
 	public int serverId = 0;
 	
@@ -19,6 +19,10 @@ public class HivePlayer {
 	public String ownedCosmetics = "";
 	
 	public boolean playersVisible;
+	
+	HivePlayer(Player mcPlayer) {
+		this.mcPlayer = mcPlayer;
+	}
 	
 	public String addFriend(String UUID) {
 		ArrayList<String> friendList = Functions.ArrayToListConversion(friends.split(","));
