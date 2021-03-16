@@ -93,6 +93,10 @@ public class Main extends JavaPlugin implements Listener {
 					String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
 					player.joinParty(uuid);
 				}
+				if (args[0].equalsIgnoreCase("leave")) {
+					player.leaveParty();
+				}
+				
 			}
 		}
         return false;
