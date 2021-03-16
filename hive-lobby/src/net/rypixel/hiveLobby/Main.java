@@ -45,9 +45,13 @@ public class Main extends JavaPlugin implements Listener {
 		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
 		playerMap.put(event.getPlayer(), hp);
 		if (SQL.exists("UUID", event.getPlayer().getUniqueId().toString(), "playerInfo")) {
-			//player.mysteryDust = Integer.parseInt(SQL.get("mysteryDust", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString());
+			hp.friends = SQL.get("friends", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString();
+			hp.playerRank = SQL.get("playerRank", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString();
+			hp.tokens = Integer.parseInt(SQL.get("tokens", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString());
+			hp.luckyCrates = Integer.parseInt(SQL.get("luckyCrates", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString());
+			hp.ownedCosmetics = SQL.get("cosmetics", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString();
 		} else {
-			MySQL.update("Insert into playerInfo values (\"" + event.getPlayer().getUniqueId().toString() + "\", \"\", \"None\", 0, 0, \"\");");
+			MySQL.update("Insert into playerInfo values (\"" + event.getPlayer().getUniqueId().toString() + "\", \"\", \"None\", 0, 0, \"\", \"lobby\");");
 			hp.mcPlayer.sendMessage(ChatColor.GOLD + "Welcome to your first time on The Rive server! Use the compass to select a game, and have fun!");
 		}
 		
@@ -83,16 +87,19 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 	
+	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
 		if (event.getInventory().getTitle().equalsIgnoreCase("Hub Selector")) {
 			if (event.getCurrentItem() != null) {
 				String strId = event.getCurrentItem().getItemMeta().getDisplayName();
-				int serverId = Integer.parseInt(strId);
+				int serverId = Integer.parseInt(strId) - 1;
 				playerMap.get(event.getWhoClicked()).mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[serverId].world));
 				lobbies[playerMap.get(event.getWhoClicked()).serverId].playerList.remove(playerMap.get(event.getWhoClicked()));
 				lobbies[serverId].playerList.add(playerMap.get(event.getWhoClicked()));
+				playerMap.get(event.getWhoClicked()).serverId = serverId;
 			}
 		}
+		event.setCancelled(true);
 	}
 	
 	public void initSQL() {
@@ -104,7 +111,7 @@ public class Main extends JavaPlugin implements Listener {
 		Config.setPort("3306");
 		Config.setSSL(true);
 		MySQL.connect();
-		MySQL.update("CREATE TABLE IF NOT EXISTS playerInfo(UUID varchar(64) PRIMARY KEY, friends varchar(740), playerRank varchar(16), tokens int, luckyCrates int, cosmetics varchar(9999));");
+		MySQL.update("CREATE TABLE IF NOT EXISTS playerInfo(UUID varchar(64) PRIMARY KEY, friends varchar(740), playerRank varchar(16), tokens int, luckyCrates int, cosmetics varchar(9999), lobby varchar(32));");
 	}
 	
 	public void initWorlds() {
