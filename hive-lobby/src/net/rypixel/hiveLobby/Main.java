@@ -113,6 +113,8 @@ public class Main extends JavaPlugin implements Listener {
 								lobbies[p.serverId].playerList.remove(p);
 								lobbies[serverId].playerList.add(p);
 								p.serverId = serverId;
+								
+								p.mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.GRAY + "〡" + ChatColor.AQUA + " Your party is now joining: HUB" + String.valueOf(serverId));
 							} else {
 								//Future waterfall || bungee code
 							}
@@ -221,7 +223,11 @@ public class Main extends JavaPlugin implements Listener {
 				    		hp.removeFriend(requestArr[1]);
 				    	} else if (requestArr[0].equals("partyinvite")) {
 				    		hp.requests = request;
-					    	hp.mcPlayer.sendMessage("You got a party invite from " + requestArr[2] + "!");
+				    		hp.mcPlayer.sendMessage("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+				    		hp.mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.DARK_GRAY + "〡" + ChatColor.BLUE + requestArr[2] + ChatColor.AQUA + " wants you to join their party!");
+				    		hp.mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.DARK_GRAY + "〡" + ChatColor.GREEN + "" + ChatColor.BOLD + "Click here to accept.");
+				    		hp.mcPlayer.sendMessage("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+					    	//hp.mcPlayer.sendMessage("You got a party invite from " + requestArr[2] + "!");
 					    	MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
 					    	new BukkitRunnable(){
 					    	    public void run(){
@@ -231,7 +237,8 @@ public class Main extends JavaPlugin implements Listener {
 					    	    }
 					    	}.runTaskLater(plugin, 600L);
 				    	} else if (requestArr[0].equals("partyjoined")) {
-				    		hp.mcPlayer.sendMessage(requestArr[2] + "accepted your party request!");
+				    		//hp.mcPlayer.sendMessage(requestArr[2] + "accepted your party request!");
+				    		hp.mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.DARK_GRAY + "〡" + ChatColor.GREEN + "✚ " + ChatColor.WHITE + requestArr[2] + ChatColor.GREEN + " joined your party");
 				    		MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
 				    	} else if (requestArr[0].equals("leaveparty")) {
 				    		hp.mcPlayer.sendMessage("The party has been disbanded!");

@@ -126,6 +126,7 @@ public class HivePlayer {
 						partyMembers += "," + mcPlayer.getUniqueId().toString();
 					}
 					partyOwner = uuid;
+					mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.GRAY + "〡" + ChatColor.GREEN + "Joined " + request[2] + "'s party.");
 					MySQL.update("UPDATE parties SET members=\"" + partyMembers + "\" WHERE owner=\"" + uuid + "\"");
 					MySQL.update("UPDATE playerInfo SET requests=\"" + "partyjoined:" + mcPlayer.getUniqueId().toString() + ":" + mcPlayer.getDisplayName() + "\" WHERE UUID=\"" + uuid + "\"");
 				}
@@ -137,7 +138,7 @@ public class HivePlayer {
 		MySQL.update("UPDATE playerInfo SET requests=\"" + "partyinvite:" + mcPlayer.getUniqueId().toString() + ":" + mcPlayer.getDisplayName() + "\" WHERE UUID=\"" + uuid + "\"");
 		
 		String playerName = SQL.get("playerName", "UUID", "=", uuid, "playerInfo").toString();
-		mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.GRAY + "〡" + ChatColor.GREEN + "Invited " + playerName + " to your current party. They have 30 seconds to accept");
+		mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.DARK_GRAY + "〡" + ChatColor.GREEN + "Invited " + playerName + " to your current party. They have 30 seconds to accept");
 	}
 	
 	public void leaveParty() {
@@ -152,6 +153,10 @@ public class HivePlayer {
 			isPartyOwner = false;
 			partyOwner = "";
 			partyMembers = "";
+			
+			mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.GRAY + "〡" + ChatColor.AQUA + " You left the party. Sad panda.");
+		
+			//TODO - Add party leave message for other players
 		}
 	}
 	
@@ -163,7 +168,7 @@ public class HivePlayer {
 				MySQL.update("UPDATE playerInfo SET requests=\"leaveparty\" WHERE UUID=\"" + s + "\"");
 			}
 			MySQL.update("DELETE FROM parties WHERE owner=\"" + mcPlayer.getUniqueId().toString() + "\"");
-			
+			mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.GRAY + "〡" + ChatColor.AQUA + " Your party has been disbanded");
 		}
 	}
 	
