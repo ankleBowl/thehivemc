@@ -32,6 +32,9 @@ public class LobbyWorld {
 		    public void run() {
 		        //Iterate through all players
 		    	for (HivePlayer player : playerList) {
+		    		//Give player hunger
+		    		player.mcPlayer.setFoodLevel(20);
+		    		
 		    		//Check for launchpad locations
 		    		for (Vector vec : Constants.launchpads1) {
 		    			Location loc = vec.toLocation(world);
