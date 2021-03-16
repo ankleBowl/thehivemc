@@ -96,7 +96,9 @@ public class Main extends JavaPlugin implements Listener {
 				if (args[0].equalsIgnoreCase("leave")) {
 					player.leaveParty();
 				}
-				
+				if (args[0].equalsIgnoreCase("disband")) {
+					player.disbandParty();
+				}
 			}
 		}
         return false;
@@ -204,6 +206,10 @@ public class Main extends JavaPlugin implements Listener {
 				    	} else if (requestArr[0].equals("partyjoined")) {
 				    		hp.mcPlayer.sendMessage(requestArr[2] + "accepted your party request!");
 				    		MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
+				    	} else if (requestArr[0].equals("leaveparty")) {
+				    		hp.mcPlayer.sendMessage("The party has been disbanded!");
+				    		hp.leaveParty();
+				    		MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
 				    	}
 			    	}
 		    	} catch(NullPointerException e) {
@@ -223,6 +229,7 @@ public class Main extends JavaPlugin implements Listener {
 		Config.setSSL(true);
 		MySQL.connect();
 		MySQL.update("CREATE TABLE IF NOT EXISTS playerInfo(UUID varchar(64) PRIMARY KEY, friends varchar(740), playerRank varchar(16), tokens int, luckyCrates int, cosmetics varchar(9999), lobby varchar(32), playerName varchar(20), requests varchar(9999));");
+		MySQL.update("DROP TABLE parties");
 		MySQL.update("CREATE TABLE IF NOT EXISTS parties(owner varchar(64) PRIMARY KEY, members varchar(999))");
 	}
 	

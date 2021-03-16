@@ -100,6 +100,7 @@ public class HivePlayer {
 			MySQL.update("Insert into parties values (\"" + mcPlayer.getUniqueId().toString() + "\", \"\");");
 			inParty = true;
 			isPartyOwner = true;
+			partyOwner = mcPlayer.getUniqueId().toString();
 		}
 	}
 	
@@ -133,7 +134,7 @@ public class HivePlayer {
 			ArrayList<String> partyList = Functions.ArrayToListConversion(partyMembers.split(","));
 			partyList.remove(mcPlayer.getUniqueId().toString());
 			partyMembers = Functions.ListToCSV(partyList);
-			MySQL.update("UPDATE parties SET members=\"" + partyMembers + "\" WHERE UUID=\"" + partyOwner + "\"");
+			MySQL.update("UPDATE parties SET members=\"" + partyMembers + "\" WHERE owner=\"" + partyOwner + "\"");
 			
 			inParty = false;
 			isPartyOwner = false;
@@ -144,6 +145,12 @@ public class HivePlayer {
 	
 	public void disbandParty() {
 		if (isPartyOwner) {
+			partyMembers = SQL.get("members", "owner", "=", partyOwner, "parties").toString();
+			ArrayList<String> partyList = Functions.ArrayToListConversion(partyMembers.split(","));
+			for (String s : partyList) {
+				MySQL.update("UPDATE playerInfo SET requests=\"leaveparty\" WHERE UUID=\"" + s + "\"");
+			}
+			MySQL.update("DELETE FROM parties WHERE owner=\"" + mcPlayer.getUniqueId().toString() + "\"");
 			
 		}
 	}
