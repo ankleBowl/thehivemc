@@ -99,6 +99,23 @@ public class Main extends JavaPlugin implements Listener {
 				if (args[0].equalsIgnoreCase("disband")) {
 					player.disbandParty();
 				}
+				if (args[0].equalsIgnoreCase("warp")) {
+					player.refreshParty();
+					if (player.isPartyOwner && player.inParty) {
+						for (String s : player.partyMembers.split(",")) {
+							if (Functions.checkForUUID(s)) {
+								HivePlayer p = playerMap.get(Bukkit.getPlayer(UUID.fromString(s)));
+								int serverId = player.serverId;
+								p.mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[serverId].world));
+								lobbies[p.serverId].playerList.remove(p);
+								lobbies[serverId].playerList.add(p);
+								p.serverId = serverId;
+							} else {
+								//Future waterfall || bungee code
+							}
+						}
+					}
+				}
 			}
 		}
         return false;
@@ -209,11 +226,11 @@ public class Main extends JavaPlugin implements Listener {
 				    	} else if (requestArr[0].equals("leaveparty")) {
 				    		hp.mcPlayer.sendMessage("The party has been disbanded!");
 				    		MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
-				    		hp.leaveParty();
+				    		hp.leaveParty(); //I know this sometimes fails because the SQL entry is deleted before this is triggered
 				    	}
 			    	}
 		    	} catch(NullPointerException e) {
-		    		
+		    		//Yes i know this is a bad way of doing this
 		    	}
 		    }
 		}.runTaskTimer(this, 0L, 10L);

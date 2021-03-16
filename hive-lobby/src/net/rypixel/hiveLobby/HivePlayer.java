@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import me.vagdedes.mysql.database.MySQL;
 import me.vagdedes.mysql.database.SQL;
@@ -153,5 +154,9 @@ public class HivePlayer {
 			MySQL.update("DELETE FROM parties WHERE owner=\"" + mcPlayer.getUniqueId().toString() + "\"");
 			
 		}
+	}
+	
+	public void refreshParty() {
+		partyMembers = SQL.get("members", "owner", "=", partyOwner, "parties").toString();
 	}
 }
