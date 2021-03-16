@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Player;
 
+import me.vagdedes.mysql.database.MySQL;
+
 public class HivePlayer {
 
 	public Player mcPlayer;

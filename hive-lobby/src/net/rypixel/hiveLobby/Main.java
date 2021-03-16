@@ -1,6 +1,7 @@
 package net.rypixel.hiveLobby;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -47,7 +48,17 @@ public class Main extends JavaPlugin implements Listener {
 			HivePlayer player = playerMap.get((Player) sender);
 			if (label.equalsIgnoreCase("friend") || label.equalsIgnoreCase("f")) {
 				if (args[0].equalsIgnoreCase("list")) {
-					
+					String[] fList = player.friends.split(",");
+					for (String uuid : fList) {
+						Player f = Bukkit.getPlayer(UUID.fromString(uuid));
+						String status = SQL.get("lobby", "UUID", "=", uuid, "playerInfo").toString();
+						player.mcPlayer.sendMessage(ChatColor.GRAY + "✦► " + ChatColor.BLUE + f.getDisplayName() + ChatColor.DARK_GRAY + " [" + status + "]");
+					}
+				}
+				if (args[0].equalsIgnoreCase("add")) {
+					String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
+					player.addFriend(uuid);
+					MySQL.update("UPDATE playerInfo SET friends=\"" + player.friends + "\" WHERE UUID=\"" + player.mcPlayer.getUniqueId().toString() + "\"");
 				}
 			} else if (label.equalsIgnoreCase("party") || label.equalsIgnoreCase("p")) {
 				
