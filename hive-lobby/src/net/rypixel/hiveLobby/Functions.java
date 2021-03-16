@@ -9,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.entity.Player;
 
 public class Functions {
 	
@@ -54,5 +55,15 @@ public class Functions {
 	    //WorldCreator creator = new WorldCreator(newName);
 		World newWorld = Bukkit.getServer().createWorld(new WorldCreator(newName));
 	    return newWorld;
+	}
+	
+	public static boolean checkForUUID(String UUID) {
+		boolean inServer = false;
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			if (p.getUniqueId().toString().contains(UUID)) {
+				inServer = true;
+			}
+		}
+		return inServer;
 	}
 }

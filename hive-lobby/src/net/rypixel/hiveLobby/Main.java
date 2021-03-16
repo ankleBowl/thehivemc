@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -18,6 +19,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import me.vagdedes.mysql.basic.Config;
@@ -28,6 +31,8 @@ public class Main extends JavaPlugin implements Listener {
 
 	public static HashMap<Player, HivePlayer> playerMap = new HashMap<Player, HivePlayer>();
 	
+	public static BukkitTask requestRunnable;
+	
 	public LobbyWorld[] lobbies = new LobbyWorld[10];
 	
 	public void onEnable() {
@@ -35,9 +40,11 @@ public class Main extends JavaPlugin implements Listener {
 		Constants.init();
 		initWorlds();
 		initSQL();
+		requests();
 	}
 	
 	public void onDisable() {
+		requestRunnable.cancel();
 		Bukkit.getConsoleSender().sendMessage("/kick @a");
 		MySQL.disconnect();
 	}
@@ -52,13 +59,17 @@ public class Main extends JavaPlugin implements Listener {
 					for (String uuid : fList) {
 						Player f = Bukkit.getPlayer(UUID.fromString(uuid));
 						String status = SQL.get("lobby", "UUID", "=", uuid, "playerInfo").toString();
-						player.mcPlayer.sendMessage(ChatColor.GRAY + "✦► " + ChatColor.BLUE + f.getDisplayName() + ChatColor.DARK_GRAY + " [" + status + "]");
+						String name = SQL.get("playerName", "UUID", "=", uuid, "playerInfo").toString();
+						player.mcPlayer.sendMessage(ChatColor.GRAY + "✦► " + ChatColor.BLUE + name + ChatColor.DARK_GRAY + " [" + status + "]");
 					}
 				}
-				if (args[0].equalsIgnoreCase("add")) {
-					String uuid = Bukkit.getPlayer(args[1]).getUniqueId().toString();
-					player.addFriend(uuid);
-					MySQL.update("UPDATE playerInfo SET friends=\"" + player.friends + "\" WHERE UUID=\"" + player.mcPlayer.getUniqueId().toString() + "\"");
+				if (args[0].equalsIgnoreCase("add")) {				
+					String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
+					player.requestFriend(uuid);
+				}
+				if (args[0].equalsIgnoreCase("accept")) {				
+					String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
+					player.acceptFriend(uuid);
 				}
 			} else if (label.equalsIgnoreCase("party") || label.equalsIgnoreCase("p")) {
 				
@@ -82,8 +93,9 @@ public class Main extends JavaPlugin implements Listener {
 			hp.ownedCosmetics = SQL.get("cosmetics", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString();
 			
 			MySQL.update("UPDATE playerInfo SET lobby=\"Lobby\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+			MySQL.update("UPDATE playerInfo SET playerName=\"" + hp.mcPlayer.getDisplayName() + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		} else {
-			MySQL.update("Insert into playerInfo values (\"" + event.getPlayer().getUniqueId().toString() + "\", \"\", \"None\", 0, 0, \"\", \"lobby\");");
+			MySQL.update("Insert into playerInfo values (\"" + event.getPlayer().getUniqueId().toString() + "\", \"\", \"None\", 0, 0, \"\", \"Lobby\",\"" + hp.mcPlayer.getDisplayName() + "\", \"\");");
 			hp.mcPlayer.sendMessage(ChatColor.GOLD + "Welcome to your first time on The Rive server! Use the compass to select a game, and have fun!");
 		}
 		
@@ -92,8 +104,8 @@ public class Main extends JavaPlugin implements Listener {
 				hp.mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[i].world));
 				lobbies[i].playerList.add(hp);
 				hp.serverId = i;
-				hp.currentMap = "lobby";
-				hp.currentWorld = "lobby";
+				hp.currentMap = "Lobby";
+				hp.currentWorld = "Lobby";
 				i = 1000;
 			}
 		}
@@ -141,6 +153,29 @@ public class Main extends JavaPlugin implements Listener {
 		event.setCancelled(true);
 	}
 	
+	public void requests() {
+		requestRunnable = new BukkitRunnable() {
+		    public void run() {
+		    	String toUUID = SQL.get("UUID", "requests", "!=", "", "playerInfo").toString(); //gets people who have requests
+		    	if (toUUID != null && Functions.checkForUUID(toUUID)) { //checks to see if they are on the server
+			    	String request = SQL.get("requests", "UUID", "=", toUUID, "playerInfo").toString();
+			    	HivePlayer hp = playerMap.get(Bukkit.getPlayer(UUID.fromString(toUUID)));
+			    	String[] requestArr = request.split(":");
+			    	if (requestArr[0].equals("friend")) {
+				    	hp.requests = request;
+				    	hp.mcPlayer.sendMessage("You got a friend request from " + requestArr[2] + "!");
+				    	MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
+			    	} else if (requestArr[0].equals("friendback")) {
+			    		String name = SQL.get("playerName", "UUID", "=", requestArr[1], "playerInfo").toString();
+			    		hp.mcPlayer.sendMessage(name + " accepted your friend request!");
+			    		hp.forceAddFriend(requestArr[1]);
+			    		MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
+			    	}
+		    	}
+		    }
+		}.runTaskTimer(this, 0L, 10L);
+	}
+	
 	public void initSQL() {
 		Config.create();
 		Config.setHost("66.85.144.162");
@@ -150,7 +185,7 @@ public class Main extends JavaPlugin implements Listener {
 		Config.setPort("3306");
 		Config.setSSL(true);
 		MySQL.connect();
-		MySQL.update("CREATE TABLE IF NOT EXISTS playerInfo(UUID varchar(64) PRIMARY KEY, friends varchar(740), playerRank varchar(16), tokens int, luckyCrates int, cosmetics varchar(9999), lobby varchar(32));");
+		MySQL.update("CREATE TABLE IF NOT EXISTS playerInfo(UUID varchar(64) PRIMARY KEY, friends varchar(740), playerRank varchar(16), tokens int, luckyCrates int, cosmetics varchar(9999), lobby varchar(32), playerName varchar(20), requests varchar(9999));");
 	}
 	
 	public void initWorlds() {
