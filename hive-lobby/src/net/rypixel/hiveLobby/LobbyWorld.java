@@ -3,6 +3,7 @@ package net.rypixel.hiveLobby;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -34,20 +35,26 @@ public class LobbyWorld {
 		    		//Check for launchpad locations
 		    		for (Vector vec : Constants.launchpads1) {
 		    			Location loc = vec.toLocation(world);
-		    			if (player.mcPlayer.getLocation().distance(loc) < 0.5) {
-		    				player.mcPlayer.setVelocity(player.mcPlayer.getVelocity().add(new Vector(0, 2, 0)).multiply(5));
+		    			if (player.mcPlayer.getLocation().distance(loc) < 1) {
+		    				Vector dic = player.mcPlayer.getLocation().getDirection();
+		    				Vector velocity = new Vector(dic.getX() * 10, 1.5, dic.getY() * 10);
+		    				player.mcPlayer.setVelocity(velocity);
 		    			}
 		    		}
 		    		for (Vector vec : Constants.launchpads2) {
 		    			Location loc = vec.toLocation(world);
-		    			if (player.mcPlayer.getLocation().distance(loc) < 0.5) {
-		    				player.mcPlayer.setVelocity(player.mcPlayer.getVelocity().add(new Vector(0, 2, 0)).multiply(5));
+		    			if (player.mcPlayer.getLocation().distance(loc) < 1) {
+		    				Vector dic = player.mcPlayer.getLocation().getDirection();
+		    				Vector velocity = new Vector(dic.getX() * 10, 1.5, dic.getY() * 10);
+		    				player.mcPlayer.setVelocity(velocity);
 		    			}
 		    		}
 		    		for (Vector vec : Constants.launchpads3) {
 		    			Location loc = vec.toLocation(world);
-		    			if (player.mcPlayer.getLocation().distance(loc) < 0.5) {
-		    				player.mcPlayer.setVelocity(player.mcPlayer.getVelocity().add(new Vector(0, 2, 0)).multiply(5));
+		    			if (player.mcPlayer.getLocation().distance(loc) < 1) {
+		    				Vector dic = player.mcPlayer.getLocation().getDirection();
+		    				Vector velocity = new Vector(dic.getX() * 10, 1.5, dic.getY() * 10);
+		    				player.mcPlayer.setVelocity(velocity);
 		    			}
 		    		}
 		    	}
