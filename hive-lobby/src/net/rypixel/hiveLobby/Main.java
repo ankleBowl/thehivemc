@@ -47,7 +47,7 @@ public class Main extends JavaPlugin implements Listener {
 		
 		for (int i = 0; i < lobbies.length; i++) {
 			if (lobbies[i].playerList.size() < 20) {
-				hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(lobbies[i].world));
+				hp.mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[i].world));
 				lobbies[i].playerList.add(hp);
 				i = 1000;
 			}
