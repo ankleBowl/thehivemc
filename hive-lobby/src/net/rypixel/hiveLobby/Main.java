@@ -161,6 +161,8 @@ public class Main extends JavaPlugin implements Listener {
 			hp.mcPlayer.sendMessage(ChatColor.GOLD + "Welcome to your first time on The Rive server! Use the compass to select a game, and have fun!");
 		}
 		
+		event.setJoinMessage(null);
+		
 		for (int i = 0; i < lobbies.length; i++) {
 			if (lobbies[i].playerList.size() < 20) {
 				hp.mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[i].world));
@@ -179,6 +181,8 @@ public class Main extends JavaPlugin implements Listener {
 		HivePlayer hp = playerMap.get(event.getPlayer());
 		MySQL.update("UPDATE playerInfo SET lobby=\"Offline\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		playerMap.remove(event.getPlayer());
+		
+		event.setQuitMessage(null);
 	}
 	
 	@EventHandler
