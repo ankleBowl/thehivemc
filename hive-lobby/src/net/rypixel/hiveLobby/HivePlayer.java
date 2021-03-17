@@ -68,7 +68,7 @@ public class HivePlayer {
 		MySQL.update("UPDATE playerInfo SET friends=\"" + friends + "\" WHERE UUID=\"" + mcPlayer.getUniqueId().toString() + "\"");
 	}
 	
-	public String removeFriend(String UUID) {
+	public void removeFriend(String UUID) {
 		ArrayList<String> friendList = Functions.ArrayToListConversion(friends.split(","));
 		boolean added = false;
 		for (String p : friendList) {
@@ -81,9 +81,10 @@ public class HivePlayer {
 			friends = Functions.ListToCSV(friendList);
 			MySQL.update("UPDATE playerInfo SET friends=\"" + friends + "\" WHERE UUID=\"" + mcPlayer.getUniqueId().toString() + "\"");
 			MySQL.update("UPDATE playerInfo SET requests=\"" + "removefriend:" + mcPlayer.getUniqueId().toString() + "\" WHERE UUID=\"" + UUID + "\"");
-			return "success";
+			String name = SQL.get("playerName", "UUID", "=", UUID, "playerInfo").toString();
+			mcPlayer.sendMessage(ChatColor.GREEN + "You are now friends with " + name);
 		} else {
-			return "This person is not on your friends list!";
+			mcPlayer.sendMessage(ChatColor.RED + "This person is already your friend!");
 		}
 	}
 	

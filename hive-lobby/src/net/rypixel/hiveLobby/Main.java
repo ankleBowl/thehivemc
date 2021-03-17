@@ -58,25 +58,40 @@ public class Main extends JavaPlugin implements Listener {
 			HivePlayer player = playerMap.get((Player) sender);
 			if (label.equalsIgnoreCase("friend") || label.equalsIgnoreCase("f")) {
 				if (args[0].equalsIgnoreCase("list")) {
-					String[] fList = player.friends.split(",");
-					for (String uuid : fList) {
-						Player f = Bukkit.getPlayer(UUID.fromString(uuid));
-						String status = SQL.get("lobby", "UUID", "=", uuid, "playerInfo").toString();
-						String name = SQL.get("playerName", "UUID", "=", uuid, "playerInfo").toString();
-						player.mcPlayer.sendMessage(ChatColor.GRAY + "✦► " + ChatColor.BLUE + name + ChatColor.DARK_GRAY + " [" + status + "]");
+					if (player.friends.toCharArray().length > 16) {
+						String[] fList = player.friends.split(",");
+						for (String uuid : fList) {
+							Player f = Bukkit.getPlayer(UUID.fromString(uuid));
+							String status = SQL.get("lobby", "UUID", "=", uuid, "playerInfo").toString();
+							String name = SQL.get("playerName", "UUID", "=", uuid, "playerInfo").toString();
+							player.mcPlayer.sendMessage(ChatColor.GRAY + "✦► " + ChatColor.BLUE + name + ChatColor.DARK_GRAY + " [" + status + "]");
+						}
+					} else {
+						player.mcPlayer.sendMessage("You don't have any friends");
 					}
-				}
-				if (args[0].equalsIgnoreCase("add")) {				
+				} else if (args[0].equalsIgnoreCase("add")) {				
 					String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
-					player.requestFriend(uuid);
-				}
-				if (args[0].equalsIgnoreCase("accept")) {				
+					if (uuid.toCharArray().length > 16) {
+						player.requestFriend(uuid);
+					} else {
+						player.mcPlayer.sendMessage("Please enter a valid name!");
+					}
+				} else if (args[0].equalsIgnoreCase("accept")) {				
 					String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
-					player.acceptFriend(uuid);
-				}
-				if (args[0].equalsIgnoreCase("remove")) {				
+					if (uuid.toCharArray().length > 16) {
+						player.acceptFriend(uuid);
+					} else {
+						player.mcPlayer.sendMessage("Please enter a valid name!");
+					}
+				} else if (args[0].equalsIgnoreCase("remove")) {				
 					String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
-					player.removeFriend(uuid);
+					if (uuid.toCharArray().length > 16) {
+						player.removeFriend(uuid);
+					} else {
+						player.mcPlayer.sendMessage("Please enter a valid name!");
+					}
+				} else {
+					player.mcPlayer.sendMessage("Command not recognized");
 				}
 			} else if (label.equalsIgnoreCase("party") || label.equalsIgnoreCase("p")) {
 				if (args[0].equalsIgnoreCase("invite")) {
@@ -91,18 +106,14 @@ public class Main extends JavaPlugin implements Listener {
 							player.mcPlayer.sendMessage(ChatColor.RED + "You are not the party owner!");
 						}
 					}
-				}
-				if (args[0].equalsIgnoreCase("join")) {
+				} else if (args[0].equalsIgnoreCase("join")) {
 					String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
 					player.joinParty(uuid);
-				}
-				if (args[0].equalsIgnoreCase("leave")) {
+				} else if (args[0].equalsIgnoreCase("leave")) {
 					player.leaveParty();
-				}
-				if (args[0].equalsIgnoreCase("disband")) {
+				} else if (args[0].equalsIgnoreCase("disband")) {
 					player.disbandParty();
-				}
-				if (args[0].equalsIgnoreCase("warp")) {
+				} else if (args[0].equalsIgnoreCase("warp")) {
 					player.refreshParty();
 					if (player.isPartyOwner && player.inParty) {
 						for (String s : player.partyMembers.split(",")) {
@@ -120,6 +131,8 @@ public class Main extends JavaPlugin implements Listener {
 							}
 						}
 					}
+				} else {
+					player.mcPlayer.sendMessage("Command not recognized");
 				}
 			}
 		}
