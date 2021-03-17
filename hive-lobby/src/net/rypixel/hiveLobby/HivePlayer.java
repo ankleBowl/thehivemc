@@ -19,6 +19,7 @@ public class HivePlayer {
 	public String playerRank = "";
 	public String requests = "";
 	public int serverId = 0;
+	public ScoreHelper scoreboard;
 	
 	public boolean inParty;
 	public boolean isPartyOwner;
