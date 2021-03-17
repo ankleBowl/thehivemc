@@ -81,6 +81,8 @@ public class LobbyWorld {
 		    		player.scoreboard.setSlot(2, ChatColor.DARK_GRAY + "----------------");
 		    		player.scoreboard.setSlot(1, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
 		    		
+		    		
+		    		
 		    	}
 		    }
 		}.runTaskTimer(plugin, 0L, 2L);

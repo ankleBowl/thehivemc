@@ -9,6 +9,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,15 +22,20 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
+
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteStreams;
 
 import me.vagdedes.mysql.basic.Config;
 import me.vagdedes.mysql.database.MySQL;
 import me.vagdedes.mysql.database.SQL;
 
-public class Main extends JavaPlugin implements Listener {
+public class Main extends JavaPlugin implements PluginMessageListener {
 
 	public static HashMap<Player, HivePlayer> playerMap = new HashMap<Player, HivePlayer>();
 	
@@ -39,11 +45,16 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public Plugin plugin = this;
 	
+	FileConfiguration config = this.getConfig();
+	
 	public void onEnable() {
-		Bukkit.getPluginManager().registerEvents(this, this);
+		//Bukkit.getPluginManager().registerEvents(this, this);
+		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+	    this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", (PluginMessageListener) this);
 		Constants.init();
 		initWorlds();
 		initSQL();
+		loadConfig();
 		requests();
 	}
 	
@@ -51,6 +62,12 @@ public class Main extends JavaPlugin implements Listener {
 		requestRunnable.cancel();
 		Bukkit.getConsoleSender().sendMessage("/kick @a");
 		MySQL.disconnect();
+	}
+	
+	public void loadConfig() {
+		config.addDefault("bungeeName", "");
+		config.options().copyDefaults(true);
+		saveConfig();
 	}
 	
 	@Override
@@ -135,6 +152,8 @@ public class Main extends JavaPlugin implements Listener {
 				} else {
 					player.mcPlayer.sendMessage("Command not recognized");
 				}
+			} else if (label.equalsIgnoreCase("transfer")) {
+				Functions.sendToServer(player.mcPlayer, args[0], this);
 			}
 		}
         return false;
@@ -157,10 +176,16 @@ public class Main extends JavaPlugin implements Listener {
 			MySQL.update("UPDATE playerInfo SET lobby=\"Lobby\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 			MySQL.update("UPDATE playerInfo SET playerName=\"" + hp.mcPlayer.getDisplayName() + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		} else {
-			MySQL.update("Insert into playerInfo values (\"" + event.getPlayer().getUniqueId().toString() + "\", \"\", \"None\", 0, 0, \"\", \"Lobby\",\"" + hp.mcPlayer.getDisplayName() + "\", \"\");");
+			MySQL.update("Insert into playerInfo values (\"" + event.getPlayer().getUniqueId().toString() + "\", \"\", \"Regular Member\", 0, 0, \"\", \"Lobby\",\"" + hp.mcPlayer.getDisplayName() + "\", \"\");");
 			hp.mcPlayer.sendMessage(ChatColor.GOLD + "Welcome to your first time on The Rive server! Use the compass to select a game, and have fun!");
+			hp.playerRank = "Regular Member";
 		}
 		hp.scoreboard = ScoreHelper.createScore(hp.mcPlayer);
+		Scoreboard s = hp.mcPlayer.getScoreboard();
+		if (hp.playerRank.equalsIgnoreCase("Regular Member")) {
+			//hp.mcPlayer.setPlayerListName(ChatColor.BLUE + hp.mcPlayer.getDisplayName());
+			//s.registerNewTeam("Regular Member").;
+		}
 		
 		event.setJoinMessage(null);
 		
@@ -279,6 +304,18 @@ public class Main extends JavaPlugin implements Listener {
 		    	}
 		    }
 		}.runTaskTimer(this, 0L, 10L);
+	}
+	
+	@Override
+	public void onPluginMessageReceived(String channel, Player player, byte[] message) {
+		if (!channel.equals("BungeeCord")) {
+			return;
+		}
+		ByteArrayDataInput in = ByteStreams.newDataInput(message);
+		String subchannel = in.readUTF();
+		if (subchannel.equals("SomeSubChannel")) {
+		
+		}
 	}
 	
 	public void initSQL() {

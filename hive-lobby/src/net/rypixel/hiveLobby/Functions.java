@@ -1,5 +1,7 @@
 package net.rypixel.hiveLobby;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 public class Functions {
 	
@@ -65,5 +68,17 @@ public class Functions {
 			}
 		}
 		return inServer;
+	}
+	
+	public static void sendToServer(Player player, String serverName, Plugin plugin) {
+		ByteArrayOutputStream b = new ByteArrayOutputStream();
+		DataOutputStream out = new DataOutputStream(b);
+		try {
+		out.writeUTF("Connect");
+		out.writeUTF(serverName);
+		} catch (IOException eee) {
+		Bukkit.getLogger().info("You'll never see me!");
+		}
+		player.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
 	}
 }

@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
 import net.md_5.bungee.api.ChatColor;
@@ -17,6 +18,8 @@ public class Constants {
 	public static Vector[] launchpads1 = new Vector[8];
 	public static Vector[] launchpads2 = new Vector[8];
 	public static Vector[] launchpads3 = new Vector[10];
+	
+	public static Team noRank;
 	
 	public static ItemStack lobbySelector;
 	
