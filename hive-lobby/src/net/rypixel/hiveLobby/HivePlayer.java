@@ -168,7 +168,7 @@ public class HivePlayer {
 				MySQL.update("UPDATE playerInfo SET requests=\"leaveparty\" WHERE UUID=\"" + s + "\"");
 			}
 			MySQL.update("DELETE FROM parties WHERE owner=\"" + mcPlayer.getUniqueId().toString() + "\"");
-			mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.GRAY + "〡" + ChatColor.AQUA + " Your party has been disbanded");
+			mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + " Your party has been disbanded");
 		}
 	}
 	
