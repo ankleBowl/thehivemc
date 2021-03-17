@@ -63,13 +63,31 @@ public class LobbyWorld {
 		    				player.mcPlayer.setVelocity(velocity);
 		    			}
 		    		}
+		    		
+		    		player.scoreboard.setTitle(ChatColor.BOLD + "" + ChatColor.GOLD + "The" + ChatColor.YELLOW + "Hive");
+		    		player.scoreboard.setSlot(15, "");
+		    		player.scoreboard.setSlot(14, ChatColor.BOLD + "" + ChatColor.RED + "Rank");
+		    		player.scoreboard.setSlot(13, ChatColor.BLUE + "jfrehfeifrf"); //TODO
+		    		player.scoreboard.setSlot(12, "");
+		    		player.scoreboard.setSlot(11, ChatColor.BOLD + "" + ChatColor.GREEN + "Tokens");
+		    		player.scoreboard.setSlot(10, ChatColor.GRAY + String.valueOf(player.tokens));
+		    		player.scoreboard.setSlot(9, "");
+		    		player.scoreboard.setSlot(8, ChatColor.BOLD + "" + ChatColor.AQUA + "LuckyCrates");
+		    		player.scoreboard.setSlot(7, ChatColor.GRAY + String.valueOf(player.tokens));
+		    		player.scoreboard.setSlot(6, "");
+		    		player.scoreboard.setSlot(5, ChatColor.BOLD + "" + ChatColor.WHITE + "Server");
+		    		player.scoreboard.setSlot(4, ChatColor.GRAY + "Regular Hub " + String.valueOf(player.serverId));
+		    		player.scoreboard.setSlot(3, "");
+		    		player.scoreboard.setSlot(2, ChatColor.DARK_GRAY + "----------------");
+		    		player.scoreboard.setSlot(1, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
+		    		
 		    	}
 		    }
 		}.runTaskTimer(plugin, 0L, 2L);
 	}
 	
 	public void welcomePlayer(HivePlayer hp) {
-		TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.GREEN + "play" + ChatColor.AQUA + " hivemc " + ChatColor.GREEN + "com");
+		TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.GREEN + "play" + ChatColor.AQUA + " HiveMC " + ChatColor.GREEN + "com");
 	}
 	
 	public void chat(String message) {

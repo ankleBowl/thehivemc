@@ -160,7 +160,7 @@ public class Main extends JavaPlugin implements Listener {
 			MySQL.update("Insert into playerInfo values (\"" + event.getPlayer().getUniqueId().toString() + "\", \"\", \"None\", 0, 0, \"\", \"Lobby\",\"" + hp.mcPlayer.getDisplayName() + "\", \"\");");
 			hp.mcPlayer.sendMessage(ChatColor.GOLD + "Welcome to your first time on The Rive server! Use the compass to select a game, and have fun!");
 		}
-		//hp.scoreboard = new ScoreHelper(hp.mcPlayer);
+		hp.scoreboard = ScoreHelper.createScore(hp.mcPlayer);
 		
 		event.setJoinMessage(null);
 		
@@ -182,6 +182,7 @@ public class Main extends JavaPlugin implements Listener {
 		HivePlayer hp = playerMap.get(event.getPlayer());
 		MySQL.update("UPDATE playerInfo SET lobby=\"Offline\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		playerMap.remove(event.getPlayer());
+		ScoreHelper.removeScore(event.getPlayer());
 		
 		event.setQuitMessage(null);
 	}
