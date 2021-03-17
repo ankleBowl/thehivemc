@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
+import com.connorlinfoot.titleapi.*;
 
 public class LobbyWorld {
 	
@@ -63,6 +66,16 @@ public class LobbyWorld {
 		    	}
 		    }
 		}.runTaskTimer(plugin, 0L, 2L);
+	}
+	
+	public void welcomePlayer(HivePlayer hp) {
+		TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.GREEN + "play" + ChatColor.AQUA + " hivemc " + ChatColor.GREEN + "com");
+	}
+	
+	public void chat(String message) {
+		for (HivePlayer hp : playerList) {
+			hp.mcPlayer.sendMessage(message);
+		}
 	}
 	
 	

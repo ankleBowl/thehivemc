@@ -3,7 +3,7 @@ name: Hive
 version: 1.0
 author: ankleBowl
 api-version: 1.8
-depend: [MySQL]
+depend: [MySQL,TitleAPI]
 commands:
     p:
     party:

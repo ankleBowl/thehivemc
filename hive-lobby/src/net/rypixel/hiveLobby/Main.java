@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -69,25 +70,25 @@ public class Main extends JavaPlugin implements Listener {
 					} else {
 						player.mcPlayer.sendMessage("You don't have any friends");
 					}
-				} else if (args[0].equalsIgnoreCase("add")) {				
-					String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
-					if (uuid.toCharArray().length > 16) {
+				} else if (args[0].equalsIgnoreCase("add")) {	
+					try {
+						String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
 						player.requestFriend(uuid);
-					} else {
+					} catch (NullPointerException e) {
 						player.mcPlayer.sendMessage("Please enter a valid name!");
 					}
-				} else if (args[0].equalsIgnoreCase("accept")) {				
-					String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
-					if (uuid.toCharArray().length > 16) {
+				} else if (args[0].equalsIgnoreCase("accept")) {	
+					try {
+						String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
 						player.acceptFriend(uuid);
-					} else {
+					} catch (NullPointerException e) {
 						player.mcPlayer.sendMessage("Please enter a valid name!");
 					}
-				} else if (args[0].equalsIgnoreCase("remove")) {				
-					String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
-					if (uuid.toCharArray().length > 16) {
+				} else if (args[0].equalsIgnoreCase("remove")) {		
+					try {
+						String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
 						player.removeFriend(uuid);
-					} else {
+					} catch (NullPointerException e) {
 						player.mcPlayer.sendMessage("Please enter a valid name!");
 					}
 				} else {
@@ -164,6 +165,7 @@ public class Main extends JavaPlugin implements Listener {
 			if (lobbies[i].playerList.size() < 20) {
 				hp.mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[i].world));
 				lobbies[i].playerList.add(hp);
+				lobbies[i].welcomePlayer(hp);
 				hp.serverId = i;
 				hp.currentMap = "Lobby";
 				hp.currentWorld = "Lobby";
@@ -214,6 +216,11 @@ public class Main extends JavaPlugin implements Listener {
 		event.setCancelled(true);
 	}
 	
+	@EventHandler
+	public void onChatSend(PlayerChatEvent event) {
+		HivePlayer hp = playerMap.get(event.getPlayer());
+	}
+	
 	public void requests() {
 		requestRunnable = new BukkitRunnable() {
 		    public void run() {
@@ -236,10 +243,10 @@ public class Main extends JavaPlugin implements Listener {
 				    		hp.removeFriend(requestArr[1]);
 				    	} else if (requestArr[0].equals("partyinvite")) {
 				    		hp.requests = request;
-				    		hp.mcPlayer.sendMessage("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+				    		hp.mcPlayer.sendMessage(ChatColor.DARK_GRAY + "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 				    		hp.mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.DARK_GRAY + "〡" + ChatColor.BLUE + requestArr[2] + ChatColor.AQUA + " wants you to join their party!");
 				    		hp.mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.DARK_GRAY + "〡" + ChatColor.GREEN + "" + ChatColor.BOLD + "Click here to accept.");
-				    		hp.mcPlayer.sendMessage("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+				    		hp.mcPlayer.sendMessage(ChatColor.DARK_GRAY + "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 					    	//hp.mcPlayer.sendMessage("You got a party invite from " + requestArr[2] + "!");
 					    	MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
 					    	new BukkitRunnable(){
