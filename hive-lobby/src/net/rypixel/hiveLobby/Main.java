@@ -219,6 +219,7 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onChatSend(PlayerChatEvent event) {
 		HivePlayer hp = playerMap.get(event.getPlayer());
+		lobbies[hp.serverId].chat(ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " >> " + event.getMessage());
 	}
 	
 	public void requests() {
