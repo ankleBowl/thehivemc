@@ -76,7 +76,7 @@ public class LobbyWorld {
 		    		player.scoreboard.setSlot(7, ChatColor.GRAY + String.valueOf(player.tokens));
 		    		player.scoreboard.setSlot(6, "");
 		    		player.scoreboard.setSlot(5, ChatColor.BOLD + "" + ChatColor.WHITE + "Server");
-		    		player.scoreboard.setSlot(4, ChatColor.GRAY + "Regular Hub " + String.valueOf(player.serverId));
+		    		player.scoreboard.setSlot(4, ChatColor.GRAY + "Regular Hub " + String.valueOf(player.serverId + 1));
 		    		player.scoreboard.setSlot(3, "");
 		    		player.scoreboard.setSlot(2, ChatColor.DARK_GRAY + "----------------");
 		    		player.scoreboard.setSlot(1, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
