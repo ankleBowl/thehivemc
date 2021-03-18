@@ -35,7 +35,7 @@ import me.vagdedes.mysql.basic.Config;
 import me.vagdedes.mysql.database.MySQL;
 import me.vagdedes.mysql.database.SQL;
 
-public class Main extends JavaPlugin implements PluginMessageListener {
+public class Main extends JavaPlugin implements Listener {
 
 	public static HashMap<Player, HivePlayer> playerMap = new HashMap<Player, HivePlayer>();
 	
@@ -44,18 +44,19 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 	public LobbyWorld[] lobbies = new LobbyWorld[10];
 	
 	public Plugin plugin = this;
+	public BungeeListener bl;
 	
 	FileConfiguration config = this.getConfig();
 	
 	public void onEnable() {
-		//Bukkit.getPluginManager().registerEvents(this, this);
-		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-	    this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", (PluginMessageListener) this);
+		Bukkit.getPluginManager().registerEvents(this, this);
 		Constants.init();
 		initWorlds();
 		initSQL();
 		loadConfig();
 		requests();
+		bl = new BungeeListener(this);
+		bl.init();
 	}
 	
 	public void onDisable() {
@@ -145,7 +146,7 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 								
 								p.mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.GRAY + "〡" + ChatColor.AQUA + " Your party is now joining: HUB" + String.valueOf(serverId));
 							} else {
-								//Future waterfall || bungee code
+								MySQL.update("UPDATE playerInfo SET requests=\"" + "warp:" + config.getString("bungeeName") + ":" + String.valueOf(player.serverId) + "\" WHERE UUID=\"" + s + "\"");
 							}
 						}
 					}
@@ -164,6 +165,7 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 		HivePlayer hp = new HivePlayer(event.getPlayer());
 		hp.mcPlayer.getInventory().clear();
 		hp.mcPlayer.getInventory().setItem(8, Constants.lobbySelector);
+		hp.mcPlayer.getInventory().setItem(0, Constants.gameSelector);
 		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
 		playerMap.put(event.getPlayer(), hp);
 		if (SQL.exists("UUID", event.getPlayer().getUniqueId().toString(), "playerInfo")) {
@@ -173,10 +175,16 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 			hp.luckyCrates = Integer.parseInt(SQL.get("luckyCrates", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString());
 			hp.ownedCosmetics = SQL.get("cosmetics", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString();
 			
+			hp.partyOwner = SQL.get("partyOwner", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString();
+			if (hp.partyOwner.toCharArray().length > 16) {
+				hp.inParty = true;
+				hp.refreshParty();
+			}
+			
 			MySQL.update("UPDATE playerInfo SET lobby=\"Lobby\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 			MySQL.update("UPDATE playerInfo SET playerName=\"" + hp.mcPlayer.getDisplayName() + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		} else {
-			MySQL.update("Insert into playerInfo values (\"" + event.getPlayer().getUniqueId().toString() + "\", \"\", \"Regular Member\", 0, 0, \"\", \"Lobby\",\"" + hp.mcPlayer.getDisplayName() + "\", \"\");");
+			MySQL.update("Insert into playerInfo values (\"" + event.getPlayer().getUniqueId().toString() + "\", \"\", \"Regular Member\", 0, 0, \"\", \"Lobby\",\"" + hp.mcPlayer.getDisplayName() + "\", \"\", \"\");");
 			hp.mcPlayer.sendMessage(ChatColor.GOLD + "Welcome to your first time on The Rive server! Use the compass to select a game, and have fun!");
 			hp.playerRank = "Regular Member";
 		}
@@ -210,6 +218,14 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 		ScoreHelper.removeScore(event.getPlayer());
 		
 		event.setQuitMessage(null);
+		
+		if (!hp.switchingServers) {
+			if (hp.isPartyOwner) {
+				hp.disbandParty();
+			} else if (hp.inParty) {
+				hp.leaveParty();
+			}
+		}
 	}
 	
 	@EventHandler
@@ -225,6 +241,8 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 				case BOOK:
 					event.getPlayer().openInventory(Constants.lobbySelector(lobbies.length));
 					break;
+				case COMPASS:
+					event.getPlayer().openInventory(Constants.gameSelector());
 				default:
 					break;
 				}
@@ -234,14 +252,28 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 	
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
+		HivePlayer hp = playerMap.get(event.getWhoClicked());
 		if (event.getInventory().getTitle().equalsIgnoreCase("Hub Selector")) {
 			if (event.getCurrentItem() != null) {
 				String strId = event.getCurrentItem().getItemMeta().getDisplayName();
 				int serverId = Integer.parseInt(strId) - 1;
-				playerMap.get(event.getWhoClicked()).mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[serverId].world));
-				lobbies[playerMap.get(event.getWhoClicked()).serverId].playerList.remove(playerMap.get(event.getWhoClicked()));
-				lobbies[serverId].playerList.add(playerMap.get(event.getWhoClicked()));
-				playerMap.get(event.getWhoClicked()).serverId = serverId;
+				hp.mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[serverId].world));
+				lobbies[hp.serverId].playerList.remove(hp);
+				lobbies[serverId].playerList.add(hp);
+				hp.serverId = serverId;
+			}
+		} else if (event.getInventory().getTitle().equalsIgnoreCase("The Hive Games")) {
+			if (event.getCurrentItem() != null) {
+				switch (event.getCurrentItem().getType()) {
+				case COMPASS:
+					hp.mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[hp.serverId].world));
+					break;
+				case SLIME_BALL:
+					hp.mcPlayer.teleport(new Vector(-60.5, 18, 60.5).toLocation(lobbies[hp.serverId].world));
+					break;
+				default:
+					break;
+				}
 			}
 		}
 		event.setCancelled(true);
@@ -297,6 +329,18 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 				    		hp.mcPlayer.sendMessage("The party has been disbanded!");
 				    		MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
 				    		hp.leaveParty(); //I know this sometimes fails because the SQL entry is deleted before this is triggered
+				    	} else if (requestArr[0].equals("warp")) {
+				    		hp.switchingServers = true;
+				    		Functions.sendToServer(hp.mcPlayer, requestArr[1], plugin);
+				    		MySQL.update("UPDATE playerInfo SET requests=\"toserver:" + requestArr[2] + "\" WHERE UUID=\"" + toUUID + "\"");
+				    	} else if (requestArr[0].equals("toserver")) {
+							String strId = requestArr[1];
+							int serverId = Integer.parseInt(strId);
+							hp.mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[serverId].world));
+							lobbies[hp.serverId].playerList.remove(hp);
+							lobbies[serverId].playerList.add(hp);
+							playerMap.get(hp).serverId = serverId;
+							MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
 				    	}
 			    	}
 		    	} catch(NullPointerException e) {
@@ -304,18 +348,6 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 		    	}
 		    }
 		}.runTaskTimer(this, 0L, 10L);
-	}
-	
-	@Override
-	public void onPluginMessageReceived(String channel, Player player, byte[] message) {
-		if (!channel.equals("BungeeCord")) {
-			return;
-		}
-		ByteArrayDataInput in = ByteStreams.newDataInput(message);
-		String subchannel = in.readUTF();
-		if (subchannel.equals("SomeSubChannel")) {
-		
-		}
 	}
 	
 	public void initSQL() {
@@ -327,7 +359,7 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 		Config.setPort("3306");
 		Config.setSSL(true);
 		MySQL.connect();
-		MySQL.update("CREATE TABLE IF NOT EXISTS playerInfo(UUID varchar(64) PRIMARY KEY, friends varchar(740), playerRank varchar(16), tokens int, luckyCrates int, cosmetics varchar(9999), lobby varchar(32), playerName varchar(20), requests varchar(9999));");
+		MySQL.update("CREATE TABLE IF NOT EXISTS playerInfo(UUID varchar(64) PRIMARY KEY, friends varchar(740), playerRank varchar(16), tokens int, luckyCrates int, cosmetics varchar(9999), lobby varchar(32), playerName varchar(20), requests varchar(9999), partyOwner varchar(64));");
 		MySQL.update("DROP TABLE parties");
 		MySQL.update("CREATE TABLE IF NOT EXISTS parties(owner varchar(64) PRIMARY KEY, members varchar(999))");
 	}

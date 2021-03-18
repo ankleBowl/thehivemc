@@ -7,7 +7,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Wither;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -28,6 +31,15 @@ public class LobbyWorld {
 	
 	public void init() {
 		update();
+		//spawnWither();
+	}
+	
+	public void spawnWither() {
+		Entity e = world.spawnEntity(new Vector(0, 0, 0).toLocation(world), EntityType.WITHER);
+		Wither w = (Wither) e;
+		w.setCustomNameVisible(true);
+		
+		w.setCustomName(ChatColor.YELLOW + "" + ChatColor.BOLD + "play.HiveMC.com");
 	}
 	
 	public void update() {

@@ -22,6 +22,7 @@ public class Constants {
 	public static Team noRank;
 	
 	public static ItemStack lobbySelector;
+	public static ItemStack gameSelector;
 	
 	public static void init() {
 		launchpads1[0] = new Vector(-20.5, 21, 0.5);
@@ -61,9 +62,23 @@ public class Constants {
 		lore.add(ChatColor.GRAY + "Opens up a menu that");
 		lore.add(ChatColor.GRAY + "allows you to switch between");
 		lore.add(ChatColor.GRAY + "Hive hubs!");
+		lore.add(" ");
 		lore.add(ChatColor.AQUA + "► Hold and right-click");
 		lobbySelectorMeta.setLore(lore);
 		lobbySelector.setItemMeta(lobbySelectorMeta);
+		
+		gameSelector = new ItemStack(Material.COMPASS, 1);
+		ItemMeta gameSelectorMeta = lobbySelector.getItemMeta();
+		gameSelectorMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.YELLOW + "Select" + ChatColor.AQUA + " Game");
+		lore.clear();
+		lore.add(" ");
+		lore.add(ChatColor.GRAY + "Opens up a selection menu");
+		lore.add(ChatColor.GRAY + "that allows you to teleport");
+		lore.add(ChatColor.GRAY + "to game rooms!");
+		lore.add(" ");
+		lore.add(ChatColor.AQUA + "► Hold and right-click");
+		gameSelectorMeta.setLore(lore);
+		gameSelector.setItemMeta(gameSelectorMeta);
 	}
 	
 	public static Inventory lobbySelector(int slotNumber) {
@@ -85,6 +100,58 @@ public class Constants {
 			iron.setItemMeta(ironMeta);
 			inv.setItem(i + c, iron);
 		}
+		return inv;
+	}
+	
+	public static Inventory gameSelector() {
+		Inventory inv = Bukkit.createInventory(null, 45, "The Hive Games");
+		ArrayList<String> lore = new ArrayList<String>();
+		ItemStack item = null;
+		ItemMeta itemMeta = null;
+		
+		item = new ItemStack(Material.COMPASS, 1);
+		itemMeta = item.getItemMeta();
+		itemMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.GRAY + "Back to Spawn");
+		lore.clear();
+		lore.add(" ");
+		lore.add(ChatColor.GRAY + "Stuck or lost? Use me to travel");
+		lore.add(ChatColor.GRAY + "back to the center of the hub!");
+		lore.add(" ");
+		lore.add(ChatColor.AQUA + "► Left-click to Teleport");
+		itemMeta.setLore(lore);
+		item.setItemMeta(itemMeta);
+		inv.setItem(22, item);
+		
+		item = new ItemStack(Material.SLIME_BALL, 1);
+		itemMeta = item.getItemMeta();
+		itemMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.RED + "Parkour");
+		lore.clear();
+		lore.add(" ");
+		lore.add(ChatColor.GRAY + "Think you can take on the challenge");
+		lore.add(ChatColor.GRAY + "of the hub parkour?");
+		lore.add(" ");
+		lore.add(ChatColor.AQUA + "► Left-click to Teleport");
+		itemMeta.setLore(lore);
+		item.setItemMeta(itemMeta);
+		inv.setItem(23, item);
+		
+		item = new ItemStack(Material.EGG, 1);
+		itemMeta = item.getItemMeta();
+		itemMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.AQUA + "Splegg");
+		lore.clear();
+		lore.add(ChatColor.DARK_GRAY + "PvP, Solo, Parkour");
+		lore.add(" ");
+		lore.add(ChatColor.GRAY + "Use your egg blaster to shoot");
+		lore.add(ChatColor.GRAY + "block destroying eggs to make");
+		lore.add(ChatColor.GRAY + "other players fall to their death");
+		lore.add(ChatColor.GRAY + "Last player alive wins!");
+		lore.add(" ");
+		lore.add(ChatColor.GREEN + "► Left-click to Queue");
+		lore.add(ChatColor.AQUA + "► Right-click to view Servers");
+		itemMeta.setLore(lore);
+		item.setItemMeta(itemMeta);
+		inv.setItem(23, item);
+		
 		return inv;
 	}
 	

@@ -20,6 +20,7 @@ public class HivePlayer {
 	public String requests = "";
 	public int serverId = 0;
 	public ScoreHelper scoreboard;
+	public boolean switchingServers;
 	
 	public boolean inParty;
 	public boolean isPartyOwner;
@@ -131,6 +132,7 @@ public class HivePlayer {
 					mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.DARK_GRAY + "〡" + ChatColor.GREEN + "Joined " + request[2] + "'s party.");
 					MySQL.update("UPDATE parties SET members=\"" + partyMembers + "\" WHERE owner=\"" + uuid + "\"");
 					MySQL.update("UPDATE playerInfo SET requests=\"" + "partyjoined:" + mcPlayer.getUniqueId().toString() + ":" + mcPlayer.getDisplayName() + "\" WHERE UUID=\"" + uuid + "\"");
+					MySQL.update("UPDATE playerInfo SET partyOwner=\"" + uuid + "\" WHERE UUID=\"" + mcPlayer.getUniqueId().toString() + "\"");
 				}
 			}
 		}
@@ -150,6 +152,7 @@ public class HivePlayer {
 			partyList.remove(mcPlayer.getUniqueId().toString());
 			partyMembers = Functions.ListToCSV(partyList);
 			MySQL.update("UPDATE parties SET members=\"" + partyMembers + "\" WHERE owner=\"" + partyOwner + "\"");
+			MySQL.update("UPDATE playerInfo SET partyOwner=\"\" WHERE UUID=\"" + mcPlayer.getUniqueId().toString() + "\"");
 			
 			inParty = false;
 			isPartyOwner = false;
