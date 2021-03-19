@@ -42,7 +42,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public static BukkitTask requestRunnable;
 	
-	public ArrayList<SpleggWorld> worlds = new ArrayList<SpleggWorld>();
+	public static ArrayList<SpleggWorld> worlds = new ArrayList<SpleggWorld>();
 	
 	public Plugin plugin = this;
 	public BungeeListener bl;

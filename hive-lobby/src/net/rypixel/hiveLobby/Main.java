@@ -271,6 +271,9 @@ public class Main extends JavaPlugin implements Listener {
 				case SLIME_BALL:
 					hp.mcPlayer.teleport(new Vector(-60.5, 18, 60.5).toLocation(lobbies[hp.serverId].world));
 					break;
+				case EGG:
+					Functions.sendToServer(hp.mcPlayer, "splegg", this);
+					break;
 				default:
 					break;
 				}
