@@ -1,14 +1,17 @@
 package net.rypixel.hiveSplegg;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
 import net.minecraft.server.v1_8_R1.WorldGenLargeFeatureStart;
-import net.rypixel.hiveLobby.Functions;
+import net.rypixel.hiveSplegg.Functions;
 import net.rypixel.hiveSplegg.HivePlayer;
 
 public class SpleggWorld {
@@ -54,6 +57,14 @@ public class SpleggWorld {
 				hp.serverId = w.id;
 				sent = true;
 			}
+		}
+		
+		File folder = world.getWorldFolder();
+		Bukkit.unloadWorld(world, false);
+		try {
+			FileUtils.deleteDirectory(folder);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		
 		Main.worlds.remove(this);
