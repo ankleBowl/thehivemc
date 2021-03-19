@@ -31,7 +31,7 @@ public class SpleggWorld {
 		for (HivePlayer hp : players) {
 			boolean sent = false;
 			for (SpleggWorld world : Main.worlds) {
-				if (!sent) {
+				if (!sent && world != this) {
 					if (world.players.size() < 10) {
 						world.players.add(hp);
 						hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(world.world));

@@ -75,7 +75,11 @@ public class Main extends JavaPlugin implements Listener {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player) {
-			
+			HivePlayer hp = playerMap.get((Player) sender);
+			if (label.equalsIgnoreCase("close")) {
+				SpleggWorld w = Functions.getWorldByID(worlds, hp.serverId);
+				w.stop();
+			}
 		}
         return false;
     }
