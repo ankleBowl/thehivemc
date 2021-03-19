@@ -2,11 +2,13 @@ package net.rypixel.hiveSplegg;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
 import net.minecraft.server.v1_8_R1.WorldGenLargeFeatureStart;
+import net.rypixel.hiveLobby.Functions;
 import net.rypixel.hiveSplegg.HivePlayer;
 
 public class SpleggWorld {
@@ -23,7 +25,7 @@ public class SpleggWorld {
 	}
 	
 	public void init() {
-		
+		world = Functions.createNewWorld(Bukkit.getWorld("world"), String.valueOf(id));
 	}
 	
 	public void stop() {
