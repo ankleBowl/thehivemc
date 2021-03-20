@@ -8,6 +8,7 @@ import java.util.HashMap;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
@@ -115,7 +116,10 @@ public class SpleggWorld {
 		hp.serverId = id;
 		
 		Inventory inv = hp.mcPlayer.getInventory();
-		
+		inv.setItem(0, Constants.rules);
+		inv.setItem(1, Constants.vote);
+		inv.setItem(4, Constants.locker);
+		inv.setItem(8, Constants.hub);
 	}
 	
 	public void chat(String message) {
@@ -125,7 +129,31 @@ public class SpleggWorld {
 	}
 	
 	public void onInteract(PlayerInteractEvent e) {
-		
+		if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) {
+			if (e.getItem() != null) {
+				if (!inGame) {
+					switch (e.getItem().getType()) {
+					case WRITTEN_BOOK:
+						break;
+					case DIAMOND:
+						break;
+					case YELLOW_FLOWER:
+						break;
+					case SLIME_BALL:
+						break;
+					default:
+						break;
+					}
+				} else {
+					switch (e.getItem().getType()) {
+					case IRON_SPADE:
+						break;
+					default:
+						break;
+					}
+				}
+			}
+		}
 	}
 	
 	public void onInventoryClick(InventoryClickEvent e) {

@@ -9,12 +9,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class Constants {
 
-	public ItemStack rules;
-	public ItemStack vote;
-	public ItemStack locker;
-	public ItemStack hub;
+	public static ItemStack rules;
+	public static ItemStack vote;
+	public static ItemStack locker;
+	public static ItemStack hub;
 	
-	public void init() {
+	public static String[] mapList;
+	
+	public static void init() {
 		ItemMeta meta = null;
 		ArrayList<String> lore = new ArrayList<String>();;
 		
@@ -66,6 +68,28 @@ public class Constants {
 		lore.add(ChatColor.AQUA + "► Right-click when held");
 		meta.setLore(lore);
 		hub.setItemMeta(meta);
+		
+		mapList = new String[21];
+		mapList[0] = "Splatter";
+		mapList[1] = "Petal_Power";
+		mapList[2] = "Ring_Ring";
+		mapList[3] = "Balance";
+		mapList[4] = "Starmie";
+		mapList[5] = "Palette";
+		mapList[6] = "Cell";
+		mapList[7] = "Burst";
+		mapList[8] = "Pokemon";
+		mapList[9] = "Mistic";
+		mapList[10] = "Golf";
+		mapList[11] = "Tree_Island";
+		mapList[12] = "Saturn";
+		mapList[13] = "Not_Mushroom_Here";
+		mapList[14] = "Tree_Fiddy";
+		mapList[15] = "Time_Travel";
+		mapList[16] = "Chocolate";
+		mapList[17] = "Making_It_Up";
+		mapList[18] = "Inferno";
+		mapList[19] = "Repercussions";
+		mapList[20] = "Catch_em_All";
 	}
-	
 }

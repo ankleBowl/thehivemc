@@ -18,6 +18,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -51,7 +52,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public void onEnable() {
 		Bukkit.getPluginManager().registerEvents(this, this);
-		//Constants.init();
+		Constants.init();
 		//initWorlds();
 		initSQL();
 		loadConfig();
@@ -168,6 +169,11 @@ public class Main extends JavaPlugin implements Listener {
 		HivePlayer hp = playerMap.get(event.getPlayer());
 		event.setCancelled(true);
 		Functions.getWorldByID(worlds, hp.serverId).chat(ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " >> " + event.getMessage());
+	}
+	
+	@EventHandler
+	public void onPlayerThrow(PlayerDropItemEvent event) {
+		event.setCancelled(true);
 	}
 	
 	public void initSQL() {
