@@ -43,7 +43,7 @@ import me.vagdedes.mysql.database.SQL;
 
 public class Main extends JavaPlugin implements Listener {
 
-	public static HashMap<Player, HivePlayer> playerMap = new HashMap<Player, HivePlayer>();
+	public static HashMap<Player, SpleggPlayer> playerMap = new HashMap<Player, SpleggPlayer>();
 	
 	public static BukkitTask requestRunnable;
 	
@@ -84,7 +84,7 @@ public class Main extends JavaPlugin implements Listener {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player) {
-			HivePlayer hp = playerMap.get((Player) sender);
+			SpleggPlayer hp = playerMap.get((Player) sender);
 			if (label.equalsIgnoreCase("close")) {
 				SpleggWorld w = Functions.getWorldByID(worlds, hp.serverId);
 				w.stop();
@@ -99,7 +99,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		HivePlayer hp = new HivePlayer(event.getPlayer());
+		SpleggPlayer hp = new SpleggPlayer(event.getPlayer(), this);
 //		hp.mcPlayer.getInventory().clear();
 //		hp.mcPlayer.getInventory().setItem(8, Constants.lobbySelector);
 //		hp.mcPlayer.getInventory().setItem(0, Constants.gameSelector);
@@ -150,7 +150,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent event) {
-		HivePlayer hp = playerMap.get(event.getPlayer());
+		SpleggPlayer hp = playerMap.get(event.getPlayer());
 		
 		SpleggWorld world = Functions.getWorldByID(worlds, hp.serverId);
 		world.onPlayerLeave(event);
@@ -176,7 +176,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onInteract(PlayerInteractEvent event) {
-		HivePlayer hp = playerMap.get(event.getPlayer());
+		SpleggPlayer hp = playerMap.get(event.getPlayer());
 		SpleggWorld world = Functions.getWorldByID(worlds, hp.serverId);
 		world.onInteract(event);
 	}
@@ -194,14 +194,14 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
-		HivePlayer hp = playerMap.get(event.getWhoClicked());
+		SpleggPlayer hp = playerMap.get(event.getWhoClicked());
 		SpleggWorld world = Functions.getWorldByID(worlds, hp.serverId);
 		world.onInventoryClick(event);
 	}
 	
 	@EventHandler
 	public void onChatSend(PlayerChatEvent event) {
-		HivePlayer hp = playerMap.get(event.getPlayer());
+		SpleggPlayer hp = playerMap.get(event.getPlayer());
 		event.setCancelled(true);
 		Functions.getWorldByID(worlds, hp.serverId).chat(ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " >> " + event.getMessage());
 	}

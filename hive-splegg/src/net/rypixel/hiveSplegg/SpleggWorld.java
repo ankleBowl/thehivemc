@@ -31,7 +31,7 @@ import org.bukkit.util.Vector;
 
 import net.minecraft.server.v1_8_R1.WorldGenLargeFeatureStart;
 import net.rypixel.hiveSplegg.Functions;
-import net.rypixel.hiveSplegg.HivePlayer;
+import net.rypixel.hiveSplegg.SpleggPlayer;
 
 public class SpleggWorld {
 
@@ -50,9 +50,9 @@ public class SpleggWorld {
 	
 	public Integer[] maps = new Integer[5];
 	
-	public ArrayList<HivePlayer> players = new ArrayList<HivePlayer>();
+	public ArrayList<SpleggPlayer> players = new ArrayList<SpleggPlayer>();
 	
-	public HashMap<HivePlayer, Integer> votes = new HashMap<HivePlayer, Integer>();
+	public HashMap<SpleggPlayer, Integer> votes = new HashMap<SpleggPlayer, Integer>();
 	
 	SpleggWorld(Plugin plugin, int id) {
 		this.plugin = plugin;
@@ -66,7 +66,7 @@ public class SpleggWorld {
 	
 	public void stop() {
 		
-		for (HivePlayer hp : players) {
+		for (SpleggPlayer hp : players) {
 			boolean sent = false;
 			for (SpleggWorld world : Main.worlds) {
 				if (!sent && world != this) {
@@ -106,7 +106,7 @@ public class SpleggWorld {
 	public void update() {
 		new BukkitRunnable() {
 			public void run() {
-				for (HivePlayer hp : players) {
+				for (SpleggPlayer hp : players) {
 					hp.mcPlayer.setFoodLevel(20);
 					hp.mcPlayer.setSaturation(20);
 				}
@@ -137,7 +137,7 @@ public class SpleggWorld {
 	public void initGame() {
 		inGame = true;
 		gameWorld = Functions.createNewWorld(Bukkit.getWorld("spleggmap1"), String.valueOf(id)); //Replace "spleggmap1" with the voted map later
-		for (HivePlayer hp : players) {
+		for (SpleggPlayer hp : players) {
 			hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(gameWorld));
 			hp.mcPlayer.getInventory().clear();
 			hp.mcPlayer.setFoodLevel(20);
@@ -145,7 +145,7 @@ public class SpleggWorld {
 		}
 		new BukkitRunnable() {
 			public void run() {
-				for (HivePlayer hp : players) {
+				for (SpleggPlayer hp : players) {
 					hp.mcPlayer.getInventory().setItem(0, Constants.spleggGun);
 					
 				}
@@ -153,7 +153,7 @@ public class SpleggWorld {
 		}.runTaskLater(plugin, 100L);
 	}
 	
-	public void welcomePlayer(HivePlayer hp) {
+	public void welcomePlayer(SpleggPlayer hp) {
 		players.add(hp);
 		hp.mcPlayer.teleport(new Vector(0, 10, 0).toLocation(world));
 		hp.serverId = id;
@@ -198,14 +198,14 @@ public class SpleggWorld {
 	}
 	
 	public void chat(String message) {
-		for (HivePlayer hp : players) {
+		for (SpleggPlayer hp : players) {
 			hp.mcPlayer.sendMessage(message);
 		}
 	}
 	
 	public void onInteract(PlayerInteractEvent e) {
 		if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) {
-			HivePlayer hp = Main.playerMap.get(e.getPlayer());
+			SpleggPlayer hp = Main.playerMap.get(e.getPlayer());
 			if (e.getItem() != null) {
 				if (!inGame) {
 					switch (e.getItem().getType()) {
@@ -239,7 +239,7 @@ public class SpleggWorld {
 	}
 	
 	public void onInventoryClick(InventoryClickEvent e) {
-		HivePlayer hp = Main.playerMap.get(e.getWhoClicked());
+		SpleggPlayer hp = Main.playerMap.get(e.getWhoClicked());
 		if (inGame) {
 			
 		} else {
@@ -259,8 +259,7 @@ public class SpleggWorld {
 	public void onProjectileHit(ProjectileHitEvent e) {
 		if (e.getEntityType() == EntityType.EGG) {
 			Location eggLoc = e.getEntity().getLocation();
-			Location forward = eggLoc.subtract(e.getEntity().getLocation().getDirection());
-			Bukkit.broadcastMessage(forward.toVector().toString());
+			Location forward = eggLoc.add(e.getEntity().getVelocity());
 			forward.getBlock().setType(Material.AIR);
 		}
 	}
@@ -272,7 +271,7 @@ public class SpleggWorld {
 		voteTotal[2] = 0;
 		voteTotal[3] = 0;
 		voteTotal[4] = 0;
-		for (Map.Entry<HivePlayer, Integer> set : votes.entrySet()) {
+		for (Map.Entry<SpleggPlayer, Integer> set : votes.entrySet()) {
 			voteTotal[set.getValue()]++;
 		}
 		return voteTotal;
@@ -309,7 +308,7 @@ public class SpleggWorld {
 	}
 	
 	public void onPlayerLeave(PlayerQuitEvent event) {
-		HivePlayer hp = Main.playerMap.get(event.getPlayer());
+		SpleggPlayer hp = Main.playerMap.get(event.getPlayer());
 		votes.remove(hp);
 		players.remove(hp);
 	}
