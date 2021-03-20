@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -100,16 +101,20 @@ public class SpleggWorld {
 			e.printStackTrace();
 		}
 		
+		folder = gameWorld.getWorldFolder();
+		Bukkit.unloadWorld(gameWorld, false);
+		try {
+			FileUtils.deleteDirectory(folder);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		Main.worlds.remove(this);
 	}
 	
 	public void update() {
 		new BukkitRunnable() {
 			public void run() {
-				for (SpleggPlayer hp : players) {
-					hp.mcPlayer.setFoodLevel(20);
-					hp.mcPlayer.setSaturation(20);
-				}
 				if (!inGame) {
 					if (players.size() > 5 && !gameStarting) {
 						gameStarting = true;
@@ -126,8 +131,28 @@ public class SpleggWorld {
 					}
 				} else {
 					gameTimer++;
-					if (gameTimer > 100) {
+					//Check for deaths
+					for (SpleggPlayer hp : players) {
+						hp.mcPlayer.setFoodLevel(20);
+						hp.mcPlayer.setSaturation(20);
 						
+						if (hp.mcPlayer.getLocation().getBlockY() < 60 && hp.alive) {
+							hp.alive = false;
+							hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(gameWorld));
+							hp.mcPlayer.setGameMode(GameMode.SPECTATOR);
+						}
+					}
+					
+					
+					//Check if game is over
+					int alivePlayers = 0;
+					for (SpleggPlayer hp : players) {
+						if (hp.alive) {
+							alivePlayers++;
+						}
+					}
+					if (alivePlayers < 2) {
+						stop();
 					}
 				}
 		    }
