@@ -16,6 +16,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerChatEvent;
@@ -157,6 +159,13 @@ public class Main extends JavaPlugin implements Listener {
 		ScoreHelper.removeScore(event.getPlayer());
 		
 		event.setQuitMessage(null);
+	}
+	
+	@EventHandler 
+	public void onMobSpawn(CreatureSpawnEvent event) {
+		if (event.getSpawnReason() == SpawnReason.EGG) {
+			event.setCancelled(true);
+		}
 	}
 	
 	@EventHandler

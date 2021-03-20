@@ -16,6 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Egg;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -221,7 +222,7 @@ public class SpleggWorld {
 					case IRON_SPADE:
 						Egg egg = hp.mcPlayer.launchProjectile(Egg.class);
 						Vector direction = hp.mcPlayer.getLocation().getDirection();
-						egg.setVelocity(direction.multiply(2));
+						egg.setVelocity(direction.multiply(1.5));
 						break;
 					default:
 						break;
@@ -248,6 +249,10 @@ public class SpleggWorld {
 			}
 		}
 		e.setCancelled(true);
+	}
+	
+	public void onProjectileHit(ProjectileHitEvent e) {
+		if (e.)
 	}
 	
 	public int[] tallyVotes() {
