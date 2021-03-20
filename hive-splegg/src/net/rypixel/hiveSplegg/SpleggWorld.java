@@ -10,11 +10,16 @@ import java.util.Random;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.DyeColor;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -172,12 +177,14 @@ public class SpleggWorld {
 	
 	public void onInteract(PlayerInteractEvent e) {
 		if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) {
+			HivePlayer hp = Main.playerMap.get(e.getPlayer());
 			if (e.getItem() != null) {
 				if (!inGame) {
 					switch (e.getItem().getType()) {
 					case WRITTEN_BOOK:
 						break;
 					case DIAMOND:
+						hp.mcPlayer.openInventory(voteInv());
 						break;
 					case YELLOW_FLOWER:
 						break;
@@ -196,6 +203,7 @@ public class SpleggWorld {
 				}
 			}
 		}
+		e.setCancelled(true);
 	}
 	
 	public void onInventoryClick(InventoryClickEvent e) {
@@ -208,6 +216,35 @@ public class SpleggWorld {
 			voteTotal[set.getValue()]++;
 		}
 		return voteTotal;
+	}
+	
+	public Inventory voteInv() {
+		Inventory inv = Bukkit.createInventory(null, 45, "Vote for an Option [1]");
+		
+		String[] mapList = Constants.mapList;
+		int[] voteArray = tallyVotes();
+		
+		for (int i = 0; i < 5; i++) {
+			ItemStack map = new ItemStack(Material.MAP, 1);
+			ItemMeta meta = map.getItemMeta();
+			meta.setDisplayName(mapList[maps[i]].replaceAll("_", " "));
+			inv.setItem(i * 9, map);
+			if (votes.size() > 0) {
+				ItemStack emptyGlass = new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.GRAY.getData());
+				ItemStack greenGlass = new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.GREEN.getData());
+				double percentage = (double) voteArray[i] / votes.size();
+				int slot = 0;
+				for (double n = 0; i < 100; i += 12.5) {
+					slot++;
+					if (percentage > n) {
+						inv.setItem(i * 9 + slot, greenGlass);
+					} else {
+						inv.setItem(i * 9 + slot, emptyGlass);
+					}
+				}
+			}
+		}
+		return inv;
 	}
 	
 	public String chatPrefix() {
