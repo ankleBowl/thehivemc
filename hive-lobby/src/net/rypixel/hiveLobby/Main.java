@@ -37,7 +37,7 @@ import me.vagdedes.mysql.database.SQL;
 
 public class Main extends JavaPlugin implements Listener {
 
-	public static HashMap<Player, HivePlayer> playerMap = new HashMap<Player, HivePlayer>();
+	public static HashMap<Player, LobbyPlayer> playerMap = new HashMap<Player, LobbyPlayer>();
 	
 	public static HashMap<String, Integer> serverToSend = new HashMap<String, Integer>();
 	
@@ -75,7 +75,7 @@ public class Main extends JavaPlugin implements Listener {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player) {
-			HivePlayer player = playerMap.get((Player) sender);
+			LobbyPlayer player = playerMap.get((Player) sender);
 			if (label.equalsIgnoreCase("transfer")) {
 				Functions.sendToServer(player.mcPlayer, args[0], this);
 			}
@@ -85,7 +85,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		HivePlayer hp = new HivePlayer(event.getPlayer());
+		LobbyPlayer hp = new LobbyPlayer(event.getPlayer());
 		hp.mcPlayer.getInventory().clear();
 		hp.mcPlayer.getInventory().setItem(8, Constants.lobbySelector);
 		hp.mcPlayer.getInventory().setItem(0, Constants.gameSelector);
@@ -129,7 +129,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent event) {
-		HivePlayer hp = playerMap.get(event.getPlayer());
+		LobbyPlayer hp = playerMap.get(event.getPlayer());
 		MySQL.update("UPDATE playerInfo SET lobby=\"Offline\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		playerMap.remove(event.getPlayer());
 		ScoreHelper.removeScore(event.getPlayer());
@@ -161,7 +161,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
-		HivePlayer hp = playerMap.get(event.getWhoClicked());
+		LobbyPlayer hp = playerMap.get(event.getWhoClicked());
 		if (event.getInventory().getTitle().equalsIgnoreCase("Hub Selector")) {
 			if (event.getCurrentItem() != null) {
 				String strId = event.getCurrentItem().getItemMeta().getDisplayName();
@@ -193,7 +193,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onChatSend(PlayerChatEvent event) {
-		HivePlayer hp = playerMap.get(event.getPlayer());
+		LobbyPlayer hp = playerMap.get(event.getPlayer());
 		event.setCancelled(true);
 		lobbies[hp.serverId].chat(ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " >> " + event.getMessage());
 	}
