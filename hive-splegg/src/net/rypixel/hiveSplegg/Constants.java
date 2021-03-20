@@ -14,6 +14,8 @@ public class Constants {
 	public static ItemStack locker;
 	public static ItemStack hub;
 	
+	public static ItemStack spleggGun;
+	
 	public static String[] mapList;
 	
 	public static void init() {
@@ -68,6 +70,19 @@ public class Constants {
 		lore.add(ChatColor.AQUA + "► Right-click when held");
 		meta.setLore(lore);
 		hub.setItemMeta(meta);
+		
+		spleggGun = new ItemStack(Material.IRON_SPADE, 1);
+		meta = spleggGun.getItemMeta();
+		meta.setDisplayName(ChatColor.GRAY + "Splegg Gun");
+		lore.clear();
+		lore.add("");
+		lore.add(ChatColor.GRAY + "Shoot eggs");
+		lore.add(ChatColor.GRAY + "from this");
+		lore.add(ChatColor.GRAY + "fancy gun!");
+		lore.add("");
+		lore.add(ChatColor.AQUA + "► Shoot to fire");
+		meta.setLore(lore);
+		spleggGun.setItemMeta(meta);
 		
 		mapList = new String[21];
 		mapList[0] = "Splatter";

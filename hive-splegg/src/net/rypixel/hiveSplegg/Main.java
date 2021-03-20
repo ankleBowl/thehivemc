@@ -127,7 +127,7 @@ public class Main extends JavaPlugin implements Listener {
 		
 		for (SpleggWorld world : worlds) {
 			if (!sent) {
-				if (world.players.size() < 20) {
+				if (world.players.size() < 20 && !world.inGame) {
 					world.welcomePlayer(hp);
 					sent = true;
 				}

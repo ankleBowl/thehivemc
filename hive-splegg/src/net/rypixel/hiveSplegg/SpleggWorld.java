@@ -14,6 +14,7 @@ import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Egg;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -39,6 +40,7 @@ public class SpleggWorld {
 	public boolean gameStarting;
 	public int countdown = 1200;
 	
+	public int gameTimer;
 	public boolean inGame;
 	
 	public boolean canVote;
@@ -116,7 +118,10 @@ public class SpleggWorld {
 						}
 					}
 				} else {
-					
+					gameTimer++;
+					if (gameTimer > 100) {
+						
+					}
 				}
 		    }
 		}.runTaskTimer(plugin, 0L, 1L);
@@ -127,12 +132,20 @@ public class SpleggWorld {
 		gameWorld = Functions.createNewWorld(Bukkit.getWorld("spleggmap1"), String.valueOf(id)); //Replace "spleggmap1" with the voted map later
 		for (HivePlayer hp : players) {
 			hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(gameWorld));
+			hp.mcPlayer.getInventory().clear();
 		}
+		new BukkitRunnable() {
+			public void run() {
+				for (HivePlayer hp : players) {
+					hp.mcPlayer.getInventory().setItem(0, Constants.spleggGun);
+				}
+		    }
+		}.runTaskLater(plugin, 100L);
 	}
 	
 	public void welcomePlayer(HivePlayer hp) {
 		players.add(hp);
-		hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(world));
+		hp.mcPlayer.teleport(new Vector(0, 10, 0).toLocation(world));
 		hp.serverId = id;
 		
 		Inventory inv = hp.mcPlayer.getInventory();
@@ -194,6 +207,7 @@ public class SpleggWorld {
 					case YELLOW_FLOWER:
 						break;
 					case SLIME_BALL:
+						Functions.sendToServer(hp.mcPlayer, "lobby0", plugin);
 						break;
 					default:
 						break;
@@ -201,6 +215,9 @@ public class SpleggWorld {
 				} else {
 					switch (e.getItem().getType()) {
 					case IRON_SPADE:
+						Egg egg = hp.mcPlayer.launchProjectile(Egg.class);
+						Vector direction = hp.mcPlayer.getLocation().getDirection();
+						egg.setVelocity(direction.multiply(2));
 						break;
 					default:
 						break;
