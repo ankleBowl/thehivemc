@@ -81,4 +81,37 @@ public class Functions {
 		}
 		player.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
 	}
+	
+	public static void sendCustomData(Player player, String serverName, Plugin plugin) {
+		ByteArrayOutputStream b = new ByteArrayOutputStream();
+		DataOutputStream out = new DataOutputStream(b);
+		
+		try {
+			out.writeUTF("Forward"); // So BungeeCord knows to forward it
+			out.writeUTF("ALL");
+			out.writeUTF("MyChannel"); // The channel name to check if this your data
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		ByteArrayOutputStream msgbytes = new ByteArrayOutputStream();
+		DataOutputStream msgout = new DataOutputStream(msgbytes);
+		try {
+			msgout.writeUTF("Some kind of data here"); // You can do anything you want with msgout
+			msgout.writeShort(123);
+		} catch (IOException exception){
+			exception.printStackTrace();
+		}
+
+		try {
+			out.writeShort(msgbytes.toByteArray().length);
+			out.write(msgbytes.toByteArray());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		player.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
+	}
 }

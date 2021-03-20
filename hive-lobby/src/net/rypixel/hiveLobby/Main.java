@@ -39,6 +39,8 @@ public class Main extends JavaPlugin implements Listener {
 
 	public static HashMap<Player, HivePlayer> playerMap = new HashMap<Player, HivePlayer>();
 	
+	public static HashMap<String, Integer> serverToSend = new HashMap<String, Integer>();
+	
 	public static BukkitTask requestRunnable;
 	
 	public LobbyWorld[] lobbies = new LobbyWorld[10];
@@ -54,7 +56,6 @@ public class Main extends JavaPlugin implements Listener {
 		initWorlds();
 		initSQL();
 		loadConfig();
-		requests();
 		bl = new BungeeListener(this);
 		bl.init();
 	}
@@ -75,85 +76,7 @@ public class Main extends JavaPlugin implements Listener {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player) {
 			HivePlayer player = playerMap.get((Player) sender);
-			if (label.equalsIgnoreCase("friend") || label.equalsIgnoreCase("f")) {
-				if (args[0].equalsIgnoreCase("list")) {
-					if (player.friends.toCharArray().length > 16) {
-						String[] fList = player.friends.split(",");
-						for (String uuid : fList) {
-							Player f = Bukkit.getPlayer(UUID.fromString(uuid));
-							String status = SQL.get("lobby", "UUID", "=", uuid, "playerInfo").toString();
-							String name = SQL.get("playerName", "UUID", "=", uuid, "playerInfo").toString();
-							player.mcPlayer.sendMessage(ChatColor.GRAY + "✦► " + ChatColor.BLUE + name + ChatColor.DARK_GRAY + " [" + status + "]");
-						}
-					} else {
-						player.mcPlayer.sendMessage("You don't have any friends");
-					}
-				} else if (args[0].equalsIgnoreCase("add")) {	
-					try {
-						String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
-						player.requestFriend(uuid);
-					} catch (NullPointerException e) {
-						player.mcPlayer.sendMessage("Please enter a valid name!");
-					}
-				} else if (args[0].equalsIgnoreCase("accept")) {	
-					try {
-						String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
-						player.acceptFriend(uuid);
-					} catch (NullPointerException e) {
-						player.mcPlayer.sendMessage("Please enter a valid name!");
-					}
-				} else if (args[0].equalsIgnoreCase("remove")) {		
-					try {
-						String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
-						player.removeFriend(uuid);
-					} catch (NullPointerException e) {
-						player.mcPlayer.sendMessage("Please enter a valid name!");
-					}
-				} else {
-					player.mcPlayer.sendMessage("Command not recognized");
-				}
-			} else if (label.equalsIgnoreCase("party") || label.equalsIgnoreCase("p")) {
-				if (args[0].equalsIgnoreCase("invite")) {
-					String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
-					if (!player.inParty) {
-						player.createParty();
-						player.inviteToParty(uuid);
-					} else if (player.inParty) {
-						if (player.isPartyOwner) {
-							player.inviteToParty(uuid);
-						} else {
-							player.mcPlayer.sendMessage(ChatColor.RED + "You are not the party owner!");
-						}
-					}
-				} else if (args[0].equalsIgnoreCase("join")) {
-					String uuid = SQL.get("UUID", "playerName", "=", args[1], "playerInfo").toString();
-					player.joinParty(uuid);
-				} else if (args[0].equalsIgnoreCase("leave")) {
-					player.leaveParty();
-				} else if (args[0].equalsIgnoreCase("disband")) {
-					player.disbandParty();
-				} else if (args[0].equalsIgnoreCase("warp")) {
-					player.refreshParty();
-					if (player.isPartyOwner && player.inParty) {
-						for (String s : player.partyMembers.split(",")) {
-							if (Functions.checkForUUID(s)) {
-								HivePlayer p = playerMap.get(Bukkit.getPlayer(UUID.fromString(s)));
-								int serverId = player.serverId;
-								p.mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[serverId].world));
-								lobbies[p.serverId].playerList.remove(p);
-								lobbies[serverId].playerList.add(p);
-								p.serverId = serverId;
-								
-								p.mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.GRAY + "〡" + ChatColor.AQUA + " Your party is now joining: HUB" + String.valueOf(serverId));
-							} else {
-								MySQL.update("UPDATE playerInfo SET requests=\"" + "warp:" + config.getString("bungeeName") + ":" + String.valueOf(player.serverId) + "\" WHERE UUID=\"" + s + "\"");
-							}
-						}
-					}
-				} else {
-					player.mcPlayer.sendMessage("Command not recognized");
-				}
-			} else if (label.equalsIgnoreCase("transfer")) {
+			if (label.equalsIgnoreCase("transfer")) {
 				Functions.sendToServer(player.mcPlayer, args[0], this);
 			}
 		}
@@ -174,12 +97,6 @@ public class Main extends JavaPlugin implements Listener {
 			hp.tokens = Integer.parseInt(SQL.get("tokens", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString());
 			hp.luckyCrates = Integer.parseInt(SQL.get("luckyCrates", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString());
 			hp.ownedCosmetics = SQL.get("cosmetics", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString();
-			
-			hp.partyOwner = SQL.get("partyOwner", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString();
-			if (hp.partyOwner.toCharArray().length > 16) {
-				hp.inParty = true;
-				hp.refreshParty();
-			}
 			
 			MySQL.update("UPDATE playerInfo SET lobby=\"Lobby\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 			MySQL.update("UPDATE playerInfo SET playerName=\"" + hp.mcPlayer.getDisplayName() + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
@@ -218,14 +135,6 @@ public class Main extends JavaPlugin implements Listener {
 		ScoreHelper.removeScore(event.getPlayer());
 		
 		event.setQuitMessage(null);
-		
-		if (!hp.switchingServers) {
-			if (hp.isPartyOwner) {
-				hp.disbandParty();
-			} else if (hp.inParty) {
-				hp.leaveParty();
-			}
-		}
 	}
 	
 	@EventHandler
@@ -287,70 +196,6 @@ public class Main extends JavaPlugin implements Listener {
 		HivePlayer hp = playerMap.get(event.getPlayer());
 		event.setCancelled(true);
 		lobbies[hp.serverId].chat(ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " >> " + event.getMessage());
-	}
-	
-	public void requests() {
-		requestRunnable = new BukkitRunnable() {
-		    public void run() {
-		    	try {
-			    	String toUUID = SQL.get("UUID", "requests", "!=", "", "playerInfo").toString(); //gets people who have requests
-			    	if (toUUID != null && Functions.checkForUUID(toUUID)) { //checks to see if they are on the server
-				    	String request = SQL.get("requests", "UUID", "=", toUUID, "playerInfo").toString();
-				    	HivePlayer hp = playerMap.get(Bukkit.getPlayer(UUID.fromString(toUUID)));
-				    	String[] requestArr = request.split(":");
-				    	if (requestArr[0].equals("friend")) {
-					    	hp.requests = request;
-					    	hp.mcPlayer.sendMessage("You got a friend request from " + requestArr[2] + "!");
-					    	MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
-				    	} else if (requestArr[0].equals("friendback")) {
-				    		String name = SQL.get("playerName", "UUID", "=", requestArr[1], "playerInfo").toString();
-				    		hp.mcPlayer.sendMessage(name + " accepted your friend request!");
-				    		hp.forceAddFriend(requestArr[1]);
-				    		MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
-				    	} else if (requestArr[0].equals("removefriend")) {
-				    		hp.removeFriend(requestArr[1]);
-				    	} else if (requestArr[0].equals("partyinvite")) {
-				    		hp.requests = request;
-				    		hp.mcPlayer.sendMessage(ChatColor.DARK_GRAY + "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-				    		hp.mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.DARK_GRAY + "〡" + ChatColor.BLUE + requestArr[2] + ChatColor.AQUA + " wants you to join their party!");
-				    		hp.mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.DARK_GRAY + "〡" + ChatColor.GREEN + "" + ChatColor.BOLD + "Click here to accept.");
-				    		hp.mcPlayer.sendMessage(ChatColor.DARK_GRAY + "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-					    	//hp.mcPlayer.sendMessage("You got a party invite from " + requestArr[2] + "!");
-					    	MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
-					    	new BukkitRunnable(){
-					    	    public void run(){
-					    	        if (hp.requests.split(",")[0].equals("partyinvite")) {
-					    	        	hp.requests = "";
-					    	        }
-					    	    }
-					    	}.runTaskLater(plugin, 600L);
-				    	} else if (requestArr[0].equals("partyjoined")) {
-				    		//hp.mcPlayer.sendMessage(requestArr[2] + "accepted your party request!");
-				    		hp.mcPlayer.sendMessage(ChatColor.DARK_GRAY + "〡" + ChatColor.AQUA + "Party" + ChatColor.DARK_GRAY + "〡" + ChatColor.GREEN + "✚ " + ChatColor.WHITE + requestArr[2] + ChatColor.GREEN + " joined your party");
-				    		MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
-				    	} else if (requestArr[0].equals("leaveparty")) {
-				    		hp.mcPlayer.sendMessage("The party has been disbanded!");
-				    		MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
-				    		hp.leaveParty(); //I know this sometimes fails because the SQL entry is deleted before this is triggered
-				    	} else if (requestArr[0].equals("warp")) {
-				    		hp.switchingServers = true;
-				    		Functions.sendToServer(hp.mcPlayer, requestArr[1], plugin);
-				    		MySQL.update("UPDATE playerInfo SET requests=\"toserver:" + requestArr[2] + "\" WHERE UUID=\"" + toUUID + "\"");
-				    	} else if (requestArr[0].equals("toserver")) {
-							String strId = requestArr[1];
-							int serverId = Integer.parseInt(strId);
-							hp.mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[serverId].world));
-							lobbies[hp.serverId].playerList.remove(hp);
-							lobbies[serverId].playerList.add(hp);
-							playerMap.get(hp).serverId = serverId;
-							MySQL.update("UPDATE playerInfo SET requests=\"\" WHERE UUID=\"" + toUUID + "\"");
-				    	}
-			    	}
-		    	} catch(NullPointerException e) {
-		    		//Yes i know this is a bad way of doing this
-		    	}
-		    }
-		}.runTaskTimer(this, 0L, 10L);
 	}
 	
 	public void initSQL() {

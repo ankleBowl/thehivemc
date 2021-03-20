@@ -31,7 +31,8 @@ public class BungeeListener implements PluginMessageListener {
 	
 	public void init() {
 		Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
+		Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "ServerStatus");
 	    Bukkit.getServer().getMessenger().registerIncomingPluginChannel(plugin, "BungeeCord", (PluginMessageListener) this);
+	    Bukkit.getServer().getMessenger().registerIncomingPluginChannel(plugin, "ServerStatus", (PluginMessageListener) this);
 	}
-
 }
