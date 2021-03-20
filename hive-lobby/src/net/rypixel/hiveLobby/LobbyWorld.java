@@ -109,6 +109,4 @@ public class LobbyWorld {
 			hp.mcPlayer.sendMessage(message);
 		}
 	}
-	
-	
 }

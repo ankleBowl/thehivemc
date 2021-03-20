@@ -89,7 +89,7 @@ public class Functions {
 		try {
 			out.writeUTF("Forward"); // So BungeeCord knows to forward it
 			out.writeUTF("ALL");
-			out.writeUTF("MyChannel"); // The channel name to check if this your data
+			out.writeUTF("ServerStatus"); // The channel name to check if this your data
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
