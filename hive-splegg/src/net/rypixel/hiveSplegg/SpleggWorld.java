@@ -75,9 +75,7 @@ public class SpleggWorld {
 			for (SpleggWorld world : Main.worlds) {
 				if (!sent && world != this) {
 					if (world.players.size() < 10) {
-						world.players.add(hp);
-						hp.mcPlayer.teleport(new Vector(0, 10, 0).toLocation(world.world));
-						hp.serverId = world.id;
+						world.welcomePlayer(hp);
 						sent = true;
 					}
 				}
@@ -89,9 +87,7 @@ public class SpleggWorld {
 				w.init();
 				Main.worlds.add(w);
 				
-				w.players.add(hp);
-				hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(w.world));
-				hp.serverId = w.id;
+				w.welcomePlayer(hp);
 				sent = true;
 			}
 		}
