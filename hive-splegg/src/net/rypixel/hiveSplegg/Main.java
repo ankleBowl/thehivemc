@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -54,6 +55,7 @@ public class Main extends JavaPlugin implements Listener {
 		Bukkit.getPluginManager().registerEvents(this, this);
 		Constants.init();
 		//initWorlds();
+		loadWorlds();
 		initSQL();
 		loadConfig();
 		bl = new BungeeListener(this);
@@ -72,6 +74,10 @@ public class Main extends JavaPlugin implements Listener {
 		saveConfig();
 	}
 	
+	public void loadWorlds() {
+		Bukkit.createWorld(new WorldCreator("spleggmap1"));
+	}
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player) {
@@ -79,6 +85,10 @@ public class Main extends JavaPlugin implements Listener {
 			if (label.equalsIgnoreCase("close")) {
 				SpleggWorld w = Functions.getWorldByID(worlds, hp.serverId);
 				w.stop();
+			}
+			if (label.equalsIgnoreCase("start")) {
+				SpleggWorld w = Functions.getWorldByID(worlds, hp.serverId);
+				w.initGame();
 			}
 		}
         return false;
@@ -138,6 +148,10 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent event) {
 		HivePlayer hp = playerMap.get(event.getPlayer());
+		
+		SpleggWorld world = Functions.getWorldByID(worlds, hp.serverId);
+		world.onPlayerLeave(event);
+		
 		MySQL.update("UPDATE playerInfo SET lobby=\"Offline\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		playerMap.remove(event.getPlayer());
 		ScoreHelper.removeScore(event.getPlayer());

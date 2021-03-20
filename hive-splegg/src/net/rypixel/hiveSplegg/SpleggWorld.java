@@ -17,6 +17,7 @@ import org.bukkit.World;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -108,8 +109,7 @@ public class SpleggWorld {
 					if (gameStarting) {
 						countdown--;
 						if (countdown == 0) {
-							inGame = true;
-							//Game Prep
+							initGame();
 						}
 						if (canVote && countdown < 300) {
 							canVote = false;
@@ -123,7 +123,11 @@ public class SpleggWorld {
 	}
 	
 	public void initGame() {
-		
+		inGame = true;
+		gameWorld = Functions.createNewWorld(Bukkit.getWorld("spleggmap1"), String.valueOf(id)); //Replace "spleggmap1" with the voted map later
+		for (HivePlayer hp : players) {
+			hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(gameWorld));
+		}
 	}
 	
 	public void welcomePlayer(HivePlayer hp) {
@@ -141,11 +145,11 @@ public class SpleggWorld {
 		int[] voteArray = tallyVotes();
 		
 		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.YELLOW + " Vote for a map! " + ChatColor.GRAY + "Use " + ChatColor.WHITE + "/v #" + ChatColor.WHITE + " or click.");
-		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + "1. " + ChatColor.GOLD + mapList[maps[0]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[0]) + ChatColor.GRAY + " Votes]");
-		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + "1. " + ChatColor.GOLD + mapList[maps[1]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[1]) + ChatColor.GRAY + " Votes]");
-		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + "1. " + ChatColor.GOLD + mapList[maps[2]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[2]) + ChatColor.GRAY + " Votes]");
-		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + "1. " + ChatColor.GOLD + mapList[maps[3]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[3]) + ChatColor.GRAY + " Votes]");
-		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + "1. " + ChatColor.GOLD + mapList[maps[4]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[4]) + ChatColor.GRAY + " Votes]");
+		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 1. " + ChatColor.GOLD + mapList[maps[0]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[0]) + ChatColor.GRAY + " Votes]");
+		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 2. " + ChatColor.GOLD + mapList[maps[1]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[1]) + ChatColor.GRAY + " Votes]");
+		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 3. " + ChatColor.GOLD + mapList[maps[2]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[2]) + ChatColor.GRAY + " Votes]");
+		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 4. " + ChatColor.GOLD + mapList[maps[3]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[3]) + ChatColor.GRAY + " Votes]");
+		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 5. " + ChatColor.GOLD + mapList[maps[4]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[4]) + ChatColor.GRAY + " Votes]");
 	}
 	
 	public void selectMaps() {
@@ -163,6 +167,7 @@ public class SpleggWorld {
 			}
 			
 			if (!used) {
+				maps[i] = randomInt;
 				i++;
 				usedNumbers.add(randomInt);
 			}
@@ -207,11 +212,30 @@ public class SpleggWorld {
 	}
 	
 	public void onInventoryClick(InventoryClickEvent e) {
-		
+		HivePlayer hp = Main.playerMap.get(e.getWhoClicked());
+		if (inGame) {
+			
+		} else {
+			switch (e.getCurrentItem().getType()) {
+			case MAP:
+				int mapNumber = e.getSlot() / 9;
+				votes.put(hp, mapNumber);
+				hp.mcPlayer.openInventory(voteInv());
+				break;
+			default:
+				break;
+			}
+		}
+		e.setCancelled(true);
 	}
 	
 	public int[] tallyVotes() {
 		int[] voteTotal = new int[5];
+		voteTotal[0] = 0;
+		voteTotal[1] = 0;
+		voteTotal[2] = 0;
+		voteTotal[3] = 0;
+		voteTotal[4] = 0;
 		for (Map.Entry<HivePlayer, Integer> set : votes.entrySet()) {
 			voteTotal[set.getValue()]++;
 		}
@@ -228,13 +252,14 @@ public class SpleggWorld {
 			ItemStack map = new ItemStack(Material.MAP, 1);
 			ItemMeta meta = map.getItemMeta();
 			meta.setDisplayName(mapList[maps[i]].replaceAll("_", " "));
+			map.setItemMeta(meta);
 			inv.setItem(i * 9, map);
 			if (votes.size() > 0) {
 				ItemStack emptyGlass = new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.GRAY.getData());
 				ItemStack greenGlass = new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.GREEN.getData());
 				double percentage = (double) voteArray[i] / votes.size();
 				int slot = 0;
-				for (double n = 0; i < 100; i += 12.5) {
+				for (double n = 0; n < 1; n += 0.125) {
 					slot++;
 					if (percentage > n) {
 						inv.setItem(i * 9 + slot, greenGlass);
@@ -245,6 +270,12 @@ public class SpleggWorld {
 			}
 		}
 		return inv;
+	}
+	
+	public void onPlayerLeave(PlayerQuitEvent event) {
+		HivePlayer hp = Main.playerMap.get(event.getPlayer());
+		votes.remove(hp);
+		players.remove(hp);
 	}
 	
 	public String chatPrefix() {
