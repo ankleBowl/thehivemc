@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
@@ -32,6 +33,10 @@ public class SpleggWorld {
 	
 	public boolean inGame;
 	
+	public boolean canVote;
+	
+	public Integer[] maps = new Integer[5];
+	
 	public ArrayList<HivePlayer> players = new ArrayList<HivePlayer>();
 	
 	public HashMap<HivePlayer, Integer> votes = new HashMap<HivePlayer, Integer>();
@@ -43,6 +48,7 @@ public class SpleggWorld {
 	
 	public void init() {
 		world = Functions.createNewWorld(Bukkit.getWorld("world"), String.valueOf(id));
+		selectMaps();
 	}
 	
 	public void stop() {
@@ -98,6 +104,9 @@ public class SpleggWorld {
 							inGame = true;
 							//Game Prep
 						}
+						if (canVote && countdown < 300) {
+							canVote = false;
+						}
 					}
 				} else {
 					
@@ -120,6 +129,27 @@ public class SpleggWorld {
 		inv.setItem(1, Constants.vote);
 		inv.setItem(4, Constants.locker);
 		inv.setItem(8, Constants.hub);
+	}
+	
+	public void selectMaps() {
+		ArrayList<Integer> usedNumbers = new ArrayList<Integer>();
+		Random random = new Random();
+		int i = 0;
+		while (i < 5) {
+			int randomInt = random.nextInt(21);
+			
+			boolean used = false;
+			for (Integer n : usedNumbers) {
+				if (n == randomInt) {
+					used = true;
+				}
+			}
+			
+			if (!used) {
+				i++;
+				usedNumbers.add(randomInt);
+			}
+		}
 	}
 	
 	public void chat(String message) {
