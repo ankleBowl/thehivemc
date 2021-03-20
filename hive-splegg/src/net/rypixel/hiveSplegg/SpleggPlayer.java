@@ -5,7 +5,7 @@ import org.bukkit.plugin.Plugin;
 
 public class SpleggPlayer extends HivePlayer {
 
-	public boolean alive;
+	public boolean alive = true;
 	
 	SpleggPlayer(Player mcPlayer, Plugin plugin) {
 		super(mcPlayer, plugin);

@@ -168,6 +168,7 @@ public class SpleggWorld {
 			hp.mcPlayer.getInventory().clear();
 			hp.mcPlayer.setFoodLevel(20);
 			hp.mcPlayer.setSaturation(20);
+			hp.alive = true;
 		}
 		new BukkitRunnable() {
 			public void run() {
