@@ -12,9 +12,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Egg;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -138,11 +140,14 @@ public class SpleggWorld {
 		for (HivePlayer hp : players) {
 			hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(gameWorld));
 			hp.mcPlayer.getInventory().clear();
+			hp.mcPlayer.setFoodLevel(20);
+			hp.mcPlayer.setSaturation(20);
 		}
 		new BukkitRunnable() {
 			public void run() {
 				for (HivePlayer hp : players) {
 					hp.mcPlayer.getInventory().setItem(0, Constants.spleggGun);
+					
 				}
 		    }
 		}.runTaskLater(plugin, 100L);
@@ -252,7 +257,12 @@ public class SpleggWorld {
 	}
 	
 	public void onProjectileHit(ProjectileHitEvent e) {
-		if (e.)
+		if (e.getEntityType() == EntityType.EGG) {
+			Location eggLoc = e.getEntity().getLocation();
+			Location forward = eggLoc.subtract(e.getEntity().getLocation().getDirection());
+			Bukkit.broadcastMessage(forward.toVector().toString());
+			forward.getBlock().setType(Material.AIR);
+		}
 	}
 	
 	public int[] tallyVotes() {

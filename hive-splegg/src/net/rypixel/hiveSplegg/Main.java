@@ -19,6 +19,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -178,6 +179,17 @@ public class Main extends JavaPlugin implements Listener {
 		HivePlayer hp = playerMap.get(event.getPlayer());
 		SpleggWorld world = Functions.getWorldByID(worlds, hp.serverId);
 		world.onInteract(event);
+	}
+	
+	@EventHandler
+	public void onProjectileHit(ProjectileHitEvent event) {
+		SpleggWorld w = null;
+		for (SpleggWorld world : worlds) {
+			if (world.gameWorld == event.getEntity().getLocation().getWorld()) {
+				w = world;
+			}
+		}
+		w.onProjectileHit(event);
 	}
 	
 	@EventHandler
