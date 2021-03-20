@@ -116,10 +116,8 @@ public class Main extends JavaPlugin implements Listener {
 		
 		for (SpleggWorld world : worlds) {
 			if (!sent) {
-				if (world.players.size() < 10) {
-					world.players.add(hp);
-					hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(world.world));
-					hp.serverId = world.id;
+				if (world.players.size() < 20) {
+					world.welcomePlayer(hp);
 					sent = true;
 				}
 			}
@@ -131,9 +129,7 @@ public class Main extends JavaPlugin implements Listener {
 			w.init();
 			worlds.add(w);
 			
-			w.players.add(hp);
-			hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(w.world));
-			hp.serverId = w.id;
+			w.welcomePlayer(hp);
 			sent = true;
 		}
 	}
@@ -155,15 +151,16 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onInteract(PlayerInteractEvent event) {
-		if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-
-		}
+		HivePlayer hp = playerMap.get(event.getPlayer());
+		SpleggWorld world = Functions.getWorldByID(worlds, hp.serverId);
+		world.onInteract(event);
 	}
 	
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
 		HivePlayer hp = playerMap.get(event.getWhoClicked());
-		event.setCancelled(true);
+		SpleggWorld world = Functions.getWorldByID(worlds, hp.serverId);
+		world.onInventoryClick(event);
 	}
 	
 	@EventHandler
