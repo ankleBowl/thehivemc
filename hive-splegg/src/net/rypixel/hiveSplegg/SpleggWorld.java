@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -112,6 +113,9 @@ public class SpleggWorld {
 		players.add(hp);
 		hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(world));
 		hp.serverId = id;
+		
+		Inventory inv = hp.mcPlayer.getInventory();
+		
 	}
 	
 	public void chat(String message) {
