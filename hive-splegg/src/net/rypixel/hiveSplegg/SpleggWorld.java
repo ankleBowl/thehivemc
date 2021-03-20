@@ -28,6 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import net.minecraft.server.v1_8_R1.WorldGenLargeFeatureStart;
@@ -46,6 +47,7 @@ public class SpleggWorld {
 	
 	public int gameTimer;
 	public boolean inGame;
+	public BukkitTask loop;
 	
 	public boolean canVote;
 	
@@ -94,6 +96,8 @@ public class SpleggWorld {
 			}
 		}
 		
+		loop.cancel();
+		
 		File folder = world.getWorldFolder();
 		Bukkit.unloadWorld(world, false);
 		try {
@@ -114,7 +118,7 @@ public class SpleggWorld {
 	}
 	
 	public void update() {
-		new BukkitRunnable() {
+		loop = new BukkitRunnable() {
 			public void run() {
 				if (!inGame) {
 					if (players.size() > 5 && !gameStarting) {
