@@ -22,7 +22,7 @@ public class LobbyWorld {
 	public World world;
 	public Plugin plugin;
 
-	public ArrayList<HivePlayer> playerList = new ArrayList<HivePlayer>();
+	public ArrayList<LobbyPlayer> playerList = new ArrayList<LobbyPlayer>();
 	
 	LobbyWorld(World world, Plugin plugin) {
 		this.world = world;
@@ -46,7 +46,7 @@ public class LobbyWorld {
 		new BukkitRunnable() {
 		    public void run() {
 		        //Iterate through all players
-		    	for (HivePlayer player : playerList) {
+		    	for (LobbyPlayer player : playerList) {
 		    		//Give player hunger
 		    		player.mcPlayer.setFoodLevel(20);
 		    		
@@ -76,6 +76,19 @@ public class LobbyWorld {
 		    			}
 		    		}
 		    		
+		    		if (player.mcPlayer.getLocation().distance(Constants.parkourLocations[0].toLocation(world)) < 1) {
+	    				player.startParkour();
+	    			}
+		    		
+		    		if (player.inParkour) {
+		    			if (player.mcPlayer.getLocation().distance(Constants.parkourLocations[player.parkourCheckpoint + 1].toLocation(world)) < 1) {
+		    				player.parkourCheckpoint++;
+		    				if (player.parkourCheckpoint == 3) {
+		    					player.completeParkour();
+		    				}
+		    			}
+		    		}
+		    		
 		    		player.scoreboard.setTitle(ChatColor.BOLD + "" + ChatColor.GOLD + "The" + ChatColor.YELLOW + "Hive");
 		    		player.scoreboard.setSlot(15, "");
 		    		player.scoreboard.setSlot(14, ChatColor.BOLD + "" + ChatColor.RED + "Rank");
@@ -100,12 +113,12 @@ public class LobbyWorld {
 		}.runTaskTimer(plugin, 0L, 2L);
 	}
 	
-	public void welcomePlayer(HivePlayer hp) {
+	public void welcomePlayer(LobbyPlayer hp) {
 		TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.GREEN + "play" + ChatColor.AQUA + " HiveMC " + ChatColor.GREEN + "com");
 	}
 	
 	public void chat(String message) {
-		for (HivePlayer hp : playerList) {
+		for (LobbyPlayer hp : playerList) {
 			hp.mcPlayer.sendMessage(message);
 		}
 	}

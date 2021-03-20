@@ -85,7 +85,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		LobbyPlayer hp = new LobbyPlayer(event.getPlayer());
+		LobbyPlayer hp = new LobbyPlayer(event.getPlayer(), this);
 		hp.mcPlayer.getInventory().clear();
 		hp.mcPlayer.getInventory().setItem(8, Constants.lobbySelector);
 		hp.mcPlayer.getInventory().setItem(0, Constants.gameSelector);
@@ -130,6 +130,11 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent event) {
 		LobbyPlayer hp = playerMap.get(event.getPlayer());
+		
+		if (hp.inParkour) {
+			hp.cancelParkour();
+		}
+		
 		MySQL.update("UPDATE playerInfo SET lobby=\"Offline\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		playerMap.remove(event.getPlayer());
 		ScoreHelper.removeScore(event.getPlayer());

@@ -19,6 +19,8 @@ public class Constants {
 	public static Vector[] launchpads2 = new Vector[8];
 	public static Vector[] launchpads3 = new Vector[10];
 	
+	public static Vector[] parkourLocations = new Vector[4];
+	
 	public static Team noRank;
 	
 	public static ItemStack lobbySelector;
@@ -53,6 +55,11 @@ public class Constants {
 		launchpads3[7] = new Vector(68.5, 18, -40.5);
 		launchpads3[8] = new Vector(68.5, 18, 0.5);
 		launchpads3[9] = new Vector(68.5, 18, 41.5);
+		
+		parkourLocations[0] = new Vector(-57.5, 20, 63.5);
+		parkourLocations[1] = new Vector(-37.5, 62, 40.5);
+		parkourLocations[2] = new Vector(-21.5, 76, -28.5);
+		parkourLocations[3] = new Vector(33.5, 81, 15.5);
 		
 		lobbySelector = new ItemStack(Material.BOOK, 1);
 		ItemMeta lobbySelectorMeta = lobbySelector.getItemMeta();
