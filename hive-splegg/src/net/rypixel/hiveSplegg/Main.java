@@ -100,10 +100,7 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		SpleggPlayer hp = new SpleggPlayer(event.getPlayer(), this);
-//		hp.mcPlayer.getInventory().clear();
-//		hp.mcPlayer.getInventory().setItem(8, Constants.lobbySelector);
-//		hp.mcPlayer.getInventory().setItem(0, Constants.gameSelector);
-//		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
+
 		playerMap.put(event.getPlayer(), hp);
 		if (SQL.exists("UUID", event.getPlayer().getUniqueId().toString(), "playerInfo")) {
 			//hp.friends = SQL.get("friends", "UUID", "=", event.getPlayer().getUniqueId().toString(), "playerInfo").toString();
@@ -117,6 +114,21 @@ public class Main extends JavaPlugin implements Listener {
 		} else {
 			hp.mcPlayer.kickPlayer("Log in to The Rive Server directly!");
 		}
+		
+		if (SQL.exists("UUID", event.getPlayer().getUniqueId().toString(), "splegg")) {
+			hp.points = Integer.parseInt(SQL.get("points", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			hp.played = Integer.parseInt(SQL.get("played", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			hp.wins = Integer.parseInt(SQL.get("wins", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			hp.deaths = Integer.parseInt(SQL.get("deaths", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			hp.eggsFired = Integer.parseInt(SQL.get("eggsFired", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			hp.eggsLanded = Integer.parseInt(SQL.get("blocksbroken", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			
+			MySQL.update("UPDATE playerInfo SET lobby=\"Splegg\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+			MySQL.update("UPDATE playerInfo SET playerName=\"" + hp.mcPlayer.getDisplayName() + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		} else {
+			MySQL.update("Insert into splegg values (\"" + event.getPlayer().getUniqueId().toString() + "\", 0, 0, 0, 0, 0, 0, 0);");
+		}
+		
 		hp.scoreboard = ScoreHelper.createScore(hp.mcPlayer);
 		Scoreboard s = hp.mcPlayer.getScoreboard();
 		if (hp.playerRank.equalsIgnoreCase("Regular Member")) {
@@ -220,8 +232,6 @@ public class Main extends JavaPlugin implements Listener {
 		Config.setPort("3306");
 		Config.setSSL(true);
 		MySQL.connect();
-		MySQL.update("CREATE TABLE IF NOT EXISTS playerInfo(UUID varchar(64) PRIMARY KEY, friends varchar(740), playerRank varchar(16), tokens int, luckyCrates int, cosmetics varchar(9999), lobby varchar(32), playerName varchar(20), requests varchar(9999), partyOwner varchar(64));");
-		MySQL.update("DROP TABLE parties");
-		MySQL.update("CREATE TABLE IF NOT EXISTS parties(owner varchar(64) PRIMARY KEY, members varchar(999))");
+		MySQL.update("CREATE TABLE IF NOT EXISTS splegg(UUID varchar(64) PRIMARY KEY, tokens int, points int, played int, wins int, deaths int, eggsFired int, blocksbroken int);");
 	}
 }

@@ -27,9 +27,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+
+import com.connorlinfoot.titleapi.TitleAPI;
 
 import net.minecraft.server.v1_8_R1.WorldGenLargeFeatureStart;
 import net.rypixel.hiveSplegg.Functions;
@@ -56,6 +60,7 @@ public class SpleggWorld {
 	public ArrayList<SpleggPlayer> players = new ArrayList<SpleggPlayer>();
 	
 	public HashMap<SpleggPlayer, Integer> votes = new HashMap<SpleggPlayer, Integer>();
+	public HashMap<Egg, SpleggPlayer> eggMap = new HashMap<Egg, SpleggPlayer>();
 	
 	SpleggWorld(Plugin plugin, int id) {
 		this.plugin = plugin;
@@ -138,9 +143,12 @@ public class SpleggWorld {
 						hp.mcPlayer.setSaturation(20);
 						
 						if (hp.mcPlayer.getLocation().getBlockY() < 60 && hp.alive) {
+							chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.GRAY + " has fallen to their " + ChatColor.RED + "DEATH!");
 							hp.alive = false;
 							hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(gameWorld));
 							hp.mcPlayer.setGameMode(GameMode.SPECTATOR);
+							TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "YOU DIED!");
+							hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1, false, true));
 						}
 					}
 					
@@ -153,7 +161,14 @@ public class SpleggWorld {
 						}
 					}
 					if (alivePlayers < 2) {
-						stop();
+						for (SpleggPlayer hp : players) {
+							TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "Game. OVER!");
+						}
+						new BukkitRunnable() {
+							public void run() {
+								stop();
+						    }
+						}.runTaskLater(plugin, 200L);
 					}
 				}
 		    }
@@ -256,6 +271,8 @@ public class SpleggWorld {
 						Egg egg = hp.mcPlayer.launchProjectile(Egg.class);
 						Vector direction = hp.mcPlayer.getLocation().getDirection();
 						egg.setVelocity(direction.multiply(1.5));
+						eggMap.put(egg, hp);
+						hp.eggsFired++;
 						break;
 					default:
 						break;
@@ -289,6 +306,7 @@ public class SpleggWorld {
 			Location eggLoc = e.getEntity().getLocation();
 			Location forward = eggLoc.add(e.getEntity().getVelocity());
 			forward.getBlock().setType(Material.AIR);
+			eggMap.get((Egg) e.getEntity()).eggsLanded++;
 		}
 	}
 	
@@ -306,7 +324,7 @@ public class SpleggWorld {
 	}
 	
 	public Inventory voteInv() {
-		Inventory inv = Bukkit.createInventory(null, 45, "Vote for an Option [1]");
+		Inventory inv = Bukkit.createInventory(null, 45, "Vote for an Option");
 		
 		String[] mapList = Constants.mapList;
 		int[] voteArray = tallyVotes();
