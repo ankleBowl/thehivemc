@@ -103,6 +103,10 @@ public class SpleggWorld {
 	public void update() {
 		new BukkitRunnable() {
 			public void run() {
+				for (HivePlayer hp : players) {
+					hp.mcPlayer.setFoodLevel(20);
+					hp.mcPlayer.setSaturation(20);
+				}
 				if (!inGame) {
 					if (players.size() > 5 && !gameStarting) {
 						gameStarting = true;
