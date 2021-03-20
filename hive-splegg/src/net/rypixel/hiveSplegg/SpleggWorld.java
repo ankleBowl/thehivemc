@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -129,6 +131,16 @@ public class SpleggWorld {
 		inv.setItem(1, Constants.vote);
 		inv.setItem(4, Constants.locker);
 		inv.setItem(8, Constants.hub);
+		
+		String[] mapList = Constants.mapList;
+		int[] voteArray = tallyVotes();
+		
+		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.YELLOW + " Vote for a map! " + ChatColor.GRAY + "Use " + ChatColor.WHITE + "/v #" + ChatColor.WHITE + " or click.");
+		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + "1. " + ChatColor.GOLD + mapList[maps[0]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[0]) + ChatColor.GRAY + " Votes]");
+		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + "1. " + ChatColor.GOLD + mapList[maps[1]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[1]) + ChatColor.GRAY + " Votes]");
+		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + "1. " + ChatColor.GOLD + mapList[maps[2]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[2]) + ChatColor.GRAY + " Votes]");
+		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + "1. " + ChatColor.GOLD + mapList[maps[3]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[3]) + ChatColor.GRAY + " Votes]");
+		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + "1. " + ChatColor.GOLD + mapList[maps[4]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[4]) + ChatColor.GRAY + " Votes]");
 	}
 	
 	public void selectMaps() {
@@ -188,5 +200,17 @@ public class SpleggWorld {
 	
 	public void onInventoryClick(InventoryClickEvent e) {
 		
+	}
+	
+	public int[] tallyVotes() {
+		int[] voteTotal = new int[5];
+		for (Map.Entry<HivePlayer, Integer> set : votes.entrySet()) {
+			voteTotal[set.getValue()]++;
+		}
+		return voteTotal;
+	}
+	
+	public String chatPrefix() {
+		return ChatColor.DARK_GRAY + "|" + ChatColor.AQUA + " Splegg " + ChatColor.DARK_GRAY + "|";
 	}
 }
