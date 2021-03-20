@@ -76,13 +76,13 @@ public class LobbyWorld {
 		    			}
 		    		}
 		    		
-		    		if (player.mcPlayer.getLocation().distance(Constants.parkourLocations[0].toLocation(world)) < 1) {
+		    		if (player.mcPlayer.getLocation().distance(Constants.parkourLocations[0].toLocation(world)) < 1 && player.inParkour == false) {
 	    				player.startParkour();
 	    			}
 		    		
 		    		if (player.inParkour) {
 		    			if (player.mcPlayer.getLocation().distance(Constants.parkourLocations[player.parkourCheckpoint + 1].toLocation(world)) < 1) {
-		    				player.parkourCheckpoint++;
+		    				player.checkpointParkour();
 		    				if (player.parkourCheckpoint == 3) {
 		    					player.completeParkour();
 		    				}
