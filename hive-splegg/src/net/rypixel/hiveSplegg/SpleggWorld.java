@@ -188,6 +188,7 @@ public class SpleggWorld {
 		players.add(hp);
 		hp.mcPlayer.teleport(new Vector(0, 10, 0).toLocation(world));
 		hp.serverId = id;
+		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
 		
 		Inventory inv = hp.mcPlayer.getInventory();
 		inv.setItem(0, Constants.rules);
