@@ -187,7 +187,8 @@ public class SpleggWorld {
 							hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1, false, true));
 							hp.deaths++;
 							hp.mcPlayer.getInventory().setItem(7, Constants.again);
-							hp.mcPlayer.getInventory().setItem(7, Constants.players);
+							hp.mcPlayer.getInventory().setItem(0, Constants.players);
+							hp.mcPlayer.getInventory().setItem(8, Constants.hub);
 						}
 					}
 					
@@ -394,6 +395,9 @@ public class SpleggWorld {
 							w.welcomePlayer(hp);
 							sent = true;
 						}
+						break;
+					case SLIME_BALL:
+						Functions.sendToServer(hp.mcPlayer, "lobby0", plugin);
 						break;
 					default:
 						break;
