@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
@@ -27,6 +28,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -373,6 +375,7 @@ public class SpleggWorld {
 						hp.eggsFiredTemp++;
 						break;
 					case COMPASS:
+						hp.mcPlayer.openInventory(Constants.playerSelector(players));
 						break;
 					case MINECART:
 						players.remove(hp);
@@ -411,7 +414,16 @@ public class SpleggWorld {
 	public void onInventoryClick(InventoryClickEvent e) {
 		SpleggPlayer hp = Main.playerMap.get(e.getWhoClicked());
 		if (inGame) {
-			
+			switch (e.getCurrentItem().getType()) {
+			case SKULL:
+				SkullMeta meta = (SkullMeta) e.getCurrentItem().getItemMeta();
+				String playerUUID = meta.getOwner();
+				Location teleportLoc = Bukkit.getPlayer(UUID.fromString(playerUUID)).getLocation();
+				hp.mcPlayer.teleport(teleportLoc);
+				break;
+			default:
+				break;
+			}
 		} else {
 			switch (e.getCurrentItem().getType()) {
 			case MAP:

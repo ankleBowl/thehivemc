@@ -2,10 +2,13 @@ package net.rypixel.hiveSplegg;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 public class Constants {
 
@@ -134,5 +137,17 @@ public class Constants {
 		mapList[18] = "Inferno";
 		mapList[19] = "Repercussions";
 		mapList[20] = "Catch_em_All";
+	}
+	
+	public static Inventory playerSelector(ArrayList<SpleggPlayer> players) {
+		Inventory inv = Bukkit.createInventory(null, 18);
+		for (int i = 0; i < 18; i++) {
+			if (i < players.size()) {
+				ItemStack skull = new ItemStack(Material.SKULL, 1);
+				SkullMeta meta = (SkullMeta) skull.getItemMeta();
+				meta.setOwner(players.get(i).mcPlayer.getUniqueId().toString());
+			}
+		}
+		return inv;
 	}
 }
