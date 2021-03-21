@@ -52,6 +52,7 @@ public class SpleggWorld {
 	
 	public int gameTimer;
 	public boolean inGame;
+	public boolean gameOver = false;
 	public BukkitTask loop;
 	
 	public boolean canVote = true;
@@ -77,6 +78,9 @@ public class SpleggWorld {
 	public void stop() {
 		
 		for (SpleggPlayer hp : players) {
+			hp.mcPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
+			hp.mcPlayer.setFlying(false);
+			
 			boolean sent = false;
 			for (SpleggWorld world : Main.worlds) {
 				if (!sent && world != this) {
@@ -181,7 +185,9 @@ public class SpleggWorld {
 							chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.GRAY + " has fallen to their " + ChatColor.RED + "DEATH!");
 							hp.alive = false;
 							hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(gameWorld));
-							hp.mcPlayer.setGameMode(GameMode.SPECTATOR);
+							hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
+							hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999, 1, false, true));
+							hp.mcPlayer.setFlying(true);
 							TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "YOU DIED!");
 							hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1, false, true));
 							hp.deaths++;
@@ -220,7 +226,8 @@ public class SpleggWorld {
 						hp.scoreboard.setSlot(1, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
 					}
 					
-					if (alivePlayers < 2) {
+					if (alivePlayers < 2 && !gameOver) {
+						gameOver = true;
 						winner.wins++;
 						for (SpleggPlayer hp : players) {
 							TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "Game. OVER!");
@@ -254,6 +261,7 @@ public class SpleggWorld {
 									hp.mcPlayer.sendMessage(ChatColor.BLUE + mostShot.mcPlayer.getDisplayName() + ChatColor.GOLD + " shot the most eggs! " + ChatColor.YELLOW + "(" + String.valueOf(mostShot.eggsFiredTemp) + " eggs)");
 									hp.mcPlayer.sendMessage("");
 									hp.mcPlayer.sendMessage(ChatColor.AQUA + "[Tweet Game]    " + ChatColor.GREEN + "[New Game]");
+									hp.mcPlayer.sendMessage("");
 								}
 						    }
 						}.runTaskLater(plugin, 100L);
