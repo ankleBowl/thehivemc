@@ -123,6 +123,23 @@ public class SpleggWorld {
 		loop = new BukkitRunnable() {
 			public void run() {
 				if (!inGame) {
+					for (SpleggPlayer hp : players) {
+						hp.scoreboard.setTitle(ChatColor.AQUA + "Splegg");
+						hp.scoreboard.setSlot(14, "");
+						hp.scoreboard.setSlot(13, ChatColor.GREEN + "Tokens");
+						hp.scoreboard.setSlot(12, ChatColor.GRAY + String.valueOf(hp.tokens));
+						hp.scoreboard.setSlot(11, "");
+						hp.scoreboard.setSlot(10, ChatColor.YELLOW + "Your Stats");
+						hp.scoreboard.setSlot(9, ChatColor.DARK_AQUA + "Points: " + ChatColor.AQUA + String.valueOf(hp.points));
+						hp.scoreboard.setSlot(8, ChatColor.DARK_AQUA + "Points: " + ChatColor.AQUA + String.valueOf(hp.played));
+						hp.scoreboard.setSlot(7, ChatColor.DARK_AQUA + "Points: " + ChatColor.AQUA + String.valueOf(hp.wins));
+						hp.scoreboard.setSlot(6, ChatColor.DARK_AQUA + "Points: " + ChatColor.AQUA + String.valueOf(hp.deaths));
+						hp.scoreboard.setSlot(5, ChatColor.DARK_AQUA + "Points: " + ChatColor.AQUA + String.valueOf(hp.eggsFired));
+						hp.scoreboard.setSlot(4, ChatColor.DARK_AQUA + "Points: " + ChatColor.AQUA + String.valueOf(hp.eggsLanded));
+						hp.scoreboard.setSlot(3, "");
+						hp.scoreboard.setSlot(2, ChatColor.DARK_GRAY + "----------------");
+						hp.scoreboard.setSlot(1, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
+					}
 					if (players.size() > 5 && !gameStarting) {
 						gameStarting = true;
 					}
