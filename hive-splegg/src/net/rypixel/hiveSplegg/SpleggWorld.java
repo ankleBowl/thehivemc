@@ -146,10 +146,19 @@ public class SpleggWorld {
 					}
 					if (players.size() > 5 && !gameStarting) {
 						gameStarting = true;
+					} else {
+						for (SpleggPlayer hp : players) {
+							TitleAPI.sendSubtitle(hp.mcPlayer, 0, 2, 0, ChatColor.YELLOW + String.valueOf(6 - players.size()) + " players needed to start...");
+						}
 					}
 					
 					if (gameStarting) {
 						countdown--;
+						
+						for (SpleggPlayer hp : players) {
+							TitleAPI.sendSubtitle(hp.mcPlayer, 0, 2, 0, ChatColor.GREEN + "Starting game in " + String.valueOf(countdown / 20));
+						}
+						
 						if (countdown == 0) {
 							initGame();
 						}
@@ -289,6 +298,48 @@ public class SpleggWorld {
 			hp.eggsFiredTemp = 0;
 			hp.eggsLandedTemp = 0;
 		}
+		
+		for (SpleggPlayer hp : players) {
+			TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, ChatColor.GOLD + "⑤");
+			TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, ChatColor.GRAY + "until start");
+		}
+		
+		new BukkitRunnable() {
+			public void run() {
+				for (SpleggPlayer hp : players) {
+					TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, ChatColor.GOLD + "④");
+					TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, ChatColor.GRAY + "until start");
+				}
+		    }
+		}.runTaskLater(plugin, 20L);
+		
+		new BukkitRunnable() {
+			public void run() {
+				for (SpleggPlayer hp : players) {
+					TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, ChatColor.GOLD + "③");
+					TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, ChatColor.GRAY + "until start");
+				}
+		    }
+		}.runTaskLater(plugin, 40L);
+		
+		new BukkitRunnable() {
+			public void run() {
+				for (SpleggPlayer hp : players) {
+					TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, ChatColor.GOLD + "②");
+					TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, ChatColor.GRAY + "until start");
+				}
+		    }
+		}.runTaskLater(plugin, 60L);
+		
+		new BukkitRunnable() {
+			public void run() {
+				for (SpleggPlayer hp : players) {
+					TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, ChatColor.GOLD + "①");
+					TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, ChatColor.GRAY + "until start");
+				}
+		    }
+		}.runTaskLater(plugin, 80L);
+		
 		new BukkitRunnable() {
 			public void run() {
 				for (SpleggPlayer hp : players) {
