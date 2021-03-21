@@ -148,7 +148,7 @@ public class SpleggWorld {
 						gameStarting = true;
 					} else {
 						for (SpleggPlayer hp : players) {
-							TitleAPI.sendSubtitle(hp.mcPlayer, 0, 2, 0, ChatColor.YELLOW + String.valueOf(6 - players.size()) + " players needed to start...");
+							TitleAPI.sendSubtitle(hp.mcPlayer, 1, 20, 1, ChatColor.YELLOW + String.valueOf(6 - players.size()) + " players needed to start...");
 						}
 					}
 					
@@ -156,7 +156,7 @@ public class SpleggWorld {
 						countdown--;
 						
 						for (SpleggPlayer hp : players) {
-							TitleAPI.sendSubtitle(hp.mcPlayer, 0, 2, 0, ChatColor.GREEN + "Starting game in " + String.valueOf(countdown / 20));
+							TitleAPI.sendSubtitle(hp.mcPlayer, 1, 20, 1, ChatColor.GREEN + "Starting game in " + String.valueOf(countdown / 20));
 						}
 						
 						if (countdown == 0) {
@@ -217,8 +217,12 @@ public class SpleggWorld {
 					}
 					
 					for (SpleggPlayer hp : players) {
+						
 						String time = DurationFormatUtils.formatDuration(600000 - (gameTimer * 50), "mm:ss");
+						int seconds = gameTimer / 20;
 					     
+						hp.mcPlayer.setLevel(600 - seconds);
+						
 						hp.scoreboard.setTitle(ChatColor.AQUA + "Splegg " + ChatColor.DARK_GRAY + ">>"  + ChatColor.GRAY + time);
 						hp.scoreboard.setSlot(13, "");
 						hp.scoreboard.setSlot(12, ChatColor.RED + "Players");
@@ -302,6 +306,7 @@ public class SpleggWorld {
 		for (SpleggPlayer hp : players) {
 			TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, ChatColor.GOLD + "⑤");
 			TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, ChatColor.GRAY + "until start");
+			hp.mcPlayer.setLevel(5);
 		}
 		
 		new BukkitRunnable() {
@@ -309,6 +314,7 @@ public class SpleggWorld {
 				for (SpleggPlayer hp : players) {
 					TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, ChatColor.GOLD + "④");
 					TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, ChatColor.GRAY + "until start");
+					hp.mcPlayer.setLevel(4);
 				}
 		    }
 		}.runTaskLater(plugin, 20L);
@@ -318,6 +324,7 @@ public class SpleggWorld {
 				for (SpleggPlayer hp : players) {
 					TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, ChatColor.GOLD + "③");
 					TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, ChatColor.GRAY + "until start");
+					hp.mcPlayer.setLevel(3);
 				}
 		    }
 		}.runTaskLater(plugin, 40L);
@@ -327,6 +334,7 @@ public class SpleggWorld {
 				for (SpleggPlayer hp : players) {
 					TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, ChatColor.GOLD + "②");
 					TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, ChatColor.GRAY + "until start");
+					hp.mcPlayer.setLevel(2);
 				}
 		    }
 		}.runTaskLater(plugin, 60L);
@@ -336,6 +344,7 @@ public class SpleggWorld {
 				for (SpleggPlayer hp : players) {
 					TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, ChatColor.GOLD + "①");
 					TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, ChatColor.GRAY + "until start");
+					hp.mcPlayer.setLevel(1);
 				}
 		    }
 		}.runTaskLater(plugin, 80L);
@@ -344,7 +353,6 @@ public class SpleggWorld {
 			public void run() {
 				for (SpleggPlayer hp : players) {
 					hp.mcPlayer.getInventory().setItem(0, Constants.spleggGun);
-					
 				}
 		    }
 		}.runTaskLater(plugin, 100L);
