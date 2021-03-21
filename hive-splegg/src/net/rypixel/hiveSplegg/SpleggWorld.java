@@ -151,6 +151,23 @@ public class SpleggWorld {
 						}
 						if (canVote && countdown < 300) {
 							canVote = false;
+							for (SpleggPlayer hp : players) {
+								hp.mcPlayer.getInventory().remove(Material.DIAMOND);
+							}
+							int[] votes = tallyVotes();
+							int highestNumber = 0;
+							Random random = new Random();
+							int mapNumber = random.nextInt(5);
+							int n = 0;
+							for (int i : votes) {
+								if (i > highestNumber) {
+									highestNumber = i;
+									mapNumber = n;
+								}
+								n++;
+							}
+							String[] mapList = Constants.mapList;
+							chat(chatPrefix() + ChatColor.DARK_AQUA + " Voting has ended!" + ChatColor.AQUA + " The map " + ChatColor.WHITE + mapList[maps[mapNumber]].replaceAll("_", " ") + ChatColor.AQUA + " has won!");
 						}
 					}
 				} else {
