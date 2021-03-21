@@ -188,7 +188,6 @@ public class SpleggWorld {
 						}
 					}
 					
-					
 					//Check if game is over
 					int alivePlayers = 0;
 					SpleggPlayer winner = null;
@@ -198,6 +197,22 @@ public class SpleggWorld {
 							winner = hp;
 						}
 					}
+					
+					for (SpleggPlayer hp : players) {
+						hp.scoreboard.setTitle(ChatColor.AQUA + "Splegg");
+						hp.scoreboard.setSlot(13, "");
+						hp.scoreboard.setSlot(12, ChatColor.RED + "Players");
+						hp.scoreboard.setSlot(12, String.valueOf(alivePlayers));
+						hp.scoreboard.setSlot(11, "");
+						hp.scoreboard.setSlot(10, ChatColor.YELLOW + "Your Stats");
+						hp.scoreboard.setSlot(9, ChatColor.GRAY + "Eggs Fired: " + ChatColor.WHITE + String.valueOf(hp.eggsFiredTemp));
+						hp.scoreboard.setSlot(8, ChatColor.GRAY + "Blocks Destroyed: " + ChatColor.WHITE + String.valueOf(hp.eggsLandedTemp));
+						hp.scoreboard.setSlot(7, ChatColor.GRAY + "Powerups: " + ChatColor.WHITE + "N/A");
+						hp.scoreboard.setSlot(6, "");
+						hp.scoreboard.setSlot(5, ChatColor.DARK_GRAY + "----------------");
+						hp.scoreboard.setSlot(4, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
+					}
+					
 					if (alivePlayers < 2) {
 						winner.wins++;
 						for (SpleggPlayer hp : players) {
@@ -230,6 +245,8 @@ public class SpleggWorld {
 			hp.mcPlayer.setSaturation(20);
 			hp.alive = true;
 			hp.played++;
+			hp.eggsFiredTemp = 0;
+			hp.eggsLandedTemp = 0;
 		}
 		new BukkitRunnable() {
 			public void run() {
@@ -319,6 +336,7 @@ public class SpleggWorld {
 						egg.setVelocity(direction.multiply(1.5));
 						eggMap.put(egg, hp);
 						hp.eggsFired++;
+						hp.eggsFiredTemp++;
 						break;
 					default:
 						break;
@@ -357,6 +375,7 @@ public class SpleggWorld {
 			Location forward = eggLoc.add(e.getEntity().getVelocity());
 			forward.getBlock().setType(Material.AIR);
 			eggMap.get((Egg) e.getEntity()).eggsLanded++;
+			eggMap.get((Egg) e.getEntity()).eggsLandedTemp++;
 		}
 	}
 	

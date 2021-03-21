@@ -14,6 +14,9 @@ public class SpleggPlayer extends HivePlayer {
 	public int wins;
 	public int deaths;
 	
+	public int eggsFiredTemp;
+	public int eggsLandedTemp;
+	
 	SpleggPlayer(Player mcPlayer, Plugin plugin) {
 		super(mcPlayer, plugin);
 		// TODO Auto-generated constructor stub
