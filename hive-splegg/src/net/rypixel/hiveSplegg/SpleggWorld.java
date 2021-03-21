@@ -452,8 +452,10 @@ public class SpleggWorld {
 			Location eggLoc = e.getEntity().getLocation();
 			Location forward = eggLoc.add(e.getEntity().getVelocity());
 			forward.getBlock().setType(Material.AIR);
-			eggMap.get((Egg) e.getEntity()).eggsLanded++;
-			eggMap.get((Egg) e.getEntity()).eggsLandedTemp++;
+			if (new Vector(0, 100, 0).toLocation(gameWorld).distance(eggLoc) < 50) {
+				eggMap.get((Egg) e.getEntity()).eggsLanded++;
+				eggMap.get((Egg) e.getEntity()).eggsLandedTemp++;
+			}
 		}
 	}
 	
