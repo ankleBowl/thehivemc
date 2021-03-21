@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -199,7 +200,9 @@ public class SpleggWorld {
 					}
 					
 					for (SpleggPlayer hp : players) {
-						hp.scoreboard.setTitle(ChatColor.AQUA + "Splegg");
+						String time = DurationFormatUtils.formatDuration(6000000 - (gameTimer * 50), "mm:ss");
+					     
+						hp.scoreboard.setTitle(ChatColor.AQUA + "Splegg " + ChatColor.DARK_GRAY + ">>"  + ChatColor.GRAY + time);
 						hp.scoreboard.setSlot(13, "");
 						hp.scoreboard.setSlot(12, ChatColor.RED + "Players");
 						hp.scoreboard.setSlot(12, String.valueOf(alivePlayers));
