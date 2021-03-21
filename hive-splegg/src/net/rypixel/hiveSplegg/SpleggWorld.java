@@ -208,7 +208,7 @@ public class SpleggWorld {
 					}
 					
 					for (SpleggPlayer hp : players) {
-						String time = DurationFormatUtils.formatDuration(6000000 - (gameTimer * 50), "mm:ss");
+						String time = DurationFormatUtils.formatDuration(600000 - (gameTimer * 50), "mm:ss");
 					     
 						hp.scoreboard.setTitle(ChatColor.AQUA + "Splegg " + ChatColor.DARK_GRAY + ">>"  + ChatColor.GRAY + time);
 						hp.scoreboard.setSlot(13, "");
