@@ -186,6 +186,8 @@ public class SpleggWorld {
 							TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "YOU DIED!");
 							hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1, false, true));
 							hp.deaths++;
+							hp.mcPlayer.getInventory().setItem(7, Constants.again);
+							hp.mcPlayer.getInventory().setItem(7, Constants.players);
 						}
 					}
 					
