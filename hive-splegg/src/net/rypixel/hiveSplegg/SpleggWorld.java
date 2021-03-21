@@ -35,6 +35,7 @@ import org.bukkit.util.Vector;
 
 import com.connorlinfoot.titleapi.TitleAPI;
 
+import me.vagdedes.mysql.database.MySQL;
 import net.minecraft.server.v1_8_R1.WorldGenLargeFeatureStart;
 import net.rypixel.hiveSplegg.Functions;
 import net.rypixel.hiveSplegg.SpleggPlayer;
@@ -149,20 +150,30 @@ public class SpleggWorld {
 							hp.mcPlayer.setGameMode(GameMode.SPECTATOR);
 							TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "YOU DIED!");
 							hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1, false, true));
+							hp.deaths++;
 						}
 					}
 					
 					
 					//Check if game is over
 					int alivePlayers = 0;
+					SpleggPlayer winner = null;
 					for (SpleggPlayer hp : players) {
 						if (hp.alive) {
 							alivePlayers++;
+							winner = hp;
 						}
 					}
 					if (alivePlayers < 2) {
+						winner.wins++;
 						for (SpleggPlayer hp : players) {
 							TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "Game. OVER!");
+							hp.played++;
+							MySQL.update("UPDATE splegg SET played=\"" + String.valueOf(hp.played) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+							MySQL.update("UPDATE splegg SET wins=\"" + String.valueOf(hp.wins) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+							MySQL.update("UPDATE splegg SET deaths=\"" + String.valueOf(hp.deaths) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+							MySQL.update("UPDATE splegg SET eggsFired=\"" + String.valueOf(hp.eggsFired) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+							MySQL.update("UPDATE splegg SET blocksbroken=\"" + String.valueOf(hp.eggsLanded) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 						}
 						new BukkitRunnable() {
 							public void run() {
@@ -184,6 +195,7 @@ public class SpleggWorld {
 			hp.mcPlayer.setFoodLevel(20);
 			hp.mcPlayer.setSaturation(20);
 			hp.alive = true;
+			hp.played++;
 		}
 		new BukkitRunnable() {
 			public void run() {
