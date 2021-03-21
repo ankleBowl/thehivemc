@@ -205,15 +205,17 @@ public class SpleggWorld {
 						hp.scoreboard.setTitle(ChatColor.AQUA + "Splegg " + ChatColor.DARK_GRAY + ">>"  + ChatColor.GRAY + time);
 						hp.scoreboard.setSlot(13, "");
 						hp.scoreboard.setSlot(12, ChatColor.RED + "Players");
-						hp.scoreboard.setSlot(12, String.valueOf(alivePlayers));
-						hp.scoreboard.setSlot(11, "");
-						hp.scoreboard.setSlot(10, ChatColor.YELLOW + "Your Stats");
-						hp.scoreboard.setSlot(9, ChatColor.GRAY + "Eggs Fired: " + ChatColor.WHITE + String.valueOf(hp.eggsFiredTemp));
-						hp.scoreboard.setSlot(8, ChatColor.GRAY + "Blocks Destroyed: " + ChatColor.WHITE + String.valueOf(hp.eggsLandedTemp));
-						hp.scoreboard.setSlot(7, ChatColor.GRAY + "Powerups: " + ChatColor.WHITE + "N/A");
-						hp.scoreboard.setSlot(6, "");
-						hp.scoreboard.setSlot(5, ChatColor.DARK_GRAY + "----------------");
-						hp.scoreboard.setSlot(4, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
+						hp.scoreboard.setSlot(11, String.valueOf(alivePlayers));
+						hp.scoreboard.setSlot(10, "");
+						hp.scoreboard.setSlot(9, ChatColor.YELLOW + "Your Stats");
+						hp.scoreboard.setSlot(8, ChatColor.GRAY + "Eggs Fired: " + ChatColor.WHITE + String.valueOf(hp.eggsFiredTemp));
+						hp.scoreboard.setSlot(7, ChatColor.GRAY + "Blocks Destroyed: " + ChatColor.WHITE + String.valueOf(hp.eggsLandedTemp));
+						hp.scoreboard.setSlot(6, ChatColor.GRAY + "Powerups: " + ChatColor.WHITE + "N/A");
+						hp.scoreboard.setSlot(5, "");
+						hp.scoreboard.setSlot(4, ChatColor.RED + "No Powerups!");
+						hp.scoreboard.setSlot(3, "");
+						hp.scoreboard.setSlot(2, ChatColor.DARK_GRAY + "----------------");
+						hp.scoreboard.setSlot(1, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
 					}
 					
 					if (alivePlayers < 2) {
@@ -227,6 +229,32 @@ public class SpleggWorld {
 							MySQL.update("UPDATE splegg SET eggsFired=\"" + String.valueOf(hp.eggsFired) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 							MySQL.update("UPDATE splegg SET blocksbroken=\"" + String.valueOf(hp.eggsLanded) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 						}
+						String winnerName = winner.mcPlayer.getDisplayName();
+						new BukkitRunnable() {
+							public void run() {
+								SpleggPlayer mostShot = players.get(0);
+								SpleggPlayer mostBroken = players.get(0);
+								
+								for (SpleggPlayer hp : players) {
+									if (hp.eggsFiredTemp > mostShot.eggsFiredTemp) {
+										mostShot = hp;
+									}
+									if (hp.eggsLandedTemp > mostBroken.eggsLandedTemp) {
+										mostBroken = hp;
+									}
+								}
+								
+								for (SpleggPlayer hp : players) {
+									hp.mcPlayer.sendMessage("");
+									hp.mcPlayer.sendMessage(ChatColor.RED + "Game. OVER! " + ChatColor.BLUE + winnerName + ChatColor.GRAY + " won the game!");
+									hp.mcPlayer.sendMessage("");
+									hp.mcPlayer.sendMessage(ChatColor.BLUE + mostBroken.mcPlayer.getDisplayName() + ChatColor.DARK_GREEN + " destroyed the most blocks! " + ChatColor.GREEN + "(" + String.valueOf(mostBroken.eggsLandedTemp) + " blocks)");
+									hp.mcPlayer.sendMessage(ChatColor.BLUE + mostShot.mcPlayer.getDisplayName() + ChatColor.GOLD + " shot the most eggs! " + ChatColor.YELLOW + "(" + String.valueOf(mostShot.eggsFiredTemp) + " eggs)");
+									hp.mcPlayer.sendMessage("");
+									hp.mcPlayer.sendMessage(ChatColor.AQUA + "[Tweet Game]    " + ChatColor.GREEN + "[New Game]");
+								}
+						    }
+						}.runTaskLater(plugin, 100L);
 						new BukkitRunnable() {
 							public void run() {
 								stop();
