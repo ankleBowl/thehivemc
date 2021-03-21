@@ -39,9 +39,6 @@ import org.bukkit.util.Vector;
 import com.connorlinfoot.titleapi.TitleAPI;
 
 import me.vagdedes.mysql.database.MySQL;
-import net.minecraft.server.v1_8_R1.WorldGenLargeFeatureStart;
-import net.rypixel.hiveSplegg.Functions;
-import net.rypixel.hiveSplegg.SpleggPlayer;
 
 public class SpleggWorld {
 
@@ -57,7 +54,7 @@ public class SpleggWorld {
 	public boolean inGame;
 	public BukkitTask loop;
 	
-	public boolean canVote;
+	public boolean canVote = true;
 	
 	public Integer[] maps = new Integer[5];
 	
