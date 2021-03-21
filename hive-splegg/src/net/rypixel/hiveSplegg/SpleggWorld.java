@@ -369,6 +369,30 @@ public class SpleggWorld {
 						hp.eggsFired++;
 						hp.eggsFiredTemp++;
 						break;
+					case COMPASS:
+						break;
+					case MINECART:
+						players.remove(hp);
+						boolean sent = false;
+						for (SpleggWorld world : Main.worlds) {
+							if (!sent && world != this) {
+								if (world.players.size() < 10) {
+									world.welcomePlayer(hp);
+									sent = true;
+								}
+							}
+						}
+						
+						if (!sent) {
+							int id = Functions.getLowestWorldID(Main.worlds);
+							SpleggWorld w = new SpleggWorld(plugin, id);
+							w.init();
+							Main.worlds.add(w);
+							
+							w.welcomePlayer(hp);
+							sent = true;
+						}
+						break;
 					default:
 						break;
 					}
