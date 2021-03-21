@@ -319,9 +319,13 @@ public class SpleggWorld {
 		} else {
 			switch (e.getCurrentItem().getType()) {
 			case MAP:
-				int mapNumber = e.getSlot() / 9;
-				votes.put(hp, mapNumber);
-				hp.mcPlayer.openInventory(voteInv());
+				if (canVote) {
+					int mapNumber = e.getSlot() / 9;
+					votes.put(hp, mapNumber);
+					hp.mcPlayer.openInventory(voteInv());
+				} else {
+					hp.mcPlayer.sendMessage(ChatColor.RED + "You can no longer vote!");
+				}
 				break;
 			default:
 				break;
