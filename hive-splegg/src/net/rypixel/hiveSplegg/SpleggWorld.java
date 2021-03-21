@@ -80,6 +80,7 @@ public class SpleggWorld {
 		for (SpleggPlayer hp : players) {
 			hp.mcPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
 			hp.mcPlayer.setFlying(false);
+			hp.mcPlayer.setLevel(0);
 			
 			boolean sent = false;
 			for (SpleggWorld world : Main.worlds) {
@@ -148,7 +149,7 @@ public class SpleggWorld {
 						gameStarting = true;
 					} else {
 						for (SpleggPlayer hp : players) {
-							TitleAPI.sendSubtitle(hp.mcPlayer, 1, 20, 1, ChatColor.YELLOW + String.valueOf(6 - players.size()) + " players needed to start...");
+							TitleAPI.sendTitle(hp.mcPlayer, 1, 20, 1, ChatColor.YELLOW + String.valueOf(6 - players.size()) + " players needed to start...");
 						}
 					}
 					
@@ -156,7 +157,7 @@ public class SpleggWorld {
 						countdown--;
 						
 						for (SpleggPlayer hp : players) {
-							TitleAPI.sendSubtitle(hp.mcPlayer, 1, 20, 1, ChatColor.GREEN + "Starting game in " + String.valueOf(countdown / 20));
+							TitleAPI.sendTitle(hp.mcPlayer, 1, 20, 1, ChatColor.GREEN + "Starting game in " + String.valueOf(countdown / 20));
 						}
 						
 						if (countdown == 0) {
