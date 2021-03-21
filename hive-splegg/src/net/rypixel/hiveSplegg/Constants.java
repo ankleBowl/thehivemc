@@ -14,6 +14,9 @@ public class Constants {
 	public static ItemStack locker;
 	public static ItemStack hub;
 	
+	public static ItemStack again;
+	public static ItemStack players;
+	
 	public static ItemStack spleggGun;
 	
 	public static String[] mapList;
@@ -83,6 +86,31 @@ public class Constants {
 		lore.add(ChatColor.AQUA + "► Shoot to fire");
 		meta.setLore(lore);
 		spleggGun.setItemMeta(meta);
+		
+		players = new ItemStack(Material.COMPASS, 1);
+		meta = players.getItemMeta();
+		meta.setDisplayName(ChatColor.AQUA + "Player Selector");
+		lore.clear();
+		lore.add("");
+		lore.add(ChatColor.GRAY + "Opens a menu that");
+		lore.add(ChatColor.GRAY + "allows you to teleport to");
+		lore.add(ChatColor.GRAY + "participating players!");
+		lore.add("");
+		lore.add(ChatColor.AQUA + "► Right-click when held");
+		meta.setLore(lore);
+		players.setItemMeta(meta);
+		
+		again = new ItemStack(Material.MINECART, 1);
+		meta = again.getItemMeta();
+		meta.setDisplayName(ChatColor.GREEN + "Play Again");
+		lore.clear();
+		lore.add("");
+		lore.add(ChatColor.GRAY + "Sends you into the");
+		lore.add(ChatColor.GRAY + "bext available game!");
+		lore.add("");
+		lore.add(ChatColor.AQUA + "► Right-click when held");
+		meta.setLore(lore);
+		again.setItemMeta(meta);
 		
 		mapList = new String[21];
 		mapList[0] = "Splatter";
