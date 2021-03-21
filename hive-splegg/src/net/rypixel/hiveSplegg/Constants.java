@@ -145,6 +145,7 @@ public class Constants {
 			if (i < players.size()) {
 				ItemStack skull = new ItemStack(Material.SKULL, 1);
 				SkullMeta meta = (SkullMeta) skull.getItemMeta();
+				meta.setDisplayName(ChatColor.BLUE + players.get(i).mcPlayer.getDisplayName());
 				meta.setOwner(players.get(i).mcPlayer.getUniqueId().toString());
 			}
 		}
