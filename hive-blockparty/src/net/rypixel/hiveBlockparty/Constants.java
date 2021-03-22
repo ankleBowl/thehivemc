@@ -22,7 +22,7 @@ public class Constants {
 	
 	public static ItemStack spleggGun;
 	
-	public static String[] mapList;
+	public static String[] blockpartyText;
 	
 	public static void init() {
 		ItemMeta meta = null;
@@ -77,19 +77,6 @@ public class Constants {
 		meta.setLore(lore);
 		hub.setItemMeta(meta);
 		
-		spleggGun = new ItemStack(Material.IRON_SPADE, 1);
-		meta = spleggGun.getItemMeta();
-		meta.setDisplayName(ChatColor.GRAY + "Splegg Gun");
-		lore.clear();
-		lore.add("");
-		lore.add(ChatColor.GRAY + "Shoot eggs");
-		lore.add(ChatColor.GRAY + "from this");
-		lore.add(ChatColor.GRAY + "fancy gun!");
-		lore.add("");
-		lore.add(ChatColor.AQUA + "► Shoot to fire");
-		meta.setLore(lore);
-		spleggGun.setItemMeta(meta);
-		
 		players = new ItemStack(Material.COMPASS, 1);
 		meta = players.getItemMeta();
 		meta.setDisplayName(ChatColor.AQUA + "Player Selector");
@@ -115,28 +102,17 @@ public class Constants {
 		meta.setLore(lore);
 		again.setItemMeta(meta);
 		
-		mapList = new String[21];
-		mapList[0] = "Splatter";
-		mapList[1] = "Petal_Power";
-		mapList[2] = "Ring_Ring";
-		mapList[3] = "Balance";
-		mapList[4] = "Starmie";
-		mapList[5] = "Palette";
-		mapList[6] = "Cell";
-		mapList[7] = "Burst";
-		mapList[8] = "Pokemon";
-		mapList[9] = "Mistic";
-		mapList[10] = "Golf";
-		mapList[11] = "Tree_Island";
-		mapList[12] = "Saturn";
-		mapList[13] = "Not_Mushroom_Here";
-		mapList[14] = "Tree_Fiddy";
-		mapList[15] = "Time_Travel";
-		mapList[16] = "Chocolate";
-		mapList[17] = "Making_It_Up";
-		mapList[18] = "Inferno";
-		mapList[19] = "Repercussions";
-		mapList[20] = "Catch_em_All";
+		blockpartyText = new String[10];
+		blockpartyText[0] = "B";
+		blockpartyText[1] = "l";
+		blockpartyText[2] = "o";
+		blockpartyText[3] = "c";
+		blockpartyText[4] = "k";
+		blockpartyText[5] = "P";
+		blockpartyText[6] = "a";
+		blockpartyText[7] = "r";
+		blockpartyText[8] = "t";
+		blockpartyText[9] = "y";
 	}
 	
 	public static Inventory playerSelector(ArrayList<HivePlayer> players) {

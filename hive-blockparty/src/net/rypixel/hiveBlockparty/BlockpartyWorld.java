@@ -32,6 +32,8 @@ public class BlockpartyWorld {
 	public boolean starting;
 	public int countdown;
 	
+	public int titleTimer;
+	
 	public int level;
 	
 	public ArrayList<HivePlayer> players = new ArrayList<HivePlayer>();
@@ -103,6 +105,9 @@ public class BlockpartyWorld {
 		for (HivePlayer hp : players) {
 			hp.mcPlayer.teleport(new Vector(0, 1, 0).toLocation(world));
 		}
+		
+		titleTimer = 10;
+		
 		cycle(100, 50);
 	}
 	
@@ -131,5 +136,41 @@ public class BlockpartyWorld {
 	
 	public void opening() {
 		
+		new BukkitRunnable() {
+			public void run() {
+				titleTimer--;
+				String message = generateTitle(titleTimer);
+				for (HivePlayer hp : players) {
+					TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 20, message);
+				}
+				if (titleTimer < -9) {
+					cancel();
+				}
+			}
+		}.runTaskTimer(plugin, 0L, 1L);
+	}
+	
+	public String generateTitle(int spacing) {
+		if (spacing > -1) {
+			String string = "";
+			for (int i = 0; i < 10; i++) {
+				string += Constants.blockpartyText[i];
+				for (int n = 0; n < spacing; n++) {
+					string += " ";
+				}
+			}
+			return string;
+		} else {
+			int number = Math.abs(spacing);
+			String string = "";
+			for (int i = 0; i < 10; i++) {
+				if (i != number) {
+					string += ChatColor.YELLOW + Constants.blockpartyText[i];
+				} else {
+					string += ChatColor.GOLD + Constants.blockpartyText[i];
+				}
+			}
+			return string;
+		}
 	}
 }
