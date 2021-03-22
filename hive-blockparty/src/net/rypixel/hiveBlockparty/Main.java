@@ -82,17 +82,17 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-//		if (sender instanceof Player) {
-//			HivePlayer hp = playerMap.get((Player) sender);
-//			if (label.equalsIgnoreCase("close")) {
-//				BlockpartyWorld w = Functions.getWorldByID(worlds, hp.serverId);
-//				w.stop();
-//			}
-//			if (label.equalsIgnoreCase("start")) {
-//				BlockpartyWorld w = Functions.getWorldByID(worlds, hp.serverId);
-//				w.initGame();
-//			}
-//		}
+		if (sender instanceof Player) {
+			HivePlayer hp = playerMap.get((Player) sender);
+			if (label.equalsIgnoreCase("close")) {
+				BlockpartyWorld w = Functions.getWorldByID(worlds, hp.serverId);
+				//w.stop();
+			}
+			if (label.equalsIgnoreCase("start")) {
+				BlockpartyWorld w = Functions.getWorldByID(worlds, hp.serverId);
+				w.initGame();
+			}
+		}
         return false;
     }
 
