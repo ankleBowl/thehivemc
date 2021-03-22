@@ -149,7 +149,8 @@ public class SpleggWorld {
 						gameStarting = true;
 					} else {
 						for (SpleggPlayer hp : players) {
-							TitleAPI.sendTitle(hp.mcPlayer, 1, 20, 1, ChatColor.YELLOW + String.valueOf(6 - players.size()) + " players needed to start...");
+							TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 0, "");
+							TitleAPI.sendSubtitle(hp.mcPlayer, 0, 20, 0, ChatColor.YELLOW + String.valueOf(6 - players.size()) + " players needed to start...");
 						}
 					}
 					
@@ -157,7 +158,8 @@ public class SpleggWorld {
 						countdown--;
 						
 						for (SpleggPlayer hp : players) {
-							TitleAPI.sendTitle(hp.mcPlayer, 1, 20, 1, ChatColor.GREEN + "Starting game in " + String.valueOf(countdown / 20));
+							TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 0, "");
+							TitleAPI.sendSubtitle(hp.mcPlayer, 0, 20, 0, ChatColor.GREEN + "Starting game in " + String.valueOf(countdown / 20));
 						}
 						
 						if (countdown == 0) {
