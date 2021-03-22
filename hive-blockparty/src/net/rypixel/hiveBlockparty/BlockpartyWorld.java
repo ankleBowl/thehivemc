@@ -32,6 +32,8 @@ public class BlockpartyWorld {
 	public boolean starting;
 	public int countdown;
 	
+	public int level;
+	
 	public ArrayList<HivePlayer> players = new ArrayList<HivePlayer>();
 	
 	BlockpartyWorld(Plugin plugin, int id) {
@@ -58,7 +60,7 @@ public class BlockpartyWorld {
 	
 	public void welcomePlayer(HivePlayer hp) {
 		players.add(hp);
-		hp.mcPlayer.teleport(new Vector(0, 10, 0).toLocation(world));
+		hp.mcPlayer.teleport(new Vector(34.5, 3, 8).toLocation(world));
 		hp.serverId = id;
 		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
 	}
@@ -98,6 +100,36 @@ public class BlockpartyWorld {
 	}
 	
 	public void initGame() {
+		for (HivePlayer hp : players) {
+			hp.mcPlayer.teleport(new Vector(0, 1, 0).toLocation(world));
+		}
+		cycle(100, 50);
+	}
+	
+	public void cycle(int runTime, int emptyTime) {
+		for (HivePlayer hp : players) {
+			//check if dead
+		}
+		
+		new BukkitRunnable() {
+			public void run() {
+				//countdown for players to run
+			}
+		}.runTaskLater(plugin, runTime);
+		
+		new BukkitRunnable() {
+			public void run() {
+				//remove the floor
+				if (level < 22) {
+					cycle(100, 50);
+				} else {
+					//game is over (tie)
+				}
+			}
+		}.runTaskLater(plugin, runTime);
+	}
+	
+	public void opening() {
 		
 	}
 }
