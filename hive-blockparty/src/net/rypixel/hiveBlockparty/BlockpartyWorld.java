@@ -198,8 +198,11 @@ public class BlockpartyWorld {
 		
 		//Set new floor
 		loadFloor();
-		chat(chatPrefix() + ChatColor.GREEN + " ✚" + ChatColor.AQUA + " 1 point");
-		//get the block they will need to run to
+		
+		if (level != 0) {
+			chat(chatPrefix() + ChatColor.GREEN + " ✚" + ChatColor.AQUA + " 1 point");
+		}
+		
 		ArrayList<BlockpartyPlayer> dead = new ArrayList<BlockpartyPlayer>();
 		for (BlockpartyPlayer hp : players) {
 			hp.mcPlayer.setFoodLevel(20);
@@ -353,10 +356,14 @@ public class BlockpartyWorld {
 	}
 	
 	public void loadFloor() {
-		updateHashmap();
+		int map = 0;
+		if (level != 0) {
+			updateHashmap();
+			
+			Random random = new Random();
+			map = random.nextInt(9);
+		}
 		
-		Random random = new Random();
-		int map = random.nextInt(9);
 		colorsUsed.clear();
 		
 		for (int x = 0; x < 48; x++) {
