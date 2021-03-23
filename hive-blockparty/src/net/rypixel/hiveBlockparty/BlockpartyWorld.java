@@ -198,7 +198,7 @@ public class BlockpartyWorld {
 		
 		//Set new floor
 		loadFloor();
-		chat(chatPrefix() + ChatColor.GREEN + " ✚" + ChatColor.AQUA + "1 point");
+		chat(chatPrefix() + ChatColor.GREEN + " ✚" + ChatColor.AQUA + " 1 point");
 		//get the block they will need to run to
 		ArrayList<BlockpartyPlayer> dead = new ArrayList<BlockpartyPlayer>();
 		for (BlockpartyPlayer hp : players) {
@@ -221,7 +221,7 @@ public class BlockpartyWorld {
 			}
 		}
 
-		ArrayList<BlockpartyPlayer> possibleWinner = null;
+		ArrayList<BlockpartyPlayer> possibleWinner = new ArrayList<BlockpartyPlayer>();
 		for (BlockpartyPlayer hp : players) {
 			if (!hp.isDead) {
 				possibleWinner.add(hp);
