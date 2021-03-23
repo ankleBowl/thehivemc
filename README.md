@@ -15,6 +15,10 @@ Splegg
 - Time Remaining
 - Misc. Titles/Scoreboards
 
+Blockparty
+- Basic Matchmaking
+- Basic Game Loop
+
 What's not done: Literally everything else
 
 Credits
