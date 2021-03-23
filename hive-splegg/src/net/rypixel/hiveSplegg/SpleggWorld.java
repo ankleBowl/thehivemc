@@ -71,6 +71,7 @@ public class SpleggWorld {
 	
 	public void init() {
 		world = Functions.createNewWorld(Bukkit.getWorld("world"), String.valueOf(id));
+		countdown = 1200;
 		selectMaps();
 		update();
 	}

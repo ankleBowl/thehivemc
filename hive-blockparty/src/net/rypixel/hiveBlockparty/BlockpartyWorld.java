@@ -60,6 +60,7 @@ public class BlockpartyWorld {
 	
 	public void init() {
 		world = Functions.createNewWorld(Bukkit.getWorld("bpmap1"), String.valueOf(id));
+		countdown = 1200;
 		update();
 	}
 
