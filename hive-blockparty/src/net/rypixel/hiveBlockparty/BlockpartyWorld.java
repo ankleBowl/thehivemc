@@ -17,6 +17,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -142,7 +143,9 @@ public class BlockpartyWorld {
 			public void run() {
 				Random random = new Random();
 				colorToRemove = colorsUsed.get(random.nextInt(colorsUsed.size()));
-				//countdown for players to run
+				for (HivePlayer hp : players) {
+					hp.mcPlayer.getInventory().setItem(5, new ItemStack(Material.STAINED_CLAY, 1, colorToRemove.getData()));
+				}
 			}
 		}.runTaskLater(plugin, 60);
 		
@@ -150,7 +153,6 @@ public class BlockpartyWorld {
 			public void run() {
 				//remove the floor
 				removeFloor(colorToRemove);
-
 			}
 		}.runTaskLater(plugin, runTime + 60);
 		
@@ -160,7 +162,6 @@ public class BlockpartyWorld {
 				if (level < 21) {
 					level++;
 					cycle(Constants.roundSpeed[level], 50);
-					
 				} else {
 					//game is over (tie)
 				}
@@ -214,7 +215,7 @@ public class BlockpartyWorld {
 		for (int x = 0; x < 48; x++) {
 			for (int z = 0; z < 48; z++) {
 				Block c = world.getBlockAt(x - 32, 0, z - 16);
-				if (c.getData() == colorToRemove.getData()) {
+				if (c.getData() != colorToRemove.getData()) {
 					c.setType(Material.AIR);
 				}
 			}
