@@ -138,7 +138,7 @@ public class Constants {
 		roundSpeed[20] = 20;
 	}
 	
-	public static Inventory playerSelector(ArrayList<HivePlayer> players) {
+	public static Inventory playerSelector(ArrayList<BlockpartyPlayer> players) {
 		Inventory inv = Bukkit.createInventory(null, 18);
 		for (int i = 0; i < 18; i++) {
 			if (i < players.size()) {

@@ -43,7 +43,7 @@ import me.vagdedes.mysql.database.SQL;
 
 public class Main extends JavaPlugin implements Listener {
 
-	public static HashMap<Player, HivePlayer> playerMap = new HashMap<Player, HivePlayer>();
+	public static HashMap<Player, BlockpartyPlayer> playerMap = new HashMap<Player, BlockpartyPlayer>();
 	
 	public static BukkitTask requestRunnable;
 	
@@ -83,7 +83,7 @@ public class Main extends JavaPlugin implements Listener {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player) {
-			HivePlayer hp = playerMap.get((Player) sender);
+			BlockpartyPlayer hp = playerMap.get((Player) sender);
 			if (label.equalsIgnoreCase("close")) {
 				BlockpartyWorld w = Functions.getWorldByID(worlds, hp.serverId);
 				//w.stop();
@@ -98,7 +98,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		HivePlayer hp = new HivePlayer(event.getPlayer(), this);
+		BlockpartyPlayer hp = new BlockpartyPlayer(event.getPlayer(), this);
 
 		playerMap.put(event.getPlayer(), hp);
 		if (SQL.exists("UUID", event.getPlayer().getUniqueId().toString(), "playerInfo")) {
@@ -158,7 +158,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent event) {
-		HivePlayer hp = playerMap.get(event.getPlayer());
+		BlockpartyPlayer hp = playerMap.get(event.getPlayer());
 		
 		BlockpartyWorld world = Functions.getWorldByID(worlds, hp.serverId);
 		world.onPlayerLeave(event);
@@ -189,21 +189,21 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onInteract(PlayerInteractEvent event) {
-		HivePlayer hp = playerMap.get(event.getPlayer());
+		BlockpartyPlayer hp = playerMap.get(event.getPlayer());
 		BlockpartyWorld world = Functions.getWorldByID(worlds, hp.serverId);
 		world.onInteract(event);
 	}
 
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
-		HivePlayer hp = playerMap.get(event.getWhoClicked());
+		BlockpartyPlayer hp = playerMap.get(event.getWhoClicked());
 		BlockpartyWorld world = Functions.getWorldByID(worlds, hp.serverId);
 		world.onInventoryClick(event);
 	}
 	
 	@EventHandler
 	public void onChatSend(PlayerChatEvent event) {
-		HivePlayer hp = playerMap.get(event.getPlayer());
+		BlockpartyPlayer hp = playerMap.get(event.getPlayer());
 		event.setCancelled(true);
 		Functions.getWorldByID(worlds, hp.serverId).chat(ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " >> " + event.getMessage());
 	}

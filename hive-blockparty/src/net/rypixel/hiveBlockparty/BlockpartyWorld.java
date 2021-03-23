@@ -19,19 +19,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import com.connorlinfoot.titleapi.TitleAPI;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.extent.clipboard.Clipboard;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
-
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
-import com.sk89q.worldedit.function.operation.Operation;
-import com.sk89q.worldedit.session.ClipboardHolder;
 
 public class BlockpartyWorld {
 
@@ -49,7 +43,7 @@ public class BlockpartyWorld {
 	
 	public int level;
 	
-	public ArrayList<HivePlayer> players = new ArrayList<HivePlayer>();
+	public ArrayList<BlockpartyPlayer> players = new ArrayList<BlockpartyPlayer>();
 	
 	public HashMap<DyeColor, DyeColor> colorMap = new HashMap<DyeColor, DyeColor>();
 	public ArrayList<DyeColor> colorsUsed = new ArrayList<DyeColor>();
@@ -77,7 +71,7 @@ public class BlockpartyWorld {
 
 	}
 	
-	public void welcomePlayer(HivePlayer hp) {
+	public void welcomePlayer(BlockpartyPlayer hp) {
 		players.add(hp);
 		hp.mcPlayer.teleport(new Vector(34.5, 3, 8).toLocation(world));
 		hp.serverId = id;
@@ -85,7 +79,7 @@ public class BlockpartyWorld {
 	}
 	
 	public void chat(String message) {
-		for (HivePlayer hp : players) {
+		for (BlockpartyPlayer hp : players) {
 			hp.mcPlayer.sendMessage(message);
 		}
 	}
@@ -97,7 +91,7 @@ public class BlockpartyWorld {
 					if (players.size() > 5 && !starting) {
 						starting = true;
 					} else {
-						for (HivePlayer hp : players) {
+						for (BlockpartyPlayer hp : players) {
 							TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 0, "");
 							TitleAPI.sendSubtitle(hp.mcPlayer, 0, 20, 0, ChatColor.YELLOW + String.valueOf(6 - players.size()) + " players needed to start...");
 						}
@@ -106,7 +100,7 @@ public class BlockpartyWorld {
 					if (starting) {
 						countdown--;
 						
-						for (HivePlayer hp : players) {
+						for (BlockpartyPlayer hp : players) {
 							TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 0, "");
 							TitleAPI.sendSubtitle(hp.mcPlayer, 0, 20, 0, ChatColor.GREEN + "Starting game in " + String.valueOf(countdown / 20));
 						}
@@ -121,8 +115,9 @@ public class BlockpartyWorld {
 	}
 	
 	public void initGame() {
-		for (HivePlayer hp : players) {
+		for (BlockpartyPlayer hp : players) {
 			hp.mcPlayer.teleport(new Vector(0, 1, 0).toLocation(world));
+			hp.isDead = false;
 		}
 		inGame = true;
 		titleTimer = 10;
@@ -135,16 +130,29 @@ public class BlockpartyWorld {
 		//Set new floor
 		loadFloor();
 		//get the block they will need to run to
-		for (HivePlayer hp : players) {
-			//check if dead
+		for (BlockpartyPlayer hp : players) {
+			hp.mcPlayer.getInventory().setItem(4, null);
+			if (!hp.isDead && hp.mcPlayer.getLocation().getY() < 0) {
+				hp.isDead = true;
+				hp.mcPlayer.teleport(new Vector(0, 10, 0).toLocation(world));
+				hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999, 1, false, true));
+				hp.mcPlayer.setFlying(true);
+				TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "YOU DIED!");
+				hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1, false, true));
+				hp.mcPlayer.getInventory().setItem(7, Constants.again);
+				hp.mcPlayer.getInventory().setItem(0, Constants.players);
+				hp.mcPlayer.getInventory().setItem(8, Constants.hub);
+			}
 		}
 
 		new BukkitRunnable() {
 			public void run() {
 				Random random = new Random();
 				colorToRemove = colorsUsed.get(random.nextInt(colorsUsed.size()));
-				for (HivePlayer hp : players) {
-					hp.mcPlayer.getInventory().setItem(5, new ItemStack(Material.STAINED_CLAY, 1, colorToRemove.getData()));
+				for (BlockpartyPlayer hp : players) {
+					if (!hp.isDead) {
+						hp.mcPlayer.getInventory().setItem(4, new ItemStack(Material.STAINED_CLAY, 1, colorToRemove.getData()));
+					}
 				}
 			}
 		}.runTaskLater(plugin, 60);
@@ -176,7 +184,7 @@ public class BlockpartyWorld {
 			public void run() {
 				titleTimer--;
 				String message = generateTitle(titleTimer);
-				for (HivePlayer hp : players) {
+				for (BlockpartyPlayer hp : players) {
 					TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 20, message);
 					//hp.mcPlayer.sendMessage(message);
 				}
