@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -149,5 +150,26 @@ public class Constants {
 			}
 		}
 		return inv;
+	}
+	
+	public static ArrayList<DyeColor> colors() {
+		ArrayList<DyeColor> colors = new ArrayList<DyeColor>();
+		colors.add(DyeColor.BLACK);
+		colors.add(DyeColor.BLUE);
+		colors.add(DyeColor.BROWN);
+		colors.add(DyeColor.CYAN);
+		colors.add(DyeColor.GRAY);
+		colors.add(DyeColor.GREEN);
+		colors.add(DyeColor.LIGHT_BLUE);
+		colors.add(DyeColor.LIME);
+		colors.add(DyeColor.MAGENTA);
+		colors.add(DyeColor.ORANGE);
+		colors.add(DyeColor.PINK);
+		colors.add(DyeColor.PURPLE);
+		colors.add(DyeColor.RED);
+		colors.add(DyeColor.SILVER);
+		colors.add(DyeColor.WHITE);
+		colors.add(DyeColor.YELLOW);
+		return colors;
 	}
 }

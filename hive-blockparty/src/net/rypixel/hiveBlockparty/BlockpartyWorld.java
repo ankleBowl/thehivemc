@@ -2,13 +2,16 @@ package net.rypixel.hiveBlockparty;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -46,6 +49,8 @@ public class BlockpartyWorld {
 	public int level;
 	
 	public ArrayList<HivePlayer> players = new ArrayList<HivePlayer>();
+	
+	public HashMap<DyeColor, DyeColor> colorMap = new HashMap<DyeColor, DyeColor>();
 	
 	BlockpartyWorld(Plugin plugin, int id) {
 		this.plugin = plugin;
@@ -125,7 +130,7 @@ public class BlockpartyWorld {
 	
 	public void cycle(int runTime, int emptyTime) {
 		//Set new floor
-
+		loadFloor();
 
 		//get the block they will need to run to
 		for (HivePlayer hp : players) {
@@ -194,7 +199,32 @@ public class BlockpartyWorld {
 	}
 	
 	public void loadFloor() {
+		updateHashmap();
+		
 		Random random = new Random();
 		int map = random.nextInt(9);
+		
+		for (int x = 0; x < 48; x++) {
+			for (int z = 0; z < 48; z++) {
+				Block b = world.getBlockAt(new Vector(x + 100, map, z).toLocation(world));
+				DyeColor color = DyeColor.getByData(b.getData());
+				Block c = world.getBlockAt(x - 32, 0, z - 16);
+				c.setType(Material.STAINED_CLAY);
+				c.setData(colorMap.get(color).getData());
+			}
+		}
+	}
+	
+	public void updateHashmap() {
+		Random random = new Random();
+		ArrayList<DyeColor> colorsToTranslate = Constants.colors();
+		ArrayList<DyeColor> colorsToPut = Constants.colors();
+		while (colorsToTranslate.size() > 0) {
+			int colorInt = random.nextInt(colorsToTranslate.size());
+			int colorPutInt = random.nextInt(colorsToTranslate.size());
+			colorMap.put(colorsToTranslate.get(colorInt), colorsToPut.get(colorPutInt));
+			colorsToTranslate.remove(colorInt);
+			colorsToPut.remove(colorPutInt);
+		}
 	}
 }
