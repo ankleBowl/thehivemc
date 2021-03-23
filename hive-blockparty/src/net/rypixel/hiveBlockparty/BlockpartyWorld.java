@@ -131,6 +131,7 @@ public class BlockpartyWorld {
 		hp.mcPlayer.setSaturation(20);
 		
 		Inventory inv = hp.mcPlayer.getInventory();
+		inv.clear();
 		inv.setItem(0, Constants.rules);
 		inv.setItem(1, Constants.vote);
 		inv.setItem(4, Constants.locker);
@@ -140,6 +141,13 @@ public class BlockpartyWorld {
 	public void chat(String message) {
 		for (BlockpartyPlayer hp : players) {
 			hp.mcPlayer.sendMessage(message);
+		}
+	}
+	
+	public void title(String message) {
+		for (BlockpartyPlayer hp : players) {
+			TitleAPI.sendSubtitle(hp.mcPlayer, 20, 20, 20, "");
+			TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, message);
 		}
 	}
 	
@@ -261,17 +269,39 @@ public class BlockpartyWorld {
 	}
 	
 	public void gameEnding(ArrayList<BlockpartyPlayer> winners) {
+		if (winners.size() > 2) {
+			title(ChatColor.BLUE + "Multiple players have won!");
+		} else if (winners.size() == 1) {
+			title(ChatColor.BLUE + winners.get(0).mcPlayer.getDisplayName() + " has won!");
+		} else {
+			title(ChatColor.BLUE + winners.get(0).mcPlayer.getDisplayName() + " and " +  winners.get(1).mcPlayer.getDisplayName() + " have won!");
+		}
+		for (BlockpartyPlayer hp : players) {
+			hp.mcPlayer.teleport(new Vector(-61.5, 7, 6.5).toLocation(world));
+			
+			Inventory inv = hp.mcPlayer.getInventory();
+			inv.clear();
+			inv.setItem(0, Constants.rules);
+			inv.setItem(1, Constants.vote);
+			inv.setItem(4, Constants.locker);
+			inv.setItem(8, Constants.hub);
+			
+			hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
+			hp.mcPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
+			hp.mcPlayer.setAllowFlight(false);
+			
+			hp.mcPlayer.setFoodLevel(20);
+			hp.mcPlayer.setSaturation(20);
+		}
+		
 		new BukkitRunnable() {
 			public void run() {
-				for (BlockpartyPlayer hp : players) {
-					hp.mcPlayer.teleport(new Vector(-61.5, 7, 6.5).toLocation(world));
-				}
+				stop();
 			}
 		}.runTaskLater(plugin, 200L);
 	}
 	
 	public void opening() {
-		
 		new BukkitRunnable() {
 			public void run() {
 				titleTimer--;
