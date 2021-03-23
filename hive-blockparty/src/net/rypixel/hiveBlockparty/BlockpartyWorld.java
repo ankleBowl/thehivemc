@@ -1,10 +1,13 @@
 package net.rypixel.hiveBlockparty;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -26,8 +29,6 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import com.connorlinfoot.titleapi.TitleAPI;
-
-import net.rypixel.hiveSplegg.Constants;
 
 public class BlockpartyWorld {
 
@@ -66,7 +67,52 @@ public class BlockpartyWorld {
 	}
 	
 	public void onInteract(PlayerInteractEvent event) {
-
+		BlockpartyPlayer hp = Main.playerMap.get(event.getPlayer());
+		if (inGame) {
+			if (event.getItem() != null) {
+				switch (event.getItem().getType()) {
+				case COMPASS:
+					break;
+				case MINECART:
+					players.remove(hp);
+					boolean sent = false;
+					for (BlockpartyWorld world : Main.worlds) {
+						if (!sent && world != this) {
+							if (world.players.size() < 10) {
+								world.welcomePlayer(hp);
+								sent = true;
+							}
+						}
+					}
+					
+					if (!sent) {
+						int id = Functions.getLowestWorldID(Main.worlds);
+						BlockpartyWorld w = new BlockpartyWorld(plugin, id);
+						w.init();
+						Main.worlds.add(w);
+						
+						w.welcomePlayer(hp);
+						sent = true;
+					}
+					break;
+				case SLIME_BALL:
+					Functions.sendToServer(hp.mcPlayer, "lobby0", plugin);
+					break;
+				default:
+					break;
+				}
+			}
+		} else {
+			if (event.getItem() != null) {
+				switch (event.getItem().getType()) {
+				case SLIME_BALL:
+					Functions.sendToServer(hp.mcPlayer, "lobby0", plugin);
+					break;
+				default:
+					break;
+				}
+			}
+		}
 	}
 
 	public void onInventoryClick(InventoryClickEvent event) {
@@ -137,6 +183,7 @@ public class BlockpartyWorld {
 	}
 	
 	public void cycle(int runTime, int emptyTime) {		
+		
 		//Set new floor
 		loadFloor();
 		//get the block they will need to run to
@@ -182,10 +229,14 @@ public class BlockpartyWorld {
 					level++;
 					cycle(Constants.roundSpeed[level], 50);
 				} else {
-					//game is over (tie)
+					stop();
 				}
 			}
 		}.runTaskLater(plugin, runTime + emptyTime + 60);
+		
+		if (players.size() < 1) {
+			stop();
+		}
 	}
 
 	
@@ -273,5 +324,43 @@ public class BlockpartyWorld {
 			colorsToTranslate.remove(colorInt);
 			colorsToPut.remove(colorPutInt);
 		}
+	}
+	
+	public void stop() {
+		for (BlockpartyPlayer hp : players) {
+			hp.mcPlayer.setLevel(0);
+			
+			boolean sent = false;
+			for (BlockpartyWorld world : Main.worlds) {
+				if (!sent && world != this) {
+					if (world.players.size() < 10) {
+						world.welcomePlayer(hp);
+						sent = true;
+					}
+				}
+			}
+			
+			if (!sent) {
+				int id = Functions.getLowestWorldID(Main.worlds);
+				BlockpartyWorld w = new BlockpartyWorld(plugin, id);
+				w.init();
+				Main.worlds.add(w);
+				
+				w.welcomePlayer(hp);
+				sent = true;
+			}
+		}
+		
+		level = 22;
+		
+		File folder = world.getWorldFolder();
+		Bukkit.unloadWorld(world, false);
+		try {
+			FileUtils.deleteDirectory(folder);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		Main.worlds.remove(this);
 	}
 }
