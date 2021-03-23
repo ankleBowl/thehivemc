@@ -206,6 +206,7 @@ public class BlockpartyWorld {
 				hp.mcPlayer.getInventory().setItem(7, Constants.again);
 				hp.mcPlayer.getInventory().setItem(0, Constants.players);
 				hp.mcPlayer.getInventory().setItem(8, Constants.hub);
+				chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " -> " + ChatColor.RED + "ELIMINATED!");
 			}
 		}
 
@@ -368,5 +369,9 @@ public class BlockpartyWorld {
 		}
 		
 		Main.worlds.remove(this);
+	}
+	
+	public String chatPrefix() {
+		return ChatColor.DARK_GRAY + "| " + ChatColor.AQUA + "B" + ChatColor.GREEN + "l" + ChatColor.YELLOW + "o" + ChatColor.GOLD + "c" + ChatColor.RED + "k" + ChatColor.AQUA + "Party" + ChatColor.DARK_GRAY + " |";
 	}
 }
