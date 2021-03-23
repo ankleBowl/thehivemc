@@ -357,9 +357,8 @@ public class BlockpartyWorld {
 	
 	public void loadFloor() {
 		int map = 0;
+		updateHashmap();
 		if (level != 0) {
-			updateHashmap();
-			
 			Random random = new Random();
 			map = random.nextInt(9);
 		}
@@ -381,15 +380,22 @@ public class BlockpartyWorld {
 	}
 	
 	public void updateHashmap() {
-		Random random = new Random();
-		ArrayList<DyeColor> colorsToTranslate = Constants.colors();
-		ArrayList<DyeColor> colorsToPut = Constants.colors();
-		while (colorsToTranslate.size() > 0) {
-			int colorInt = random.nextInt(colorsToTranslate.size());
-			int colorPutInt = random.nextInt(colorsToTranslate.size());
-			colorMap.put(colorsToTranslate.get(colorInt), colorsToPut.get(colorPutInt));
-			colorsToTranslate.remove(colorInt);
-			colorsToPut.remove(colorPutInt);
+		if (level != 0) {
+			Random random = new Random();
+			ArrayList<DyeColor> colorsToTranslate = Constants.colors();
+			ArrayList<DyeColor> colorsToPut = Constants.colors();
+			while (colorsToTranslate.size() > 0) {
+				int colorInt = random.nextInt(colorsToTranslate.size());
+				int colorPutInt = random.nextInt(colorsToTranslate.size());
+				colorMap.put(colorsToTranslate.get(colorInt), colorsToPut.get(colorPutInt));
+				colorsToTranslate.remove(colorInt);
+				colorsToPut.remove(colorPutInt);
+			}
+		} else {
+			ArrayList<DyeColor> colors = Constants.colors();
+			for (DyeColor c : colors) {
+				colorMap.put(c, c);
+			}
 		}
 	}
 	
