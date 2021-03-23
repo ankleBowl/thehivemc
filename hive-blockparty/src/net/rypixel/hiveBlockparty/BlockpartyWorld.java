@@ -190,7 +190,9 @@ public class BlockpartyWorld {
 		
 		//Set new floor
 		loadFloor();
+		chat(chatPrefix() + ChatColor.GREEN + " ✚" + ChatColor.AQUA + "1 point");
 		//get the block they will need to run to
+		ArrayList<BlockpartyPlayer> dead = new ArrayList<BlockpartyPlayer>();
 		for (BlockpartyPlayer hp : players) {
 			hp.mcPlayer.setFoodLevel(20);
 			hp.mcPlayer.setSaturation(20);
@@ -207,45 +209,66 @@ public class BlockpartyWorld {
 				hp.mcPlayer.getInventory().setItem(0, Constants.players);
 				hp.mcPlayer.getInventory().setItem(8, Constants.hub);
 				chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " -> " + ChatColor.RED + "ELIMINATED!");
+				dead.add(hp);
 			}
 		}
 
-		new BukkitRunnable() {
-			public void run() {
-				Random random = new Random();
-				colorToRemove = colorsUsed.get(random.nextInt(colorsUsed.size()));
-				for (BlockpartyPlayer hp : players) {
-					if (!hp.isDead) {
-						hp.mcPlayer.getInventory().setItem(4, new ItemStack(Material.STAINED_CLAY, 1, colorToRemove.getData()));
+		ArrayList<BlockpartyPlayer> possibleWinner = null;
+		for (BlockpartyPlayer hp : players) {
+			if (!hp.isDead) {
+				possibleWinner.add(hp);
+			}
+		}
+		
+		if (possibleWinner.size() < 2) {
+			if (possibleWinner.size() == 0) {
+				gameEnding(dead);
+			} else {
+				gameEnding(possibleWinner);
+			}
+		} else {
+			new BukkitRunnable() {
+				public void run() {
+					Random random = new Random();
+					colorToRemove = colorsUsed.get(random.nextInt(colorsUsed.size()));
+					for (BlockpartyPlayer hp : players) {
+						if (!hp.isDead) {
+							hp.mcPlayer.getInventory().setItem(4, new ItemStack(Material.STAINED_CLAY, 1, colorToRemove.getData()));
+						}
 					}
 				}
-			}
-		}.runTaskLater(plugin, 60);
-		
-		new BukkitRunnable() {
-			public void run() {
-				//remove the floor
-				removeFloor(colorToRemove);
-			}
-		}.runTaskLater(plugin, runTime + 60);
-		
-		new BukkitRunnable() {
-			public void run() {
-				//when the players wait and the floor is empty
-				if (level < 20) {
-					level++;
-					cycle(Constants.roundSpeed[level], 50);
-				} else {
-					stop();
+			}.runTaskLater(plugin, 60);
+			
+			new BukkitRunnable() {
+				public void run() {
+					//remove the floor
+					removeFloor(colorToRemove);
 				}
-			}
-		}.runTaskLater(plugin, runTime + emptyTime + 60);
-		
-		if (players.size() < 1) {
-			stop();
+			}.runTaskLater(plugin, runTime + 60);
+			
+			new BukkitRunnable() {
+				public void run() {
+					//when the players wait and the floor is empty
+					if (level < 20) {
+						level++;
+						cycle(Constants.roundSpeed[level], 50);
+					} else {
+						stop();
+					}
+				}
+			}.runTaskLater(plugin, runTime + emptyTime + 60);
 		}
 	}
-
+	
+	public void gameEnding(ArrayList<BlockpartyPlayer> winners) {
+		new BukkitRunnable() {
+			public void run() {
+				for (BlockpartyPlayer hp : players) {
+					hp.mcPlayer.teleport(new Vector(-61.5, 7, 6.5).toLocation(world));
+				}
+			}
+		}.runTaskLater(plugin, 200L);
+	}
 	
 	public void opening() {
 		
