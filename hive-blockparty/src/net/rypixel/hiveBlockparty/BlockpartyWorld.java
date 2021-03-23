@@ -15,6 +15,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -62,8 +63,9 @@ public class BlockpartyWorld {
 		update();
 	}
 
-	public void onPlayerLeave(PlayerQuitEvent event) {
-		
+	public void onPlayerLeave(Player p) {
+		BlockpartyPlayer hp = Main.playerMap.get(p);
+		players.remove(hp);
 	}
 	
 	public void onInteract(PlayerInteractEvent event) {
@@ -398,7 +400,7 @@ public class BlockpartyWorld {
 			}
 		}
 	}
-	
+		
 	public void stop() {
 		for (BlockpartyPlayer hp : players) {
 			hp.mcPlayer.setLevel(0);

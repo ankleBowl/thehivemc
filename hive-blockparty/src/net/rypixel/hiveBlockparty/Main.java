@@ -161,7 +161,7 @@ public class Main extends JavaPlugin implements Listener {
 		BlockpartyPlayer hp = playerMap.get(event.getPlayer());
 		
 		BlockpartyWorld world = Functions.getWorldByID(worlds, hp.serverId);
-		world.onPlayerLeave(event);
+		world.onPlayerLeave(event.getPlayer());
 		
 		MySQL.update("UPDATE playerInfo SET lobby=\"Offline\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		
