@@ -362,7 +362,7 @@ public class BlockpartyWorld {
 		updateHashmap();
 		if (level != 0) {
 			Random random = new Random();
-			map = random.nextInt(9);
+			map = random.nextInt(9) + 1;
 		}
 		
 		colorsUsed.clear();
