@@ -27,6 +27,8 @@ import org.bukkit.util.Vector;
 
 import com.connorlinfoot.titleapi.TitleAPI;
 
+import net.rypixel.hiveSplegg.Constants;
+
 public class BlockpartyWorld {
 
 	public int id;
@@ -78,6 +80,12 @@ public class BlockpartyWorld {
 		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
 		hp.mcPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
 		hp.mcPlayer.setAllowFlight(false);
+		
+		Inventory inv = hp.mcPlayer.getInventory();
+		inv.setItem(0, Constants.rules);
+		inv.setItem(1, Constants.vote);
+		inv.setItem(4, Constants.locker);
+		inv.setItem(8, Constants.hub);
 	}
 	
 	public void chat(String message) {
