@@ -287,9 +287,8 @@ public class BlockpartyWorld {
 			
 			Inventory inv = hp.mcPlayer.getInventory();
 			inv.clear();
-			inv.setItem(0, Constants.rules);
-			inv.setItem(1, Constants.vote);
-			inv.setItem(4, Constants.locker);
+			inv.setItem(7, Constants.again);
+			inv.setItem(0, Constants.players);
 			inv.setItem(8, Constants.hub);
 			
 			hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
