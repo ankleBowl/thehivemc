@@ -51,6 +51,8 @@ public class BlockpartyWorld {
 	public ArrayList<HivePlayer> players = new ArrayList<HivePlayer>();
 	
 	public HashMap<DyeColor, DyeColor> colorMap = new HashMap<DyeColor, DyeColor>();
+	public ArrayList<DyeColor> colorsUsed = new ArrayList<DyeColor>();
+	public DyeColor colorToRemove;
 	
 	BlockpartyWorld(Plugin plugin, int id) {
 		this.plugin = plugin;
@@ -128,10 +130,9 @@ public class BlockpartyWorld {
 		cycle(Constants.roundSpeed[level], 50);
 	}
 	
-	public void cycle(int runTime, int emptyTime) {
+	public void cycle(int runTime, int emptyTime) {		
 		//Set new floor
 		loadFloor();
-
 		//get the block they will need to run to
 		for (HivePlayer hp : players) {
 			//check if dead
@@ -139,16 +140,27 @@ public class BlockpartyWorld {
 
 		new BukkitRunnable() {
 			public void run() {
+				Random random = new Random();
+				colorToRemove = colorsUsed.get(random.nextInt(colorsUsed.size()));
 				//countdown for players to run
+			}
+		}.runTaskLater(plugin, 60);
+		
+		new BukkitRunnable() {
+			public void run() {
+				//remove the floor
+				removeFloor(colorToRemove);
+
 			}
 		}.runTaskLater(plugin, runTime + 60);
 		
 		new BukkitRunnable() {
 			public void run() {
-				//remove the floor
+				//when the players wait and the floor is empty
 				if (level < 21) {
 					level++;
 					cycle(Constants.roundSpeed[level], 50);
+					
 				} else {
 					//game is over (tie)
 				}
@@ -198,11 +210,23 @@ public class BlockpartyWorld {
 		}
 	}
 	
+	public void removeFloor(DyeColor color) {
+		for (int x = 0; x < 48; x++) {
+			for (int z = 0; z < 48; z++) {
+				Block c = world.getBlockAt(x - 32, 0, z - 16);
+				if (c.getData() == colorToRemove.getData()) {
+					c.setType(Material.AIR);
+				}
+			}
+		}
+	}
+	
 	public void loadFloor() {
 		updateHashmap();
 		
 		Random random = new Random();
 		int map = random.nextInt(9);
+		colorsUsed.clear();
 		
 		for (int x = 0; x < 48; x++) {
 			for (int z = 0; z < 48; z++) {
@@ -211,6 +235,9 @@ public class BlockpartyWorld {
 				Block c = world.getBlockAt(x - 32, 0, z - 16);
 				c.setType(Material.STAINED_CLAY);
 				c.setData(colorMap.get(color).getData());
+				if (!colorsUsed.contains(colorMap.get(color))) {
+					colorsUsed.add(colorMap.get(color));
+				}
 			}
 		}
 	}
