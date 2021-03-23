@@ -1,5 +1,6 @@
 package net.rypixel.hiveBlockparty;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -19,6 +20,14 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import com.connorlinfoot.titleapi.TitleAPI;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.function.operation.Operation;
+import com.sk89q.worldedit.session.ClipboardHolder;
 
 public class BlockpartyWorld {
 
@@ -76,25 +85,27 @@ public class BlockpartyWorld {
 	public void update() {
 		timer = new BukkitRunnable() {
 			public void run() {
-				if (players.size() > 5 && !starting) {
-					starting = true;
-				} else {
-					for (HivePlayer hp : players) {
-						TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 0, "");
-						TitleAPI.sendSubtitle(hp.mcPlayer, 0, 20, 0, ChatColor.YELLOW + String.valueOf(6 - players.size()) + " players needed to start...");
-					}
-				}
-				
-				if (starting) {
-					countdown--;
-					
-					for (HivePlayer hp : players) {
-						TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 0, "");
-						TitleAPI.sendSubtitle(hp.mcPlayer, 0, 20, 0, ChatColor.GREEN + "Starting game in " + String.valueOf(countdown / 20));
+				if (!inGame) {
+					if (players.size() > 5 && !starting) {
+						starting = true;
+					} else {
+						for (HivePlayer hp : players) {
+							TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 0, "");
+							TitleAPI.sendSubtitle(hp.mcPlayer, 0, 20, 0, ChatColor.YELLOW + String.valueOf(6 - players.size()) + " players needed to start...");
+						}
 					}
 					
-					if (countdown == 0) {
-						initGame();
+					if (starting) {
+						countdown--;
+						
+						for (HivePlayer hp : players) {
+							TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 0, "");
+							TitleAPI.sendSubtitle(hp.mcPlayer, 0, 20, 0, ChatColor.GREEN + "Starting game in " + String.valueOf(countdown / 20));
+						}
+						
+						if (countdown == 0) {
+							initGame();
+						}
 					}
 				}
 			}
@@ -105,34 +116,41 @@ public class BlockpartyWorld {
 		for (HivePlayer hp : players) {
 			hp.mcPlayer.teleport(new Vector(0, 1, 0).toLocation(world));
 		}
-		
+		inGame = true;
 		titleTimer = 10;
 		
-		cycle(100, 50);
+		opening();
+		cycle(Constants.roundSpeed[level], 50);
 	}
 	
 	public void cycle(int runTime, int emptyTime) {
+		//Set new floor
+
+
+		//get the block they will need to run to
 		for (HivePlayer hp : players) {
 			//check if dead
 		}
-		
+
 		new BukkitRunnable() {
 			public void run() {
 				//countdown for players to run
 			}
-		}.runTaskLater(plugin, runTime);
+		}.runTaskLater(plugin, runTime + 60);
 		
 		new BukkitRunnable() {
 			public void run() {
 				//remove the floor
-				if (level < 22) {
-					cycle(100, 50);
+				if (level < 21) {
+					level++;
+					cycle(Constants.roundSpeed[level], 50);
 				} else {
 					//game is over (tie)
 				}
 			}
-		}.runTaskLater(plugin, runTime);
+		}.runTaskLater(plugin, runTime + emptyTime + 60);
 	}
+
 	
 	public void opening() {
 		
@@ -142,6 +160,7 @@ public class BlockpartyWorld {
 				String message = generateTitle(titleTimer);
 				for (HivePlayer hp : players) {
 					TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 20, message);
+					//hp.mcPlayer.sendMessage(message);
 				}
 				if (titleTimer < -9) {
 					cancel();
@@ -159,12 +178,12 @@ public class BlockpartyWorld {
 					string += " ";
 				}
 			}
-			return string;
+			return ChatColor.YELLOW + string;
 		} else {
 			int number = Math.abs(spacing);
 			String string = "";
 			for (int i = 0; i < 10; i++) {
-				if (i != number) {
+				if (i != number - 1) {
 					string += ChatColor.YELLOW + Constants.blockpartyText[i];
 				} else {
 					string += ChatColor.GOLD + Constants.blockpartyText[i];
@@ -172,5 +191,10 @@ public class BlockpartyWorld {
 			}
 			return string;
 		}
+	}
+	
+	public void loadFloor() {
+		Random random = new Random();
+		int map = random.nextInt(9);
 	}
 }

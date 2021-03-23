@@ -20,9 +20,8 @@ public class Constants {
 	public static ItemStack again;
 	public static ItemStack players;
 	
-	public static ItemStack spleggGun;
-	
 	public static String[] blockpartyText;
+	public static int[] roundSpeed;
 	
 	public static void init() {
 		ItemMeta meta = null;
@@ -113,6 +112,29 @@ public class Constants {
 		blockpartyText[7] = "r";
 		blockpartyText[8] = "t";
 		blockpartyText[9] = "y";
+		
+		roundSpeed = new int[21];
+		roundSpeed[0] = 120;
+		roundSpeed[1] = 110;
+		roundSpeed[2] = 110;
+		roundSpeed[3] = 100;
+		roundSpeed[4] = 100;
+		roundSpeed[5] = 90;
+		roundSpeed[6] = 90;
+		roundSpeed[7] = 80;
+		roundSpeed[8] = 80;
+		roundSpeed[9] = 70;
+		roundSpeed[10] = 70;
+		roundSpeed[11] = 60;
+		roundSpeed[12] = 60;
+		roundSpeed[13] = 50;
+		roundSpeed[14] = 50;
+		roundSpeed[15] = 40;
+		roundSpeed[16] = 40;
+		roundSpeed[17] = 30;
+		roundSpeed[18] = 30;
+		roundSpeed[19] = 20;
+		roundSpeed[20] = 20;
 	}
 	
 	public static Inventory playerSelector(ArrayList<HivePlayer> players) {
@@ -123,6 +145,7 @@ public class Constants {
 				SkullMeta meta = (SkullMeta) skull.getItemMeta();
 				meta.setDisplayName(ChatColor.BLUE + players.get(i).mcPlayer.getDisplayName());
 				meta.setOwner(players.get(i).mcPlayer.getUniqueId().toString());
+				skull.setItemMeta(meta);
 			}
 		}
 		return inv;
