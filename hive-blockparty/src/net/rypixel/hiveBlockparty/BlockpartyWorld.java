@@ -127,6 +127,9 @@ public class BlockpartyWorld {
 		hp.mcPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
 		hp.mcPlayer.setAllowFlight(false);
 		
+		hp.mcPlayer.setFoodLevel(20);
+		hp.mcPlayer.setSaturation(20);
+		
 		Inventory inv = hp.mcPlayer.getInventory();
 		inv.setItem(0, Constants.rules);
 		inv.setItem(1, Constants.vote);
@@ -174,6 +177,7 @@ public class BlockpartyWorld {
 		for (BlockpartyPlayer hp : players) {
 			hp.mcPlayer.teleport(new Vector(0, 1, 0).toLocation(world));
 			hp.isDead = false;
+			hp.mcPlayer.getInventory().clear();
 		}
 		inGame = true;
 		titleTimer = 10;
@@ -188,6 +192,8 @@ public class BlockpartyWorld {
 		loadFloor();
 		//get the block they will need to run to
 		for (BlockpartyPlayer hp : players) {
+			hp.mcPlayer.setFoodLevel(20);
+			hp.mcPlayer.setSaturation(20);
 			hp.mcPlayer.getInventory().setItem(4, null);
 			if (!hp.isDead && hp.mcPlayer.getLocation().getY() < 0) {
 				hp.isDead = true;
@@ -225,7 +231,7 @@ public class BlockpartyWorld {
 		new BukkitRunnable() {
 			public void run() {
 				//when the players wait and the floor is empty
-				if (level < 21) {
+				if (level < 20) {
 					level++;
 					cycle(Constants.roundSpeed[level], 50);
 				} else {
