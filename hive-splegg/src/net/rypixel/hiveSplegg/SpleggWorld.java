@@ -199,6 +199,7 @@ public class SpleggWorld {
 							hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(gameWorld));
 							hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
 							hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999, 1, false, true));
+							hp.mcPlayer.setAllowFlight(true);
 							hp.mcPlayer.setFlying(true);
 							TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "YOU DIED!");
 							hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1, false, true));
@@ -366,6 +367,8 @@ public class SpleggWorld {
 		hp.mcPlayer.teleport(new Vector(0, 10, 0).toLocation(world));
 		hp.serverId = id;
 		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
+		hp.mcPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
+		hp.mcPlayer.setAllowFlight(false);
 		
 		Inventory inv = hp.mcPlayer.getInventory();
 		inv.setItem(0, Constants.rules);

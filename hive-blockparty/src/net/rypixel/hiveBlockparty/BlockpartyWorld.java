@@ -76,6 +76,8 @@ public class BlockpartyWorld {
 		hp.mcPlayer.teleport(new Vector(34.5, 3, 8).toLocation(world));
 		hp.serverId = id;
 		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
+		hp.mcPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
+		hp.mcPlayer.setAllowFlight(false);
 	}
 	
 	public void chat(String message) {
@@ -136,6 +138,7 @@ public class BlockpartyWorld {
 				hp.isDead = true;
 				hp.mcPlayer.teleport(new Vector(0, 10, 0).toLocation(world));
 				hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999, 1, false, true));
+				hp.mcPlayer.setAllowFlight(true);
 				hp.mcPlayer.setFlying(true);
 				TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "YOU DIED!");
 				hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1, false, true));
