@@ -202,10 +202,6 @@ public class BlockpartyWorld {
 		//Set new floor
 		loadFloor();
 		
-		if (level != 0) {
-			chat(chatPrefix() + ChatColor.GREEN + " ✚" + ChatColor.AQUA + " 1 point");
-		}
-		
 		ArrayList<BlockpartyPlayer> dead = new ArrayList<BlockpartyPlayer>();
 		for (BlockpartyPlayer hp : players) {
 			hp.mcPlayer.setFoodLevel(20);
@@ -226,12 +222,38 @@ public class BlockpartyWorld {
 				dead.add(hp);
 			}
 		}
+		
+		if (level != 0) {
+			chat(chatPrefix() + ChatColor.GREEN + " ✚" + ChatColor.AQUA + " 1 point");
+		}
 
 		ArrayList<BlockpartyPlayer> possibleWinner = new ArrayList<BlockpartyPlayer>();
 		for (BlockpartyPlayer hp : players) {
 			if (!hp.isDead) {
 				possibleWinner.add(hp);
+				if (level != 0) {
+					hp.tempPoints++;
+					hp.points++;
+				}
 			}
+		}
+		
+		for (BlockpartyPlayer hp : players) {
+			hp.scoreboard.setTitle(ChatColor.YELLOW + "BlockParty");
+			hp.scoreboard.setSlot(14, "");
+			hp.scoreboard.setSlot(13, ChatColor.RED + "Dancers Left");
+			hp.scoreboard.setSlot(12, String.valueOf(possibleWinner.size()) + ChatColor.GRAY + " Dancers");
+			hp.scoreboard.setSlot(11, "");
+			hp.scoreboard.setSlot(10, ChatColor.AQUA + "Game Info");
+			hp.scoreboard.setSlot(9, ChatColor.GRAY + "Round: " + ChatColor.WHITE + String.valueOf(level + 1));
+			hp.scoreboard.setSlot(8, ChatColor.GRAY + "Round Speed: " + ChatColor.WHITE + String.valueOf((double) Constants.roundSpeed[level] / 20) + "s");
+			hp.scoreboard.setSlot(7, "");
+			hp.scoreboard.setSlot(6, ChatColor.GREEN + "Your Stats");
+			hp.scoreboard.setSlot(5, ChatColor.GRAY + "Points: " + ChatColor.WHITE + String.valueOf(hp.tempPoints));
+			hp.scoreboard.setSlot(4, ChatColor.GRAY + "Powerups: " + ChatColor.WHITE + "N/A");
+			hp.scoreboard.setSlot(3, "");
+			hp.scoreboard.setSlot(2, ChatColor.DARK_GRAY + "----------------");
+			hp.scoreboard.setSlot(1, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
 		}
 		
 		if (possibleWinner.size() < 2) {

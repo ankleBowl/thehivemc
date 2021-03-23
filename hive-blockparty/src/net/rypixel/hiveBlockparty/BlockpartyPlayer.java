@@ -11,5 +11,6 @@ public class BlockpartyPlayer extends HivePlayer {
 	}
 
 	public boolean isDead;
-	
+	public int tempPoints;
+	public int points;
 }
