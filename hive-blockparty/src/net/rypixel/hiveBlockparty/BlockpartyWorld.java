@@ -166,6 +166,27 @@ public class BlockpartyWorld {
 		timer = new BukkitRunnable() {
 			public void run() {
 				if (!inGame) {
+					
+					for (BlockpartyPlayer hp : players) {
+						hp.scoreboard.setTitle(ChatColor.GOLD + "Hive" + ChatColor.YELLOW + "MC");
+						hp.scoreboard.setSlot(15, "");
+						hp.scoreboard.setSlot(14, ChatColor.GREEN + "Tokens");
+						hp.scoreboard.setSlot(13, ChatColor.GRAY + String.valueOf(hp.tokens));
+						hp.scoreboard.setSlot(12, "");
+						hp.scoreboard.setSlot(11, ChatColor.YELLOW + "Your Stats");
+						hp.scoreboard.setSlot(10, ChatColor.DARK_AQUA + "Points: " + ChatColor.AQUA + String.valueOf(hp.points));
+						hp.scoreboard.setSlot(9, ChatColor.DARK_AQUA + "Games Played: " + ChatColor.AQUA + String.valueOf(hp.playedGames));
+						hp.scoreboard.setSlot(8, ChatColor.DARK_AQUA + "Victories: " + ChatColor.AQUA + String.valueOf(hp.wonGames));
+						hp.scoreboard.setSlot(7, ChatColor.DARK_AQUA + "Win Streak: " + ChatColor.AQUA + String.valueOf(hp.winstreak));
+						hp.scoreboard.setSlot(6, ChatColor.DARK_AQUA + "Hardcore Points: " + ChatColor.AQUA + String.valueOf(hp.hardcorePoints));
+						hp.scoreboard.setSlot(5, ChatColor.DARK_AQUA + "Hardcore Victories: " + ChatColor.AQUA + String.valueOf(hp.hardcoreWins));
+						hp.scoreboard.setSlot(4, ChatColor.DARK_AQUA + "Placings: " + ChatColor.AQUA + String.valueOf(hp.placings));
+						hp.scoreboard.setSlot(3, "");
+						hp.scoreboard.setSlot(2, ChatColor.DARK_GRAY + "----------------");
+						hp.scoreboard.setSlot(1, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
+						
+					}
+					
 					if (players.size() > 5 && !starting) {
 						starting = true;
 					} else {
@@ -185,6 +206,7 @@ public class BlockpartyWorld {
 						
 						if (countdown == 0) {
 							initGame();
+							cancel();
 						}
 					}
 				}
