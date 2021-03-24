@@ -6,6 +6,8 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
@@ -141,6 +143,17 @@ public class GravityWorld {
 						if (countdown == 0) {
 							initGame();
 							cancel();
+						}
+					}
+				} else {
+					for (GravityPlayer hp : players) {
+						Location playerLoc = hp.mcPlayer.getLocation();
+						playerLoc = playerLoc.subtract(new Vector(0, 1, 0));
+						if (playerLoc.getBlock().getType() == Material.AIR) {
+							hp.flyTime++;
+						}
+						if (hp.flyTime > 140) {
+							hp.mcPlayer.kickPlayer("Stop Flyhacking pls");
 						}
 					}
 				}
