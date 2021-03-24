@@ -214,6 +214,11 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	@EventHandler
+	public void onHit(ProjectileHitEvent event) {
+		Functions.getWorldByWorld(worlds, event.getEntity().getLocation().getWorld()).onHit(event);
+	}
+	
+	@EventHandler
 	public void onPlayerThrow(PlayerDropItemEvent event) {
 		event.setCancelled(true);
 	}

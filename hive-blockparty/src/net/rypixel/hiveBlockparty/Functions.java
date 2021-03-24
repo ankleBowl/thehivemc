@@ -119,4 +119,14 @@ public class Functions {
 		}
 		return w;
 	}
+	
+	public static BlockpartyWorld getWorldByWorld(ArrayList<BlockpartyWorld> worlds, World world1) {
+		BlockpartyWorld w = null;
+		for (BlockpartyWorld world : worlds) {
+			if (world.world == world1) {
+				w = world;
+			}
+		}
+		return w;
+	}
 }

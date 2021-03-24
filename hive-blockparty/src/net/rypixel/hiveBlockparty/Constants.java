@@ -22,6 +22,10 @@ public class Constants {
 	public static ItemStack again;
 	public static ItemStack players;
 	
+	public static ItemStack jump;
+	public static ItemStack pearl;
+	public static ItemStack rain;
+	
 	public static String[] blockpartyText;
 	public static int[] roundSpeed;
 	
@@ -105,6 +109,21 @@ public class Constants {
 		lore.add(ChatColor.AQUA + "► Right-click when held");
 		meta.setLore(lore);
 		again.setItemMeta(meta);
+		
+		jump = new ItemStack(Material.FEATHER, 1);
+		meta = jump.getItemMeta();
+		meta.setDisplayName(ChatColor.GREEN + "Jump Boost");
+		jump.setItemMeta(meta);
+		
+		jump = new ItemStack(Material.ENDER_PEARL, 1);
+		meta = jump.getItemMeta();
+		meta.setDisplayName(ChatColor.GREEN + "Ender Pearl");
+		jump.setItemMeta(meta);
+		
+		rain = new ItemStack(Material.ENDER_PEARL, 1);
+		meta = rain.getItemMeta();
+		meta.setDisplayName(ChatColor.GREEN + "Color Rain");
+		rain.setItemMeta(meta);
 		
 		blockpartyText = new String[10];
 		blockpartyText[0] = "B";

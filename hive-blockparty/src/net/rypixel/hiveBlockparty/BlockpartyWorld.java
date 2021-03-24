@@ -5,19 +5,24 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
+
+import javax.persistence.spi.PersistenceUnitTransactionType;
 
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -107,10 +112,44 @@ public class BlockpartyWorld {
 				case SLIME_BALL:
 					Functions.sendToServer(hp.mcPlayer, "lobby0", plugin);
 					break;
+				case FEATHER:
+    				Vector dir = hp.mcPlayer.getLocation().getDirection();
+    				Vector velocity = new Vector(dir.getX() * 10, 1.5, dir.getZ() * 10);
+    				hp.mcPlayer.setVelocity(velocity);
+    				break;
+				case MAGMA_CREAM:
+					colorRain();
+					break;
 				default:
 					break;
 				}
 			}
+			
+			Location l = hp.mcPlayer.getTargetBlock((HashSet<Byte>) null, 5).getLocation();
+			if (l.getBlock().getType() == Material.JUKEBOX) {
+				l.getBlock().setType(Material.AIR);
+				Random random = new Random();
+				int rnd = random.nextInt(5);
+				switch (rnd) {
+				case 0:
+					hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 200, 1));
+					break;
+				case 1:
+					hp.mcPlayer.getInventory().addItem(Constants.jump);
+					break;
+				case 2:
+					hp.mcPlayer.getInventory().addItem(Constants.pearl);
+					break;
+				case 3:
+					hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 200, 1));
+					break;
+				case 4:
+					hp.mcPlayer.getInventory().addItem(Constants.rain);
+					break;
+				}
+			}
+			
+			
 		} else {
 			if (event.getItem() != null) {
 				switch (event.getItem().getType()) {
@@ -119,6 +158,18 @@ public class BlockpartyWorld {
 					break;
 				default:
 					break;
+				}
+			}
+		}
+	}
+	
+	public void colorRain() {
+		Random rnd = new Random();
+		for (int x = 0; x < 48; x++) {
+			for (int z = 0; z < 48; z++) {
+				Location l = new Vector(x - 32, 20, z - 16).toLocation(world);
+				if (rnd.nextBoolean()) {
+					world.spawnEntity(l, EntityType.SNOWBALL);
 				}
 			}
 		}
@@ -420,6 +471,15 @@ public class BlockpartyWorld {
 		}.runTaskTimer(plugin, 0L, 1L);
 	}
 	
+	public void onHit(ProjectileHitEvent event) {
+		Random rnd = new Random();
+		if (event.getEntityType() == EntityType.SNOWBALL) {
+			Location loc = event.getEntity().getLocation().subtract(new Vector(0, 0.5, 0));
+			int random = rnd.nextInt(colorsUsed.size());
+			loc.getBlock().setData(colorsUsed.get(random).getData());
+		}
+	}
+	
 	public String generateTitle(int spacing) {
 		if (spacing > -1) {
 			String string = "";
@@ -457,9 +517,9 @@ public class BlockpartyWorld {
 	
 	public void loadFloor() {
 		int map = 0;
+		Random random = new Random();
 		updateHashmap();
 		if (level != 0) {
-			Random random = new Random();
 			map = random.nextInt(9) + 1;
 		}
 		
@@ -476,6 +536,12 @@ public class BlockpartyWorld {
 					colorsUsed.add(colorMap.get(color));
 				}
 			}
+		}
+		
+		if (random.nextDouble() < 0.1) {
+			int x = random.nextInt(48) - 32;
+			int y = random.nextInt(48) - 16;
+			world.getBlockAt(x, 1, y).setType(Material.JUKEBOX);
 		}
 	}
 	
