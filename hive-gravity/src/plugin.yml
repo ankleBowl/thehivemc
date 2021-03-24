@@ -1,0 +1,9 @@
+main: net.rypixel.hiveBlockparty.Main
+name: Hive Splegg
+version: 1.0
+author: ankleBowl
+api-version: 1.8
+depend: [MySQL,TitleAPI]
+commands:
+    close:
+    start:
