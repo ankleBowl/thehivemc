@@ -15,6 +15,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -41,6 +42,7 @@ public class BlockpartyWorld {
 	
 	public boolean inGame;
 	public boolean starting;
+	public boolean ending;
 	public int countdown;
 	
 	public int titleTimer;
@@ -67,6 +69,10 @@ public class BlockpartyWorld {
 	public void onPlayerLeave(Player p) {
 		BlockpartyPlayer hp = Main.playerMap.get(p);
 		players.remove(hp);
+		if (!ending && !starting) {
+			chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " -> " + ChatColor.RED + "ELIMINATED!");
+			world.spawnEntity(hp.mcPlayer.getLocation(), EntityType.LIGHTNING);
+		}
 	}
 	
 	public void onInteract(PlayerInteractEvent event) {
@@ -147,9 +153,9 @@ public class BlockpartyWorld {
 		}
 	}
 	
-	public void title(String message) {
+	public void title(String message, String subtitle) {
 		for (BlockpartyPlayer hp : players) {
-			TitleAPI.sendSubtitle(hp.mcPlayer, 20, 20, 20, "");
+			TitleAPI.sendSubtitle(hp.mcPlayer, 20, 20, 20, subtitle);
 			TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, message);
 		}
 	}
@@ -207,6 +213,10 @@ public class BlockpartyWorld {
 			hp.mcPlayer.setFoodLevel(20);
 			hp.mcPlayer.setSaturation(20);
 			hp.mcPlayer.getInventory().setItem(4, null);
+			
+			TitleAPI.sendSubtitle(hp.mcPlayer, 0, 61, 0, ChatColor.AQUA + "Waiting...");
+			TitleAPI.sendTitle(hp.mcPlayer, 0, 61, 0, "");
+			
 			if (!hp.isDead && hp.mcPlayer.getLocation().getY() < 0) {
 				hp.isDead = true;
 				hp.mcPlayer.teleport(new Vector(0, 10, 0).toLocation(world));
@@ -219,6 +229,7 @@ public class BlockpartyWorld {
 				hp.mcPlayer.getInventory().setItem(0, Constants.players);
 				hp.mcPlayer.getInventory().setItem(8, Constants.hub);
 				chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " -> " + ChatColor.RED + "ELIMINATED!");
+				world.spawnEntity(hp.mcPlayer.getLocation(), EntityType.LIGHTNING);
 				dead.add(hp);
 			}
 		}
@@ -269,7 +280,8 @@ public class BlockpartyWorld {
 					colorToRemove = colorsUsed.get(random.nextInt(colorsUsed.size()));
 					for (BlockpartyPlayer hp : players) {
 						if (!hp.isDead) {
-							hp.mcPlayer.getInventory().setItem(4, new ItemStack(Material.STAINED_CLAY, 1, colorToRemove.getData()));
+							hp.mcPlayer.getInventory().setItem(4, Constants.blockpartyBlock(colorToRemove));
+							countDown(runTime);
 						}
 					}
 				}
@@ -279,6 +291,10 @@ public class BlockpartyWorld {
 				public void run() {
 					//remove the floor
 					removeFloor(colorToRemove);
+					for (BlockpartyPlayer hp : players) {
+						TitleAPI.sendSubtitle(hp.mcPlayer, 0, 51, 0, ChatColor.RED + "✖ " + ChatColor.WHITE + "STOP" + ChatColor.RED + " ✖");
+						TitleAPI.sendTitle(hp.mcPlayer, 0, 51, 0, "");
+					}
 				}
 			}.runTaskLater(plugin, runTime + 60);
 			
@@ -296,13 +312,36 @@ public class BlockpartyWorld {
 		}
 	}
 	
+	public void countDown(int ticks) {
+		new BukkitRunnable() {
+			public void run() {
+				if (ticks > 9) {
+					String message = Constants.colorToChat.get(colorToRemove) + "";
+					for (int i = 0; i < ticks / 10; i++) {
+						message += "■";
+					}
+					message += " " + Constants.colorToName.get(colorToRemove) + " ";
+					for (int i = 0; i < ticks / 10; i++) {
+						message += "■";
+					}
+					for (BlockpartyPlayer hp : players) {
+						TitleAPI.sendSubtitle(hp.mcPlayer, 0, 11, 0, message);
+						TitleAPI.sendTitle(hp.mcPlayer, 0, 11, 0, "");
+					}
+					countDown(ticks - 10);
+				}
+			}
+		}.runTaskLater(plugin, 10);
+	}
+	
 	public void gameEnding(ArrayList<BlockpartyPlayer> winners) {
+		ending = true;
 		if (winners.size() > 2) {
-			title(ChatColor.BLUE + "Multiple players have won!");
+			title(ChatColor.BLUE + "Multiple players have won!", "");
 		} else if (winners.size() == 1) {
-			title(ChatColor.BLUE + winners.get(0).mcPlayer.getDisplayName() + " has won!");
+			title(ChatColor.BLUE + winners.get(0).mcPlayer.getDisplayName() + " has won!", "");
 		} else {
-			title(ChatColor.BLUE + winners.get(0).mcPlayer.getDisplayName() + " and " +  winners.get(1).mcPlayer.getDisplayName() + " have won!");
+			title(ChatColor.BLUE + winners.get(0).mcPlayer.getDisplayName() + " and " +  winners.get(1).mcPlayer.getDisplayName() + " have won!", "");
 		}
 		for (BlockpartyPlayer hp : players) {
 			hp.mcPlayer.teleport(new Vector(-61.5, 7, 6.5).toLocation(world));
@@ -335,7 +374,7 @@ public class BlockpartyWorld {
 				String message = generateTitle(titleTimer);
 				for (BlockpartyPlayer hp : players) {
 					TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 20, message);
-					//hp.mcPlayer.sendMessage(message);
+					TitleAPI.sendSubtitle(hp.mcPlayer, 0, 20, 20, "Time to DANCE!");
 				}
 				if (titleTimer < -9) {
 					cancel();

@@ -1,6 +1,7 @@
 package net.rypixel.hiveBlockparty;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,6 +24,9 @@ public class Constants {
 	
 	public static String[] blockpartyText;
 	public static int[] roundSpeed;
+	
+	public static HashMap<DyeColor, String> colorToName = new HashMap<DyeColor, String>();
+	public static HashMap<DyeColor, ChatColor> colorToChat = new HashMap<DyeColor, ChatColor>();
 	
 	public static void init() {
 		ItemMeta meta = null;
@@ -136,6 +140,41 @@ public class Constants {
 		roundSpeed[18] = 30;
 		roundSpeed[19] = 20;
 		roundSpeed[20] = 20;
+		
+		colorToName.put(DyeColor.BLACK, "Black");
+		colorToName.put(DyeColor.BLUE, "Blue");
+		colorToName.put(DyeColor.BROWN, "Brown");
+		colorToName.put(DyeColor.CYAN, "Cyan");
+		colorToName.put(DyeColor.GRAY, "Gray");
+		colorToName.put(DyeColor.GREEN, "Green");
+		colorToName.put(DyeColor.LIGHT_BLUE, "Light Blue");
+		colorToName.put(DyeColor.LIME, "Lime");
+		colorToName.put(DyeColor.MAGENTA, "Magenta");
+		colorToName.put(DyeColor.ORANGE, "Orange");
+		colorToName.put(DyeColor.PINK, "Pink");
+		colorToName.put(DyeColor.PURPLE, "Purple");
+		colorToName.put(DyeColor.RED, "Red");
+		colorToName.put(DyeColor.SILVER, "Light Gray");
+		colorToName.put(DyeColor.WHITE, "White");
+		colorToName.put(DyeColor.YELLOW, "Yellow");
+		
+		colorToChat.put(DyeColor.BLACK, ChatColor.BLACK);
+		colorToChat.put(DyeColor.BLUE, ChatColor.BLUE);
+		colorToChat.put(DyeColor.BROWN, ChatColor.GOLD);
+		colorToChat.put(DyeColor.CYAN, ChatColor.DARK_AQUA);
+		colorToChat.put(DyeColor.GRAY, ChatColor.DARK_GRAY);
+		colorToChat.put(DyeColor.GREEN, ChatColor.DARK_GREEN);
+		colorToChat.put(DyeColor.LIGHT_BLUE, ChatColor.AQUA);
+		colorToChat.put(DyeColor.LIME, ChatColor.GREEN);
+		colorToChat.put(DyeColor.MAGENTA, ChatColor.LIGHT_PURPLE);
+		colorToChat.put(DyeColor.ORANGE, ChatColor.GOLD);
+		colorToChat.put(DyeColor.PINK, ChatColor.LIGHT_PURPLE);
+		colorToChat.put(DyeColor.PURPLE, ChatColor.DARK_PURPLE);
+		colorToChat.put(DyeColor.RED, ChatColor.RED);
+		colorToChat.put(DyeColor.SILVER, ChatColor.GRAY);
+		colorToChat.put(DyeColor.WHITE, ChatColor.WHITE);
+		colorToChat.put(DyeColor.YELLOW, ChatColor.YELLOW);
+		
 	}
 	
 	public static Inventory playerSelector(ArrayList<BlockpartyPlayer> players) {
@@ -171,5 +210,13 @@ public class Constants {
 		colors.add(DyeColor.WHITE);
 		colors.add(DyeColor.YELLOW);
 		return colors;
+	}
+	
+	public static ItemStack blockpartyBlock(DyeColor color) {
+		ItemStack item = new ItemStack(Material.STAINED_CLAY, 1, color.getData());
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.BOLD + colorToName.get(color));
+		item.setItemMeta(meta);
+		return item;
 	}
 }
