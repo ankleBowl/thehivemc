@@ -54,6 +54,8 @@ public class BlockpartyWorld {
 	
 	public int level;
 	
+	public Location powerup;
+	
 	public ArrayList<BlockpartyPlayer> players = new ArrayList<BlockpartyPlayer>();
 	
 	public HashMap<DyeColor, DyeColor> colorMap = new HashMap<DyeColor, DyeColor>();
@@ -128,6 +130,7 @@ public class BlockpartyWorld {
 			Location l = hp.mcPlayer.getTargetBlock((HashSet<Byte>) null, 5).getLocation();
 			if (l.getBlock().getType() == Material.JUKEBOX) {
 				l.getBlock().setType(Material.AIR);
+				powerup = null;
 				Random random = new Random();
 				int rnd = random.nextInt(5);
 				switch (rnd) {
@@ -373,6 +376,10 @@ public class BlockpartyWorld {
 				public void run() {
 					//remove the floor
 					removeFloor(colorToRemove);
+					if (powerup != null) {
+						powerup.getBlock().setType(Material.AIR);
+						powerup = null;
+					}
 					for (BlockpartyPlayer hp : players) {
 						TitleAPI.sendSubtitle(hp.mcPlayer, 0, 51, 0, ChatColor.RED + "✖ " + ChatColor.WHITE + "STOP" + ChatColor.RED + " ✖");
 						TitleAPI.sendTitle(hp.mcPlayer, 0, 51, 0, "");
@@ -539,9 +546,12 @@ public class BlockpartyWorld {
 		}
 		
 		if (random.nextDouble() < 0.1) {
-			int x = random.nextInt(48) - 32;
-			int y = random.nextInt(48) - 16;
-			world.getBlockAt(x, 1, y).setType(Material.JUKEBOX);
+			if (powerup == null) {
+				int x = random.nextInt(48) - 32;
+				int y = random.nextInt(48) - 16;
+				world.getBlockAt(x, 1, y).setType(Material.JUKEBOX);
+				powerup = new Vector(x, 1, y).toLocation(world);
+			}
 		}
 	}
 	
