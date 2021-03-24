@@ -77,7 +77,7 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	public void loadWorlds() {
-		Bukkit.createWorld(new WorldCreator("bpmap1"));
+		Bukkit.createWorld(new WorldCreator("gravitymap1"));
 	}
 	
 	@Override

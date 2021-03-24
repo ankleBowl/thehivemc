@@ -114,4 +114,44 @@ public class Constants {
 		}
 		return inv;
 	}
+	
+	public static ArrayList<String> easyMaps() {
+		ArrayList<String> easyMaps = new ArrayList<String>();
+		
+		easyMaps.add("Cars");
+		easyMaps.add("Tron");
+		easyMaps.add("Speares");
+		easyMaps.add("Shackled");
+		easyMaps.add("Narnia");
+		
+		return easyMaps;
+	}
+	
+	public static ArrayList<String> mediumMaps() {
+		ArrayList<String> easyMaps = new ArrayList<String>();
+		
+		easyMaps.add("Pipe");
+		easyMaps.add("Ore");
+		easyMaps.add("Nightmare");
+		easyMaps.add("Magic");
+		easyMaps.add("Glitch");
+		easyMaps.add("Deep_Sea");
+		//easyMaps.add("CPU");
+		easyMaps.add("Arcane");
+		
+		return easyMaps;
+	}
+	
+	public static ArrayList<String> hardMaps() {
+		ArrayList<String> easyMaps = new ArrayList<String>();
+		
+		easyMaps.add("Presents");
+		easyMaps.add("DNA");
+		easyMaps.add("Blocks");
+		easyMaps.add("Aquamarine");
+		
+		easyMaps.add("CPU");
+		
+		return easyMaps;
+	}
 }
