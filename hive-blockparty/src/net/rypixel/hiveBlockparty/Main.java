@@ -112,17 +112,17 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		
 		if (SQL.exists("UUID", event.getPlayer().getUniqueId().toString(), "blockparty")) {
-			hp.points = Integer.parseInt(SQL.get("points", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-			hp.playedGames = Integer.parseInt(SQL.get("played", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-			hp.wonGames = Integer.parseInt(SQL.get("wins", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-			hp.winstreak = Integer.parseInt(SQL.get("winstreak", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-			hp.hardcorePoints = Integer.parseInt(SQL.get("hardcorepoints", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-			hp.placings = Integer.parseInt(SQL.get("placings", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-			hp.blockpartyCosmetics = SQL.get("cosmetics", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString();
+			hp.points = Integer.parseInt(SQL.get("points", "UUID", "=", event.getPlayer().getUniqueId().toString(), "blockparty").toString());
+			hp.playedGames = Integer.parseInt(SQL.get("played", "UUID", "=", event.getPlayer().getUniqueId().toString(), "blockparty").toString());
+			hp.wonGames = Integer.parseInt(SQL.get("wins", "UUID", "=", event.getPlayer().getUniqueId().toString(), "blockparty").toString());
+			hp.winstreak = Integer.parseInt(SQL.get("winstreak", "UUID", "=", event.getPlayer().getUniqueId().toString(), "blockparty").toString());
+			hp.hardcorePoints = Integer.parseInt(SQL.get("hardcorepoints", "UUID", "=", event.getPlayer().getUniqueId().toString(), "blockparty").toString());
+			hp.placings = Integer.parseInt(SQL.get("placings", "UUID", "=", event.getPlayer().getUniqueId().toString(), "blockparty").toString());
+			hp.blockpartyCosmetics = SQL.get("cosmetics", "UUID", "=", event.getPlayer().getUniqueId().toString(), "blockparty").toString();
 			
-			MySQL.update("UPDATE playerInfo SET lobby=\"Splegg\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+			MySQL.update("UPDATE playerInfo SET lobby=\"BlockParty\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		} else {
-			MySQL.update("Insert into splegg values (\"" + event.getPlayer().getUniqueId().toString() + "\", 0, 0, 0, 0, 0, 0, 0, \"\");");
+			MySQL.update("Insert into blockparty values (\"" + event.getPlayer().getUniqueId().toString() + "\", 0, 0, 0, 0, 0, 0, 0, \"\");");
 		}
 		
 		hp.scoreboard = ScoreHelper.createScore(hp.mcPlayer);
@@ -166,13 +166,15 @@ public class Main extends JavaPlugin implements Listener {
 		
 		MySQL.update("UPDATE playerInfo SET lobby=\"Offline\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		
-		MySQL.update("UPDATE splegg SET played=\"" + String.valueOf(hp.playedGames) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
-		MySQL.update("UPDATE splegg SET wins=\"" + String.valueOf(hp.wonGames) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
-		MySQL.update("UPDATE splegg SET deaths=\"" + String.valueOf(hp.winstreak) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
-		MySQL.update("UPDATE splegg SET eggsFired=\"" + String.valueOf(hp.hardcorePoints) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
-		MySQL.update("UPDATE splegg SET blocksbroken=\"" + String.valueOf(hp.hardcoreWins) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
-		MySQL.update("UPDATE splegg SET blocksbroken=\"" + String.valueOf(hp.placings) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
-		MySQL.update("UPDATE splegg SET blocksbroken=\"" + hp.blockpartyCosmetics + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE blockparty SET played=\"" + String.valueOf(hp.playedGames) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE blockparty SET wins=\"" + String.valueOf(hp.wonGames) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE blockparty SET winstreak=\"" + String.valueOf(hp.winstreak) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE blockparty SET hardcorepoints=\"" + String.valueOf(hp.hardcorePoints) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE blockparty SET hardcorewins=\"" + String.valueOf(hp.hardcoreWins) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE blockparty SET placings=\"" + String.valueOf(hp.placings) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE blockparty SET cosmetics=\"" + hp.blockpartyCosmetics + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		//TODO FIX THIS LATER
+		
 		
 		playerMap.remove(event.getPlayer());
 		ScoreHelper.removeScore(event.getPlayer());
@@ -225,6 +227,6 @@ public class Main extends JavaPlugin implements Listener {
 		Config.setPort("3306");
 		Config.setSSL(true);
 		MySQL.connect();
-		MySQL.update("CREATE TABLE IF NOT EXISTS blockparty(UUID varchar(64) PRIMARY KEY, points int, played int, wins int, winstreak int, hardcorepoints int, hardcorewins int, placings int, cosmetics varchar(9999);");
+		MySQL.update("CREATE TABLE IF NOT EXISTS blockparty(UUID varchar(64) PRIMARY KEY, points int, played int, wins int, winstreak int, hardcorepoints int, hardcorewins int, placings int, cosmetics varchar(9999));");
 	}
 }
