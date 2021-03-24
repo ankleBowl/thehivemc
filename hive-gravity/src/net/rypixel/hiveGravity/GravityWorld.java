@@ -34,6 +34,7 @@ public class GravityWorld {
 	public int countdown;
 	public int gameClock;
 	public BukkitTask timer;
+	public int highestLevel;
 	
 	public World[] worlds;
 	
@@ -109,11 +110,11 @@ public class GravityWorld {
 				maps[i] = hardMaps.get(r);
 				hardMaps.remove(r);
 			}
-			
-			World temp = Bukkit.createWorld(new WorldCreator(maps[i]));
-			worlds[i] = Functions.createNewWorld(Bukkit.getWorld(maps[i]), String.valueOf(id));
-			Bukkit.unloadWorld(temp, false);
 		}
+		
+		World temp = Bukkit.createWorld(new WorldCreator(maps[0]));
+		worlds[0] = Functions.createNewWorld(Bukkit.getWorld(maps[0]), String.valueOf(id));
+		Bukkit.unloadWorld(temp, false);
 	}
 	
 	public void update() {
@@ -150,6 +151,7 @@ public class GravityWorld {
 	public void welcomePlayer(GravityPlayer hp) {
 		hp.mcPlayer.teleport(new Vector(0.5, 172, 0.5).toLocation(world));
 		hp.serverId = id;
+		players.add(hp);
 	}
 	
 	public void initGame() {
@@ -187,14 +189,24 @@ public class GravityWorld {
 	public void onPortalUsed(PlayerPortalEvent event) {
 		GravityPlayer hp = Main.playerMap.get(event.getPlayer());
 		hp.level++;
-		if (hp.level < 6 && !hp.finished) {
+		if (hp.level > highestLevel && hp.level < 5) {
+			World temp = Bukkit.createWorld(new WorldCreator(maps[hp.level]));
+			worlds[hp.level] = Functions.createNewWorld(Bukkit.getWorld(maps[hp.level]), String.valueOf(id));
+			Bukkit.unloadWorld(temp, false);
+			highestLevel++;
+		}
+		
+		if (hp.level < 5 && !hp.finished) {
 			hp.mcPlayer.teleport(new Vector(1.5, 242, 12.5).toLocation(worlds[hp.level]));
 		} else {
 			hp.mcPlayer.teleport(new Vector(1.5, 242, 12.5).toLocation(worlds[0]));
+			hp.level = 0;
 		}
 	}
 	
-	public void chat(String messgae) {
-		
+	public void chat(String message) {
+		for (GravityPlayer hp : players) {
+			hp.mcPlayer.sendMessage(message);
+		}
 	}
 }
