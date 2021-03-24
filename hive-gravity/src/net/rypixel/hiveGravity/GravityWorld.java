@@ -8,12 +8,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 import com.connorlinfoot.titleapi.TitleAPI;
 
@@ -35,8 +40,8 @@ public class GravityWorld {
 	public String[] maps;
 	public String[][] difficulties;
 	
-	public ArrayList<HivePlayer> players = new ArrayList<HivePlayer>();
-	public HashMap<HivePlayer, String> finishTimes = new HashMap<HivePlayer, String>();
+	public ArrayList<GravityPlayer> players = new ArrayList<GravityPlayer>();
+	public HashMap<GravityPlayer, String> finishTimes = new HashMap<GravityPlayer, String>();
 	
 	public World world;
 	
@@ -118,7 +123,7 @@ public class GravityWorld {
 					if (players.size() > 5 && !starting) {
 						starting = true;
 					} else {
-						for (HivePlayer hp : players) {
+						for (GravityPlayer hp : players) {
 							TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 0, "");
 							TitleAPI.sendSubtitle(hp.mcPlayer, 0, 20, 0, ChatColor.YELLOW + String.valueOf(6 - players.size()) + " players needed to start...");
 						}
@@ -127,7 +132,7 @@ public class GravityWorld {
 					if (starting) {
 						countdown--;
 						
-						for (HivePlayer hp : players) {
+						for (GravityPlayer hp : players) {
 							TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 0, "");
 							TitleAPI.sendSubtitle(hp.mcPlayer, 0, 20, 0, ChatColor.GREEN + "Starting game in " + String.valueOf(countdown / 20));
 						}
@@ -142,16 +147,22 @@ public class GravityWorld {
 		}.runTaskTimer(plugin, 0L, 1L);
 	}
 	
-	public void welcomePlayer(HivePlayer hp) {
-		
+	public void welcomePlayer(GravityPlayer hp) {
+		hp.mcPlayer.teleport(new Vector(0.5, 172, 0.5).toLocation(world));
+		hp.serverId = id;
 	}
 	
 	public void initGame() {
-		inGame = true;
 		chooseMaps(0);
+		inGame = true;
+		for (GravityPlayer hp : players) {
+			hp.level = 0;
+			hp.finished = false;
+			hp.mcPlayer.teleport(new Vector(1.5, 242, 12.5).toLocation(worlds[0]));
+		}
 	}
 	
-	public void onPlayerLeave(HivePlayer hp) {
+	public void onPlayerLeave(GravityPlayer hp) {
 		
 	}
 	
@@ -161,6 +172,26 @@ public class GravityWorld {
 	
 	public void onInventoryClick(InventoryClickEvent event) {
 		
+	}
+	
+	public void onEntityDamage(EntityDamageEvent event) {
+		event.setCancelled(true);
+		if (event.getEntity() instanceof Player) {
+			GravityPlayer hp = Main.playerMap.get(event.getEntity());
+			if (event.getCause() == DamageCause.FALL) {
+				hp.mcPlayer.teleport(new Vector(1.5, 242, 12.5).toLocation(worlds[hp.level]));
+			}
+		}
+	}
+	
+	public void onPortalUsed(PlayerPortalEvent event) {
+		GravityPlayer hp = Main.playerMap.get(event.getPlayer());
+		hp.level++;
+		if (hp.level < 6 && !hp.finished) {
+			hp.mcPlayer.teleport(new Vector(1.5, 242, 12.5).toLocation(worlds[hp.level]));
+		} else {
+			hp.mcPlayer.teleport(new Vector(1.5, 242, 12.5).toLocation(worlds[0]));
+		}
 	}
 	
 	public void chat(String messgae) {

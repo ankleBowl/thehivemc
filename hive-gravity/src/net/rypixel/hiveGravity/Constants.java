@@ -101,7 +101,7 @@ public class Constants {
 		again.setItemMeta(meta);
 	}
 	
-	public static Inventory playerSelector(ArrayList<HivePlayer> players) {
+	public static Inventory playerSelector(ArrayList<GravityPlayer> players) {
 		Inventory inv = Bukkit.createInventory(null, 18);
 		for (int i = 0; i < 18; i++) {
 			if (i < players.size()) {

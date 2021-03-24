@@ -25,6 +25,7 @@ import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -43,7 +44,7 @@ import me.vagdedes.mysql.database.SQL;
 
 public class Main extends JavaPlugin implements Listener {
 
-	public static HashMap<Player, HivePlayer> playerMap = new HashMap<Player, HivePlayer>();
+	public static HashMap<Player, GravityPlayer> playerMap = new HashMap<Player, GravityPlayer>();
 	
 	public static BukkitTask requestRunnable;
 	
@@ -83,7 +84,7 @@ public class Main extends JavaPlugin implements Listener {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player) {
-			HivePlayer hp = playerMap.get((Player) sender);
+			GravityPlayer hp = playerMap.get((Player) sender);
 			if (label.equalsIgnoreCase("close")) {
 				GravityWorld w = Functions.getWorldByID(worlds, hp.serverId);
 				//w.stop();
@@ -98,7 +99,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		HivePlayer hp = new HivePlayer(event.getPlayer(), this);
+		GravityPlayer hp = new GravityPlayer(event.getPlayer(), this);
 
 		playerMap.put(event.getPlayer(), hp);
 		if (SQL.exists("UUID", event.getPlayer().getUniqueId().toString(), "playerInfo")) {
@@ -159,7 +160,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent event) {
-		HivePlayer hp = playerMap.get(event.getPlayer());
+		GravityPlayer hp = playerMap.get(event.getPlayer());
 		
 		GravityWorld world = Functions.getWorldByID(worlds, hp.serverId);
 		world.onPlayerLeave(hp);
@@ -188,26 +189,29 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onDamage(EntityDamageEvent event) {
-		event.setCancelled(true);
+		if (event.getEntity() instanceof Player) {
+			HivePlayer hp = Main.playerMap.get(event.getEntity());
+			Functions.getWorldByID(worlds, hp.serverId).onEntityDamage(event);
+		}
 	}
 	
 	@EventHandler
 	public void onInteract(PlayerInteractEvent event) {
-		HivePlayer hp = playerMap.get(event.getPlayer());
+		GravityPlayer hp = playerMap.get(event.getPlayer());
 		GravityWorld world = Functions.getWorldByID(worlds, hp.serverId);
 		world.onInteract(event);
 	}
 
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
-		HivePlayer hp = playerMap.get(event.getWhoClicked());
+		GravityPlayer hp = playerMap.get(event.getWhoClicked());
 		GravityWorld world = Functions.getWorldByID(worlds, hp.serverId);
 		world.onInventoryClick(event);
 	}
 	
 	@EventHandler
 	public void onChatSend(PlayerChatEvent event) {
-		HivePlayer hp = playerMap.get(event.getPlayer());
+		GravityPlayer hp = playerMap.get(event.getPlayer());
 		event.setCancelled(true);
 		Functions.getWorldByID(worlds, hp.serverId).chat(ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " >> " + event.getMessage());
 	}
@@ -215,6 +219,13 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onPlayerThrow(PlayerDropItemEvent event) {
 		event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void usePortal(PlayerPortalEvent event) {
+		event.setCancelled(true);
+		GravityPlayer hp = playerMap.get(event.getPlayer());
+		Functions.getWorldByID(worlds, hp.serverId).onPortalUsed(event);
 	}
 	
 	public void initSQL() {
