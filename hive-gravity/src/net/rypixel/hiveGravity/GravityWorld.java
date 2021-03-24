@@ -146,16 +146,7 @@ public class GravityWorld {
 						}
 					}
 				} else {
-					for (GravityPlayer hp : players) {
-						Location playerLoc = hp.mcPlayer.getLocation();
-						playerLoc = playerLoc.subtract(new Vector(0, 1, 0));
-						if (playerLoc.getBlock().getType() == Material.AIR) {
-							hp.flyTime++;
-						}
-						if (hp.flyTime > 140) {
-							hp.mcPlayer.kickPlayer("Stop Flyhacking pls");
-						}
-					}
+
 				}
 			}
 		}.runTaskTimer(plugin, 0L, 1L);
