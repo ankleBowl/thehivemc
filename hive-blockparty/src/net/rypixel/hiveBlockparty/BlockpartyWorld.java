@@ -197,6 +197,7 @@ public class BlockpartyWorld {
 			hp.mcPlayer.teleport(new Vector(0, 1, 0).toLocation(world));
 			hp.isDead = false;
 			hp.mcPlayer.getInventory().clear();
+			hp.playedGames++;
 		}
 		inGame = true;
 		titleTimer = 10;
@@ -232,6 +233,7 @@ public class BlockpartyWorld {
 				hp.mcPlayer.getInventory().setItem(8, Constants.hub);
 				chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " -> " + ChatColor.RED + "ELIMINATED!");
 				world.spawnEntity(hp.mcPlayer.getLocation(), EntityType.LIGHTNING);
+				hp.winstreak = 0;
 				dead.add(hp);
 			}
 		}
@@ -267,6 +269,11 @@ public class BlockpartyWorld {
 			hp.scoreboard.setSlot(3, "");
 			hp.scoreboard.setSlot(2, ChatColor.DARK_GRAY + "----------------");
 			hp.scoreboard.setSlot(1, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
+		}
+		if (possibleWinner.size() < 3) {
+			for (BlockpartyPlayer hp : dead) {
+				hp.placings++;
+			}
 		}
 		
 		if (possibleWinner.size() < 2) {
@@ -345,6 +352,12 @@ public class BlockpartyWorld {
 		} else {
 			title(ChatColor.BLUE + winners.get(0).mcPlayer.getDisplayName() + " and " +  winners.get(1).mcPlayer.getDisplayName() + " have won!", "");
 		}
+		
+		for (BlockpartyPlayer hp : winners ) {
+			hp.wonGames++;
+			hp.winstreak++;
+		}
+		
 		for (BlockpartyPlayer hp : players) {
 			hp.mcPlayer.teleport(new Vector(-61.5, 7, 6.5).toLocation(world));
 			
