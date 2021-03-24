@@ -19,4 +19,6 @@ public class BlockpartyPlayer extends HivePlayer {
 	public int hardcorePoints;
 	public int hardcoreWins;
 	public int placings;
+	
+	public String blockpartyCosmetics;
 }

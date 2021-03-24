@@ -113,15 +113,16 @@ public class Main extends JavaPlugin implements Listener {
 		
 		if (SQL.exists("UUID", event.getPlayer().getUniqueId().toString(), "blockparty")) {
 			hp.points = Integer.parseInt(SQL.get("points", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-			hp.played = Integer.parseInt(SQL.get("played", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-			hp.wins = Integer.parseInt(SQL.get("wins", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-			hp.deaths = Integer.parseInt(SQL.get("deaths", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-			hp.eggsFired = Integer.parseInt(SQL.get("eggsFired", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-			hp.eggsLanded = Integer.parseInt(SQL.get("blocksbroken", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			hp.playedGames = Integer.parseInt(SQL.get("played", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			hp.wonGames = Integer.parseInt(SQL.get("wins", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			hp.winstreak = Integer.parseInt(SQL.get("winstreak", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			hp.hardcorePoints = Integer.parseInt(SQL.get("hardcorepoints", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			hp.placings = Integer.parseInt(SQL.get("placings", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			hp.blockpartyCosmetics = SQL.get("cosmetics", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString();
 			
 			MySQL.update("UPDATE playerInfo SET lobby=\"Splegg\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		} else {
-			MySQL.update("Insert into splegg values (\"" + event.getPlayer().getUniqueId().toString() + "\", 0, 0, 0, 0, 0, 0, 0);");
+			MySQL.update("Insert into splegg values (\"" + event.getPlayer().getUniqueId().toString() + "\", 0, 0, 0, 0, 0, 0, 0, \"\");");
 		}
 		
 		hp.scoreboard = ScoreHelper.createScore(hp.mcPlayer);
@@ -165,11 +166,13 @@ public class Main extends JavaPlugin implements Listener {
 		
 		MySQL.update("UPDATE playerInfo SET lobby=\"Offline\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		
-//		MySQL.update("UPDATE splegg SET played=\"" + String.valueOf(hp.played) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
-//		MySQL.update("UPDATE splegg SET wins=\"" + String.valueOf(hp.wins) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
-//		MySQL.update("UPDATE splegg SET deaths=\"" + String.valueOf(hp.deaths) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
-//		MySQL.update("UPDATE splegg SET eggsFired=\"" + String.valueOf(hp.eggsFired) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
-//		MySQL.update("UPDATE splegg SET blocksbroken=\"" + String.valueOf(hp.eggsLanded) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE splegg SET played=\"" + String.valueOf(hp.playedGames) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE splegg SET wins=\"" + String.valueOf(hp.wonGames) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE splegg SET deaths=\"" + String.valueOf(hp.winstreak) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE splegg SET eggsFired=\"" + String.valueOf(hp.hardcorePoints) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE splegg SET blocksbroken=\"" + String.valueOf(hp.hardcoreWins) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE splegg SET blocksbroken=\"" + String.valueOf(hp.placings) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE splegg SET blocksbroken=\"" + hp.blockpartyCosmetics + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		
 		playerMap.remove(event.getPlayer());
 		ScoreHelper.removeScore(event.getPlayer());
