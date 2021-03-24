@@ -14,6 +14,8 @@ public class SpleggPlayer extends HivePlayer {
 	public int wins;
 	public int deaths;
 	
+	public String spleggCosmetics;
+	
 	public int eggsFiredTemp;
 	public int eggsLandedTemp;
 	

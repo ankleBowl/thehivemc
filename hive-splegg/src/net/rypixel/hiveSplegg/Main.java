@@ -172,6 +172,7 @@ public class Main extends JavaPlugin implements Listener {
 		MySQL.update("UPDATE splegg SET deaths=\"" + String.valueOf(hp.deaths) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		MySQL.update("UPDATE splegg SET eggsFired=\"" + String.valueOf(hp.eggsFired) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		MySQL.update("UPDATE splegg SET blocksbroken=\"" + String.valueOf(hp.eggsLanded) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE splegg SET cosmetics=\"" + hp.spleggCosmetics + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		
 		playerMap.remove(event.getPlayer());
 		ScoreHelper.removeScore(event.getPlayer());
@@ -237,6 +238,6 @@ public class Main extends JavaPlugin implements Listener {
 		Config.setPort("3306");
 		Config.setSSL(true);
 		MySQL.connect();
-		MySQL.update("CREATE TABLE IF NOT EXISTS splegg(UUID varchar(64) PRIMARY KEY, points int, played int, wins int, deaths int, eggsFired int, blocksbroken int);");
+		MySQL.update("CREATE TABLE IF NOT EXISTS splegg(UUID varchar(64) PRIMARY KEY, points int, played int, wins int, deaths int, eggsFired int, blocksbroken int, cosmetics varchar(9999););");
 	}
 }

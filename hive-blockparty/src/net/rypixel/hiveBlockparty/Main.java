@@ -111,18 +111,18 @@ public class Main extends JavaPlugin implements Listener {
 			hp.mcPlayer.kickPlayer("Log in to The Rive Server directly!");
 		}
 		
-//		if (SQL.exists("UUID", event.getPlayer().getUniqueId().toString(), "splegg")) {
-//			hp.points = Integer.parseInt(SQL.get("points", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-//			hp.played = Integer.parseInt(SQL.get("played", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-//			hp.wins = Integer.parseInt(SQL.get("wins", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-//			hp.deaths = Integer.parseInt(SQL.get("deaths", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-//			hp.eggsFired = Integer.parseInt(SQL.get("eggsFired", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-//			hp.eggsLanded = Integer.parseInt(SQL.get("blocksbroken", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-//			
-//			MySQL.update("UPDATE playerInfo SET lobby=\"Splegg\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
-//		} else {
-//			MySQL.update("Insert into splegg values (\"" + event.getPlayer().getUniqueId().toString() + "\", 0, 0, 0, 0, 0, 0, 0);");
-//		}
+		if (SQL.exists("UUID", event.getPlayer().getUniqueId().toString(), "blockparty")) {
+			hp.points = Integer.parseInt(SQL.get("points", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			hp.played = Integer.parseInt(SQL.get("played", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			hp.wins = Integer.parseInt(SQL.get("wins", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			hp.deaths = Integer.parseInt(SQL.get("deaths", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			hp.eggsFired = Integer.parseInt(SQL.get("eggsFired", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			hp.eggsLanded = Integer.parseInt(SQL.get("blocksbroken", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
+			
+			MySQL.update("UPDATE playerInfo SET lobby=\"Splegg\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		} else {
+			MySQL.update("Insert into splegg values (\"" + event.getPlayer().getUniqueId().toString() + "\", 0, 0, 0, 0, 0, 0, 0);");
+		}
 		
 		hp.scoreboard = ScoreHelper.createScore(hp.mcPlayer);
 		Scoreboard s = hp.mcPlayer.getScoreboard();
