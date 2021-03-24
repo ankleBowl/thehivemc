@@ -145,6 +145,8 @@ public class BlockpartyWorld {
 		inv.setItem(1, Constants.vote);
 		inv.setItem(4, Constants.locker);
 		inv.setItem(8, Constants.hub);
+		
+		chat(ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GRAY + " is ready to dance!");
 	}
 	
 	public void chat(String message) {
