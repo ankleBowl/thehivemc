@@ -157,7 +157,23 @@ public class Constants {
 		lore.add(ChatColor.AQUA + "► Right-click to view Servers");
 		itemMeta.setLore(lore);
 		item.setItemMeta(itemMeta);
-		inv.setItem(23, item);
+		inv.setItem(41, item);
+		
+		item = new ItemStack(Material.RECORD_4, 1);
+		itemMeta = item.getItemMeta();
+		itemMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Block" + ChatColor.AQUA + "Party");
+		lore.clear();
+		lore.add(ChatColor.DARK_GRAY + "PvE, Fast Paced");
+		lore.add(" ");
+		lore.add(ChatColor.GRAY + "It's time to DANCE! Dance to");
+		lore.add(ChatColor.GRAY + "the right color before the floor");
+		lore.add(ChatColor.GRAY + "drops! Last player alive wins!");
+		lore.add(" ");
+		lore.add(ChatColor.GREEN + "► Left-click to Queue");
+		lore.add(ChatColor.AQUA + "► Right-click to view Servers");
+		itemMeta.setLore(lore);
+		item.setItemMeta(itemMeta);
+		inv.setItem(34, item);
 		
 		return inv;
 	}

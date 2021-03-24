@@ -188,6 +188,9 @@ public class Main extends JavaPlugin implements Listener {
 				case EGG:
 					Functions.sendToServer(hp.mcPlayer, "splegg", this);
 					break;
+				case RECORD_4:
+					Functions.sendToServer(hp.mcPlayer, "blockparty", this);
+					break;
 				default:
 					break;
 				}
