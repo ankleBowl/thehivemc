@@ -45,6 +45,7 @@ public class GravityWorld {
 	public boolean canVote;
 	public int countdown;
 	public int gameClock;
+	public int timeRemaining;
 	public BukkitTask timer;
 	public int highestLevel;
 	public int difficultyPicked;
@@ -176,9 +177,12 @@ public class GravityWorld {
 						}
 					}
 				} else {
+					gameClock++;
+					timeRemaining++;
+					
 					rankPlayers();
 					for (GravityPlayer hp : players) {	
-						String time = DurationFormatUtils.formatDuration(600000 - (gameClock * 50), "mm:ss");
+						String time = DurationFormatUtils.formatDuration(600000 - (timeRemaining * 50), "mm:ss");
 						int seconds = gameClock / 20;
 					     
 						hp.mcPlayer.setLevel(hp.mcPlayer.getLocation().getBlockY());
@@ -197,6 +201,12 @@ public class GravityWorld {
 						hp.scoreboard.setSlot(3, "");
 						hp.scoreboard.setSlot(2, ChatColor.DARK_GRAY + "----------------");
 						hp.scoreboard.setSlot(1, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
+						
+						hp.mapTime++;
+					}
+					
+					if (timeRemaining == 600000) {
+						gameEnding();
 					}
 				}
 			}
@@ -392,6 +402,10 @@ public class GravityWorld {
 			hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + "Difficulty " + ChatColor.DARK_GRAY + ">>" + difficultyText(hp.level));
 			hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + "Best Time " + ChatColor.DARK_GRAY + ">>" + ChatColor.AQUA + "N/A");
 			hp.mcPlayer.sendMessage("");
+			
+			chat(chatPrefix() + ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GREEN + " finished " + ChatColor.AQUA + "Stage " + String.valueOf(hp.level) + ChatColor.GREEN + " in " + ChatColor.LIGHT_PURPLE + String.valueOf(hp.mapTime) + " seconds");
+			
+			hp.mapTime = 0;
 		} else {
 			hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[hp.level]).toLocation(worlds[hp.level]));
 			hp.level = 0;
@@ -399,6 +413,9 @@ public class GravityWorld {
 			hp.mcPlayer.setAllowFlight(true);
 			hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999, 1, false, true));
 			finishTimes.put(hp, gameClock);
+			if (timeRemaining < 120000) {
+				timeRemaining = 120000;
+			}
 			finished.add(hp);
 		}
 	}
@@ -497,6 +514,10 @@ public class GravityWorld {
 			break;
 		}
 		return message;
+	}
+	
+	public void gameEnding() {
+		
 	}
 	
 	public String chatPrefix() {
