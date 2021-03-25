@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -54,6 +55,8 @@ public class GravityWorld {
 	public String[][] difficulties;
 	
 	public ArrayList<GravityPlayer> players = new ArrayList<GravityPlayer>();
+	public ArrayList<String> rankings = new ArrayList<String>();
+	public ArrayList<GravityPlayer> finished = new ArrayList<GravityPlayer>();
 	public HashMap<GravityPlayer, Integer> finishTimes = new HashMap<GravityPlayer, Integer>();
 	public HashMap<GravityPlayer, Integer> votes = new HashMap<GravityPlayer, Integer>();
 	
@@ -173,10 +176,67 @@ public class GravityWorld {
 						}
 					}
 				} else {
-					
+					rankPlayers();
+					for (GravityPlayer hp : players) {	
+						String time = DurationFormatUtils.formatDuration(600000 - (gameClock * 50), "mm:ss");
+						int seconds = gameClock / 20;
+					     
+						hp.mcPlayer.setLevel(hp.mcPlayer.getLocation().getBlockY());
+						
+						hp.scoreboard.setTitle(ChatColor.AQUA + "Gra" + ChatColor.GREEN + "vi" + ChatColor.YELLOW + "ty");
+						hp.scoreboard.setSlot(13, "");
+						hp.scoreboard.setSlot(12, ChatColor.YELLOW + "Time Left");
+						hp.scoreboard.setSlot(11, time);
+						hp.scoreboard.setSlot(10, "");
+						hp.scoreboard.setSlot(9, ChatColor.AQUA + "Ranking");
+						hp.scoreboard.setSlot(8, ChatColor.GREEN + "#1 " + ChatColor.BLUE + rankings.get(0));
+						hp.scoreboard.setSlot(8, ChatColor.GREEN + "#2 " + ChatColor.BLUE + rankings.get(1));
+						hp.scoreboard.setSlot(8, ChatColor.GREEN + "#3 " + ChatColor.BLUE + rankings.get(2));
+						hp.scoreboard.setSlot(8, ChatColor.GREEN + "#4 " + ChatColor.BLUE + rankings.get(3));
+						hp.scoreboard.setSlot(8, ChatColor.GREEN + "#5 " + ChatColor.BLUE + rankings.get(4));
+						hp.scoreboard.setSlot(3, "");
+						hp.scoreboard.setSlot(2, ChatColor.DARK_GRAY + "----------------");
+						hp.scoreboard.setSlot(1, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
+					}
 				}
 			}
 		}.runTaskTimer(plugin, 0L, 1L);
+	}
+	
+	public void rankPlayers() {
+		rankings.clear();
+		for (GravityPlayer hp : finished) {	
+			String time = DurationFormatUtils.formatDuration(finishTimes.get(hp) * 50, "mm:ss");
+			rankings.add(hp.mcPlayer.getDisplayName() + ChatColor.WHITE + time);
+		}
+		for (GravityPlayer hp : players) {	
+			if (hp.level == 4) {
+				rankings.add(hp.mcPlayer.getDisplayName());
+			}
+		}
+		for (GravityPlayer hp : players) {	
+			if (hp.level == 3) {
+				rankings.add(hp.mcPlayer.getDisplayName());
+			}
+		}
+		for (GravityPlayer hp : players) {	
+			if (hp.level == 2) {
+				rankings.add(hp.mcPlayer.getDisplayName());
+			}
+		}
+		for (GravityPlayer hp : players) {	
+			if (hp.level == 1) {
+				rankings.add(hp.mcPlayer.getDisplayName());
+			}
+		}
+		for (GravityPlayer hp : players) {	
+			if (hp.level == 0) {
+				rankings.add(hp.mcPlayer.getDisplayName());
+			}
+		}
+		for (int i = 0; i < 4; i++) {
+			rankings.add("N/A");
+		}
 	}
 	
 	public void welcomePlayer(GravityPlayer hp) {
@@ -339,6 +399,7 @@ public class GravityWorld {
 			hp.mcPlayer.setAllowFlight(true);
 			hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999, 1, false, true));
 			finishTimes.put(hp, gameClock);
+			finished.add(hp);
 		}
 	}
 	
