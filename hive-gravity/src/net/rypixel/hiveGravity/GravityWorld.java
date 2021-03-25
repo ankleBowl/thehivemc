@@ -252,6 +252,15 @@ public class GravityWorld {
 				}
 		    }
 		}.runTaskLater(plugin, 80L);
+		
+		new BukkitRunnable() {
+			public void run() {
+				for (GravityPlayer hp : players) {
+					TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, "Stage 1");
+					TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, ChatColor.GRAY + "until start");
+				}
+		    }
+		}.runTaskLater(plugin, 100L);
 	}
 	
 	public void onPlayerLeave(GravityPlayer hp) {
