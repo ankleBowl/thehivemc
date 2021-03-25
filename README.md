@@ -18,6 +18,9 @@ Splegg
 Blockparty
 - Basic Matchmaking
 - Basic Game Loop
+- Powerups
+- Scoreboards
+- Titles
 
 What's not done: Literally everything else
 
