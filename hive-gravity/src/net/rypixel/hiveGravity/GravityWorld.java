@@ -260,7 +260,13 @@ public class GravityWorld {
 					TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, "Stage 1");
 					TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, maps[0].replace('_', ' ') + ChatColor.DARK_GRAY + " - " + difficultyText(0));
 				}
-		    }
+				chat("");
+				chat(chatPrefix() + ChatColor.GRAY + "Map " + ChatColor.DARK_GRAY + ">>" + ChatColor.AQUA + maps[0]);
+				chat(chatPrefix() + ChatColor.GRAY + "Creator " + ChatColor.DARK_GRAY + ">>" + ChatColor.AQUA + "N/A");
+				chat(chatPrefix() + ChatColor.GRAY + "Difficulty " + ChatColor.DARK_GRAY + ">>" + difficultyText(0));
+				chat(chatPrefix() + ChatColor.GRAY + "Best Time " + ChatColor.DARK_GRAY + ">>" + ChatColor.AQUA + "N/A");
+				chat("");
+			}
 		}.runTaskLater(plugin, 100L);
 	}
 	
@@ -319,6 +325,13 @@ public class GravityWorld {
 			hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[hp.level + 1]).toLocation(worlds[hp.level]));
 			TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, "Stage " + String.valueOf(hp.level));
 			TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, maps[hp.level].replace('_', ' ') + ChatColor.DARK_GRAY + " - " + difficultyText(hp.level));
+			
+			hp.mcPlayer.sendMessage("");
+			hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + "Map " + ChatColor.DARK_GRAY + ">>" + ChatColor.AQUA + maps[hp.level]);
+			hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + "Creator " + ChatColor.DARK_GRAY + ">>" + ChatColor.AQUA + "N/A");
+			hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + "Difficulty " + ChatColor.DARK_GRAY + ">>" + difficultyText(hp.level));
+			hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + "Best Time " + ChatColor.DARK_GRAY + ">>" + ChatColor.AQUA + "N/A");
+			hp.mcPlayer.sendMessage("");
 		} else {
 			hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[hp.level]).toLocation(worlds[hp.level]));
 			hp.level = 0;
