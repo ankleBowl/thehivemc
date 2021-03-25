@@ -417,6 +417,15 @@ public class GravityWorld {
 				timeRemaining = 120000;
 			}
 			finished.add(hp);
+			if (finished.size() == 0) {
+				chat(chatPrefix() + ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GREEN + " just finished 1st! The game will end in 2 minutes");
+			} else if (finished.size() == 1) {
+				chat(chatPrefix() + ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GREEN + " just finished 2nd!");
+			} else if (finished.size() == 2) {
+				chat(chatPrefix() + ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GREEN + " just finished 3rd!");
+			} else {
+				chat(chatPrefix() + ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GREEN + " just finished " + String.valueOf(finished.size()) + "th!");
+			}
 		}
 	}
 	
