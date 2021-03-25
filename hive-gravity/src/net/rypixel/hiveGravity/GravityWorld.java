@@ -275,7 +275,7 @@ public class GravityWorld {
 		for (GravityPlayer hp : players) {
 			hp.level = 0;
 			hp.finished = false;
-			hp.mcPlayer.teleport(new Vector(1.5, 242, 12.5).toLocation(worlds[0]));
+			hp.mcPlayer.teleport(Constants.spawnLocations.get(0).toLocation(worlds[0]));
 		}
 		
 		for (GravityPlayer hp : players) {
@@ -345,7 +345,30 @@ public class GravityWorld {
 	}
 	
 	public void onInteract(PlayerInteractEvent event) {
-		
+		GravityPlayer hp = Main.playerMap.get(event.getPlayer());
+		if (!inGame) {
+			if (event.getItem() != null) {
+				switch (event.getItem().getType()) {
+				case DIAMOND:
+					break;
+				case SLIME_BALL:
+					Functions.sendToServer(hp.mcPlayer, "lobby0", plugin);
+					break;
+				default:
+					break;
+				}
+			}
+		} else {
+			if (event.getItem() != null) {
+				switch (event.getItem().getType()) {
+				case SLIME_BALL:
+					Functions.sendToServer(hp.mcPlayer, "lobby0", plugin);
+					break;
+				default:
+					break;
+				}
+			}
+		}
 	}
 	
 	public void onInventoryClick(InventoryClickEvent event) {
