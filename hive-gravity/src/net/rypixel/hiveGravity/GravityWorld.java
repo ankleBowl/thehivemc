@@ -375,7 +375,7 @@ public class GravityWorld {
 		event.setCancelled(true);
 		if (event.getEntity() instanceof Player) {
 			GravityPlayer hp = Main.playerMap.get(event.getEntity());
-			if (event.getCause() == DamageCause.FALL) {
+			if (event.getCause() == DamageCause.FALL && event.getDamage() > 10) {
 				hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[hp.level]).toLocation(worlds[hp.level]));
 			}
 		}
