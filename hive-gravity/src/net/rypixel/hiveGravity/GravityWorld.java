@@ -155,6 +155,7 @@ public class GravityWorld {
 	public void welcomePlayer(GravityPlayer hp) {
 		hp.mcPlayer.teleport(new Vector(0.5, 172, 0.5).toLocation(world));
 		hp.serverId = id;
+		hp.mcPlayer.setAllowFlight(true);
 		players.add(hp);
 	}
 	
@@ -185,7 +186,7 @@ public class GravityWorld {
 		if (event.getEntity() instanceof Player) {
 			GravityPlayer hp = Main.playerMap.get(event.getEntity());
 			if (event.getCause() == DamageCause.FALL) {
-				hp.mcPlayer.teleport(new Vector(1.5, 242, 12.5).toLocation(worlds[hp.level]));
+				hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[hp.level]).toLocation(worlds[hp.level]));
 			}
 		}
 	}
@@ -201,9 +202,9 @@ public class GravityWorld {
 		}
 		
 		if (hp.level < 5 && !hp.finished) {
-			hp.mcPlayer.teleport(new Vector(1.5, 242, 12.5).toLocation(worlds[hp.level]));
+			hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[hp.level]).toLocation(worlds[hp.level]));
 		} else {
-			hp.mcPlayer.teleport(new Vector(1.5, 242, 12.5).toLocation(worlds[0]));
+			hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[hp.level]).toLocation(worlds[hp.level]));
 			hp.level = 0;
 		}
 	}
