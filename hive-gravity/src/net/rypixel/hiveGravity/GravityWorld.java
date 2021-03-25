@@ -431,7 +431,7 @@ public class GravityWorld {
 	}
 	
 	public void onPlayerMove(PlayerMoveEvent event) {
-		if (gameClock < 100) {
+		if (gameClock < 100 && inGame = true) {
 			event.setCancelled(true);
 		}
 	}
