@@ -11,6 +11,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.util.Vector;
 
 public class Constants {
 
@@ -21,6 +22,8 @@ public class Constants {
 	
 	public static ItemStack again;
 	public static ItemStack players;
+	
+	public static HashMap<String, Vector> spawnLocations = new HashMap<String, Vector>();
 	
 	public static void init() {
 		ItemMeta meta = null;
@@ -99,6 +102,24 @@ public class Constants {
 		lore.add(ChatColor.AQUA + "► Right-click when held");
 		meta.setLore(lore);
 		again.setItemMeta(meta);
+		
+		spawnLocations.put("Glitch", new Vector(37.5, 250, -47.5));
+		spawnLocations.put("Aquamarine", new Vector(1.5, 244, 13.5));
+		spawnLocations.put("Presents", new Vector(-10.5, 250, 3.5));
+		spawnLocations.put("Arcane", new Vector(-0.5, 241, 17.5));
+		spawnLocations.put("Magic", new Vector(3.5, 246, 5.5));
+		spawnLocations.put("Deep_Sea", new Vector(0.5, 225, 8.5));
+		spawnLocations.put("CPU", new Vector(1.5, 242, 12.5));
+		spawnLocations.put("DNA", new Vector(-5.5, 228, -0.5));
+		spawnLocations.put("Speares", new Vector(-10.5, 244, -2.5));
+		spawnLocations.put("Shackled", new Vector(-44.5, 246, -29.5));
+		spawnLocations.put("Blocks", new Vector(6, 241, 22.5));
+		spawnLocations.put("Nightmare", new Vector(9.5, 249.1, 30.5));
+		spawnLocations.put("Ore", new Vector(0.5, 235, 1.5));
+		spawnLocations.put("Tron", new Vector(2.5, 189, 7.5));
+		spawnLocations.put("Cars", new Vector(10.5, 250, 3.5));
+		spawnLocations.put("Narnia", new Vector(-3.5, 229.5, 13.5));
+		spawnLocations.put("Pipe", new Vector(4.5, 249, -0.5));
 	}
 	
 	public static Inventory playerSelector(ArrayList<GravityPlayer> players) {
