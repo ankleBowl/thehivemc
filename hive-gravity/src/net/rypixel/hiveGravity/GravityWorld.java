@@ -426,6 +426,7 @@ public class GravityWorld {
 			} else {
 				chat(chatPrefix() + ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GREEN + " just finished " + String.valueOf(finished.size()) + "th!");
 			}
+			hp.mcPlayer.sendMessage(ChatColor.GREEN + "You finished! " + ChatColor.GRAY + "You are now spectating...");
 		}
 	}
 	
