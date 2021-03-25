@@ -17,6 +17,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
@@ -172,7 +173,7 @@ public class GravityWorld {
 						}
 					}
 				} else {
-
+					
 				}
 			}
 		}.runTaskTimer(plugin, 0L, 1L);
@@ -257,7 +258,7 @@ public class GravityWorld {
 			public void run() {
 				for (GravityPlayer hp : players) {
 					TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, "Stage 1");
-					TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, ChatColor.GRAY + "until start");
+					TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, maps[0].replace('_', ' ') + ChatColor.DARK_GRAY + " - " + difficultyText(0));
 				}
 		    }
 		}.runTaskLater(plugin, 100L);
@@ -323,7 +324,12 @@ public class GravityWorld {
 			hp.mcPlayer.setAllowFlight(true);
 			hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999, 1, false, true));
 			finishTimes.put(hp, gameClock);
-			
+		}
+	}
+	
+	public void onPlayerMove(PlayerMoveEvent event) {
+		if (gameClock < 100) {
+			event.setCancelled(true);
 		}
 	}
 	
@@ -397,6 +403,22 @@ public class GravityWorld {
 				break;
 			}
 			index++;
+		}
+		return message;
+	}
+	
+	public String difficultyText(int roundIndex) {
+		String message = "";
+		switch (difficulties[difficultyPicked][roundIndex]) {
+		case "Easy":
+			message += ChatColor.GREEN + "Easy";
+			break;
+		case "Normal":
+			message += ChatColor.YELLOW + "Medium";
+			break;
+		case "Hard":
+			message += ChatColor.RED + "Hard";
+			break;
 		}
 		return message;
 	}

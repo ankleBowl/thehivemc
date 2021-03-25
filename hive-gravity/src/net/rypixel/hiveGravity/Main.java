@@ -25,6 +25,7 @@ import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
@@ -207,6 +208,12 @@ public class Main extends JavaPlugin implements Listener {
 		GravityPlayer hp = playerMap.get(event.getWhoClicked());
 		GravityWorld world = Functions.getWorldByID(worlds, hp.serverId);
 		world.onInventoryClick(event);
+	}
+	
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent event) {
+		GravityPlayer hp = playerMap.get(event.getPlayer());
+		Functions.getWorldByID(worlds, hp.serverId).onPlayerMove(event);
 	}
 	
 	@EventHandler
