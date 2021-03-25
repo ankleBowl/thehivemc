@@ -316,7 +316,9 @@ public class GravityWorld {
 		}
 		
 		if (hp.level < 5) {
-			hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[hp.level]).toLocation(worlds[hp.level]));
+			hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[hp.level + 1]).toLocation(worlds[hp.level]));
+			TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, "Stage " + String.valueOf(hp.level));
+			TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, maps[hp.level].replace('_', ' ') + ChatColor.DARK_GRAY + " - " + difficultyText(hp.level));
 		} else {
 			hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[hp.level]).toLocation(worlds[hp.level]));
 			hp.level = 0;
