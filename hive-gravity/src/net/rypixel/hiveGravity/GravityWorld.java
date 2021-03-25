@@ -18,6 +18,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
@@ -44,7 +46,7 @@ public class GravityWorld {
 	public String[][] difficulties;
 	
 	public ArrayList<GravityPlayer> players = new ArrayList<GravityPlayer>();
-	public HashMap<GravityPlayer, String> finishTimes = new HashMap<GravityPlayer, String>();
+	public HashMap<GravityPlayer, Integer> finishTimes = new HashMap<GravityPlayer, Integer>();
 	
 	public World world;
 	
@@ -156,6 +158,7 @@ public class GravityWorld {
 		hp.mcPlayer.teleport(new Vector(0.5, 172, 0.5).toLocation(world));
 		hp.serverId = id;
 		hp.mcPlayer.setAllowFlight(true);
+		hp.mcPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
 		players.add(hp);
 	}
 	
@@ -201,11 +204,16 @@ public class GravityWorld {
 			highestLevel++;
 		}
 		
-		if (hp.level < 5 && !hp.finished) {
+		if (hp.level < 5) {
 			hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[hp.level]).toLocation(worlds[hp.level]));
 		} else {
 			hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[hp.level]).toLocation(worlds[hp.level]));
 			hp.level = 0;
+			hp.finished = true;
+			hp.mcPlayer.setAllowFlight(true);
+			hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999, 1, false, true));
+			finishTimes.put(hp, gameClock);
+			
 		}
 	}
 	
