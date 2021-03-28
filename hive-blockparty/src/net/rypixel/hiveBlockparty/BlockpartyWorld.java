@@ -78,7 +78,7 @@ public class BlockpartyWorld {
 	}
 	
 	public void init() {
-		world = Functions.createNewWorld(Bukkit.getWorld("bpmap1"), String.valueOf("id"));
+		world = Functions.createNewWorld(Bukkit.getWorld("bpmap1"), String.valueOf(id));
 		countdown = 1200;
 		update();
 	}
@@ -184,6 +184,8 @@ public class BlockpartyWorld {
 				case SLIME_BALL:
 					Functions.sendToServer(hp.mcPlayer, "lobby0", plugin);
 					break;
+				case DIAMOND:
+					hp.mcPlayer.openInventory(Constants.pickSong());
 				default:
 					break;
 				}
@@ -338,14 +340,15 @@ public class BlockpartyWorld {
 		
 		int highestNumber = 0;
 		int index = 0;
-		for (int i : votes) {
+		for (int i = 0; i < 54; i++) {
 			if (votes[i] > highestNumber) {
-				index = i;
 				highestNumber = votes[i];
+				index = i;
 			}
 		}
 		
 		song = Constants.intToSong.get(index);
+		song.setVolume(100);
 		
 		for (BlockpartyPlayer hp : players) {
 			JukeboxAPI.play(hp.mcPlayer, song);
@@ -672,6 +675,9 @@ public class BlockpartyWorld {
 	}
 		
 	public void stop() {
+		
+		timer.cancel();
+		
 		for (BlockpartyPlayer hp : players) {
 			hp.mcPlayer.setLevel(0);
 			

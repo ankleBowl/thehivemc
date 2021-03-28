@@ -212,9 +212,9 @@ public class Constants {
 		colorToChat.put(DyeColor.WHITE, ChatColor.WHITE);
 		colorToChat.put(DyeColor.YELLOW, ChatColor.YELLOW);
 		
-		intToSong.put(10, new Media(ResourceType.MUSIC, "https://raw.githubusercontent.com/ankleBowl/thehivemc/main/blockpartysongs/makeacake.mp3")); //make a cake
-		intToSong.put(11, new Media(ResourceType.MUSIC, "https://raw.githubusercontent.com/ankleBowl/thehivemc/main/blockpartysongs/revenge.mp3")); //revenge
-		intToSong.put(12, new Media(ResourceType.MUSIC, "https://raw.githubusercontent.com/ankleBowl/thehivemc/main/blockpartysongs/dontmineatnight.mp3")); //dont mine at night
+		intToSong.put(10, new Media(ResourceType.MUSIC, "https://raw.githubusercontent.com/ankleBowl/thehivemc/main/blockpartysongs/makeacake.ogg")); //make a cake
+		intToSong.put(11, new Media(ResourceType.MUSIC, "https://raw.githubusercontent.com/ankleBowl/thehivemc/main/blockpartysongs/revenge.ogg")); //revenge
+		intToSong.put(12, new Media(ResourceType.MUSIC, "https://raw.githubusercontent.com/ankleBowl/thehivemc/main/blockpartysongs/dontmineatnight.ogg")); //dont mine at night
 		
 	}
 	
