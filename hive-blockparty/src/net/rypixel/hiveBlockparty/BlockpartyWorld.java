@@ -189,7 +189,7 @@ public class BlockpartyWorld {
 		hp.serverId = id;
 		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
 		hp.mcPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
-		hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 99999, 1, false, true));
+		hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 99999, 0, false, false));
 		hp.mcPlayer.setAllowFlight(false);
 		
 		hp.mcPlayer.setFoodLevel(20);
