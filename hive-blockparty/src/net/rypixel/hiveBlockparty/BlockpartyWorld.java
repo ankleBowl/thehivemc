@@ -265,6 +265,16 @@ public class BlockpartyWorld {
 							cancel();
 						}
 					}
+				} else {
+					for (BlockpartyPlayer hp : players) {
+						if (hp.isDead && hp.mcPlayer.getLocation().getY() < -50) {
+							hp.mcPlayer.teleport(new Vector(34.5, 3, 8).toLocation(world));
+						}
+						
+						if (hp.mcPlayer.getLocation().distance(new Vector(0, 0, 0).toLocation(world)) > 150) {
+							hp.mcPlayer.teleport(new Vector(34.5, 3, 8).toLocation(world));
+						}
+					}
 				}
 			}
 		}.runTaskTimer(plugin, 0L, 1L);
