@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -234,6 +235,11 @@ public class Main extends JavaPlugin implements Listener {
 //		GravityPlayer hp = playerMap.get(event.getPlayer());
 //		Functions.getWorldByID(worlds, hp.serverId).onPortalUsed(event);
 //	}
+	
+	@EventHandler
+	public void onBlockUpdate(BlockPhysicsEvent event) {
+		event.setCancelled(true);
+	}
 	
 	public void initSQL() {
 		Config.create();
