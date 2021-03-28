@@ -39,6 +39,9 @@ import org.bukkit.util.Vector;
 
 import com.connorlinfoot.titleapi.TitleAPI;
 
+import net.mcjukebox.plugin.bukkit.api.JukeboxAPI;
+import net.mcjukebox.plugin.bukkit.api.models.Media;
+
 public class BlockpartyWorld {
 
 	public int id;
@@ -52,7 +55,7 @@ public class BlockpartyWorld {
 	public boolean ending;
 	public int countdown;
 	
-	public String song;
+	public Media song;
 	
 	public int titleTimer;
 	
@@ -219,6 +222,8 @@ public class BlockpartyWorld {
 		hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 99999, 0, false, false));
 		hp.mcPlayer.setAllowFlight(false);
 		
+		JukeboxAPI.stopMusic(hp.mcPlayer);
+		
 		hp.mcPlayer.setFoodLevel(20);
 		hp.mcPlayer.setSaturation(20);
 		
@@ -322,6 +327,7 @@ public class BlockpartyWorld {
 			hp.mcPlayer.getInventory().clear();
 			hp.mcPlayer.getInventory().setItem(8, Constants.playersVisible);
 			hp.playedGames++;
+			
 		}
 		
 		int[] votes = new int[54];
@@ -339,6 +345,11 @@ public class BlockpartyWorld {
 			}
 		}
 		
+		song = Constants.intToSong.get(index);
+		
+		for (BlockpartyPlayer hp : players) {
+			JukeboxAPI.play(hp.mcPlayer, song);
+		}
 		//Index is used for the song
 		
 		inGame = true;
@@ -515,6 +526,7 @@ public class BlockpartyWorld {
 		for (BlockpartyPlayer hp : players) {
 			for (BlockpartyPlayer hp1 : players) {
 				hp.mcPlayer.showPlayer(hp1.mcPlayer);
+				JukeboxAPI.stopMusic(hp.mcPlayer);
 			}
 		}
 		

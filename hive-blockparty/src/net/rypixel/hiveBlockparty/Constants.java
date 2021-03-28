@@ -13,6 +13,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import net.mcjukebox.plugin.bukkit.api.ResourceType;
+import net.mcjukebox.plugin.bukkit.api.models.Media;
+
 public class Constants {
 
 	public static ItemStack rules;
@@ -35,7 +38,7 @@ public class Constants {
 	
 	public static HashMap<DyeColor, String> colorToName = new HashMap<DyeColor, String>();
 	public static HashMap<DyeColor, ChatColor> colorToChat = new HashMap<DyeColor, ChatColor>();
-	public static HashMap<Integer, String> intToSong = new HashMap<Integer, String>();
+	public static HashMap<Integer, Media> intToSong = new HashMap<Integer, Media>();
 	
 	public static void init() {
 		ItemMeta meta = null;
@@ -209,9 +212,9 @@ public class Constants {
 		colorToChat.put(DyeColor.WHITE, ChatColor.WHITE);
 		colorToChat.put(DyeColor.YELLOW, ChatColor.YELLOW);
 		
-		intToSong.put(10, "makeacake.mp3");
-		intToSong.put(11, "revenge.mp3");
-		intToSong.put(12, "dontmineatnight.mp3");
+		intToSong.put(10, new Media(ResourceType.MUSIC, "https://raw.githubusercontent.com/ankleBowl/thehivemc/main/blockpartysongs/makeacake.mp3")); //make a cake
+		intToSong.put(11, new Media(ResourceType.MUSIC, "https://raw.githubusercontent.com/ankleBowl/thehivemc/main/blockpartysongs/revenge.mp3")); //revenge
+		intToSong.put(12, new Media(ResourceType.MUSIC, "https://raw.githubusercontent.com/ankleBowl/thehivemc/main/blockpartysongs/dontmineatnight.mp3")); //dont mine at night
 		
 	}
 	
@@ -283,7 +286,7 @@ public class Constants {
 //		lore.add("");
 //		lore.add(ChatColor.GRAY + "Read the basics of");
 //		lore.add(ChatColor.GRAY + "our rules and how");
-//		lore.add(ChatColor.GRAY + "to play Shuffle!");
+//		lore.add(ChatColor.GRAY + "to play Shuffle!");g
 //		lore.add("");
 //		lore.add(ChatColor.AQUA + "► Right-click when held");
 //		meta.setLore(lore);
