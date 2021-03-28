@@ -358,7 +358,7 @@ public class GravityWorld {
 	}
 	
 	public void onPlayerLeave(GravityPlayer hp) {
-		
+		players.remove(hp);
 	}
 	
 	public void onInteract(PlayerInteractEvent event) {

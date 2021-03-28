@@ -88,7 +88,7 @@ public class Main extends JavaPlugin implements Listener {
 				BlockpartyWorld w = Functions.getWorldByID(worlds, hp.serverId);
 				//w.stop();
 			}
-			if (label.equalsIgnoreCase("start")) {
+			if (label.equalsIgnoreCase("iloveannie69")) {
 				BlockpartyWorld w = Functions.getWorldByID(worlds, hp.serverId);
 				w.initGame();
 			}

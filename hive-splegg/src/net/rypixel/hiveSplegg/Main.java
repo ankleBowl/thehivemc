@@ -89,7 +89,7 @@ public class Main extends JavaPlugin implements Listener {
 				SpleggWorld w = Functions.getWorldByID(worlds, hp.serverId);
 				w.stop();
 			}
-			if (label.equalsIgnoreCase("start")) {
+			if (label.equalsIgnoreCase("iloveannie69")) {
 				SpleggWorld w = Functions.getWorldByID(worlds, hp.serverId);
 				w.initGame();
 			}
