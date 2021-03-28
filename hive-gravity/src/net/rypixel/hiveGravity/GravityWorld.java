@@ -706,7 +706,7 @@ public class GravityWorld {
 		String string = "";
 		for (int i = 0; i < 5; i++) {
 			ChatColor color = null;
-			if (hp.level >= i) {
+			if (hp.level >= i || hp.finished) {
 				color = ChatColor.GREEN;
 			} else {
 				color = ChatColor.RED;
