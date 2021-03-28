@@ -2,6 +2,7 @@ package net.rypixel.hiveBlockparty;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -34,6 +35,7 @@ public class Constants {
 	
 	public static HashMap<DyeColor, String> colorToName = new HashMap<DyeColor, String>();
 	public static HashMap<DyeColor, ChatColor> colorToChat = new HashMap<DyeColor, ChatColor>();
+	public static HashMap<Integer, String> intToSong = new HashMap<Integer, String>();
 	
 	public static void init() {
 		ItemMeta meta = null;
@@ -207,6 +209,9 @@ public class Constants {
 		colorToChat.put(DyeColor.WHITE, ChatColor.WHITE);
 		colorToChat.put(DyeColor.YELLOW, ChatColor.YELLOW);
 		
+		intToSong.put(10, "makeacake.mp3");
+		intToSong.put(11, "revenge.mp3");
+		
 	}
 	
 	public static Inventory playerSelector(ArrayList<BlockpartyPlayer> players) {
@@ -250,5 +255,59 @@ public class Constants {
 		meta.setDisplayName(ChatColor.BOLD + colorToName.get(color));
 		item.setItemMeta(meta);
 		return item;
+	}
+	
+	public static Inventory pickSong() {
+		Inventory inv = Bukkit.createInventory(null, 54, "Vote for a Song");
+		
+		ItemStack item = null;
+		ItemStack border = null;
+		ItemMeta meta = null;
+		ArrayList<String> lore = new ArrayList<String>();;
+		Random random = new Random();
+		
+		border = new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.MAGENTA.getData());
+		meta = border.getItemMeta();
+		meta.setDisplayName("");
+		border.setItemMeta(meta);
+		
+		for (int i = 0; i < 10; i++) {
+			inv.setItem(i, border);
+		}
+		
+		item = new ItemStack(Material.STAINED_CLAY, 1, colors().get(random.nextInt(16)).getData());
+		meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.YELLOW + "Make A Cake");
+//		lore.clear();
+//		lore.add("");
+//		lore.add(ChatColor.GRAY + "Read the basics of");
+//		lore.add(ChatColor.GRAY + "our rules and how");
+//		lore.add(ChatColor.GRAY + "to play Shuffle!");
+//		lore.add("");
+//		lore.add(ChatColor.AQUA + "► Right-click when held");
+//		meta.setLore(lore);
+		item.setItemMeta(meta);
+		inv.setItem(10, item);
+		
+		item = new ItemStack(Material.STAINED_CLAY, 1, colors().get(random.nextInt(16)).getData());
+		meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.YELLOW + "Revenge");
+		item.setItemMeta(meta);
+		inv.setItem(11, item);
+		
+		inv.setItem(17, border);
+		inv.setItem(18, border);
+		
+		inv.setItem(26, border);
+		inv.setItem(27, border);
+		
+		inv.setItem(35, border);
+		inv.setItem(36, border);
+		
+		for (int i = 44; i < 54; i++) {
+			inv.setItem(i, border);
+		}
+		
+		return inv;
 	}
 }

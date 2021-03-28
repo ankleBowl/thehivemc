@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
 
 import javax.persistence.spi.PersistenceUnitTransactionType;
@@ -28,6 +29,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -50,6 +52,8 @@ public class BlockpartyWorld {
 	public boolean ending;
 	public int countdown;
 	
+	public String song;
+	
 	public int titleTimer;
 	
 	public int level;
@@ -59,6 +63,9 @@ public class BlockpartyWorld {
 	public ArrayList<BlockpartyPlayer> players = new ArrayList<BlockpartyPlayer>();
 	
 	public HashMap<DyeColor, DyeColor> colorMap = new HashMap<DyeColor, DyeColor>();
+	
+	public HashMap<BlockpartyPlayer, Integer> songVotes = new HashMap<BlockpartyPlayer, Integer>();
+	
 	public ArrayList<DyeColor> colorsUsed = new ArrayList<DyeColor>();
 	public DyeColor colorToRemove;
 	
@@ -194,7 +201,14 @@ public class BlockpartyWorld {
 	}
 
 	public void onInventoryClick(InventoryClickEvent event) {
-
+		if (event.getCurrentItem() != null) {
+			if (!inGame) {
+				if (event.getCurrentItem().getType() == Material.STAINED_CLAY) {
+					BlockpartyPlayer hp = Main.playerMap.get(event.getWhoClicked());
+					songVotes.put(hp, event.getSlot());
+				}
+			}
+		}
 	}
 	
 	public void welcomePlayer(BlockpartyPlayer hp) {
@@ -309,6 +323,24 @@ public class BlockpartyWorld {
 			hp.mcPlayer.getInventory().setItem(8, Constants.playersVisible);
 			hp.playedGames++;
 		}
+		
+		int[] votes = new int[54];
+		
+		for (Map.Entry<BlockpartyPlayer, Integer> entry : songVotes.entrySet()) {
+			votes[entry.getValue()]++;
+		}
+		
+		int highestNumber = 0;
+		int index = 0;
+		for (int i : votes) {
+			if (votes[i] > highestNumber) {
+				index = i;
+				highestNumber = votes[i];
+			}
+		}
+		
+		//Index is used for the song
+		
 		inGame = true;
 		titleTimer = 10;
 		
