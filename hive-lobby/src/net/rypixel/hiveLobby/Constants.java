@@ -175,6 +175,24 @@ public class Constants {
 		item.setItemMeta(itemMeta);
 		inv.setItem(34, item);
 		
+		item = new ItemStack(Material.GOLD_BOOTS, 1);
+		itemMeta = item.getItemMeta();
+		itemMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.GRAY + "Gravity");
+		lore.clear();
+		lore.add(ChatColor.DARK_GRAY + "Parkour, Dropper");
+		lore.add(" ");
+		lore.add(ChatColor.GRAY + "The dropper, made competitive! Fall");
+		lore.add(ChatColor.GRAY + "from the highest heights, navigating");
+		lore.add(ChatColor.GRAY + "obstacles to land safely. 5 maps");
+		lore.add(ChatColor.GRAY + "per round. Over 100 maps to");
+		lore.add(ChatColor.GRAY + "choose from!");
+		lore.add(" ");
+		lore.add(ChatColor.GREEN + "► Left-click to Queue");
+		lore.add(ChatColor.AQUA + "► Right-click to view Servers");
+		itemMeta.setLore(lore);
+		item.setItemMeta(itemMeta);
+		inv.setItem(28, item);
+		
 		return inv;
 	}
 	

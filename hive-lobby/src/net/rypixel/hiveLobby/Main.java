@@ -191,6 +191,9 @@ public class Main extends JavaPlugin implements Listener {
 				case RECORD_4:
 					Functions.sendToServer(hp.mcPlayer, "blockparty", this);
 					break;
+				case GOLD_BOOTS:
+					Functions.sendToServer(hp.mcPlayer, "gravity", this);
+					break;
 				default:
 					break;
 				}
