@@ -120,7 +120,7 @@ public class Constants {
 		meta.setDisplayName(ChatColor.GREEN + "Ender Pearl");
 		jump.setItemMeta(meta);
 		
-		rain = new ItemStack(Material.ENDER_PEARL, 1);
+		rain = new ItemStack(Material.MAGMA_CREAM, 1);
 		meta = rain.getItemMeta();
 		meta.setDisplayName(ChatColor.GREEN + "Color Rain");
 		rain.setItemMeta(meta);
