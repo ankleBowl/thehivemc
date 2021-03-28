@@ -249,6 +249,6 @@ public class Main extends JavaPlugin implements Listener {
 		Config.setPort("3306");
 		Config.setSSL(true);
 		MySQL.connect();
-		MySQL.update("CREATE TABLE IF NOT EXISTS splegg(UUID varchar(64) PRIMARY KEY, points int, played int, wins int, deaths int, eggsFired int, blocksbroken int, cosmetics varchar(9999););");
+		MySQL.update("CREATE TABLE IF NOT EXISTS splegg(UUID varchar(64) PRIMARY KEY, points int, played int, wins int, deaths int, eggsFired int, blocksbroken int, cosmetics varchar(9999));");
 	}
 }
