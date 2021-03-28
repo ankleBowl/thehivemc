@@ -281,6 +281,7 @@ public class GravityWorld {
 			hp.level = 0;
 			hp.finished = false;
 			hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[0]).toLocation(worlds[0]));
+			hp.mcPlayer.getInventory().setItem(5, Constants.retry);
 		}
 		
 		Constants.spawnLocations.get(maps[0]).toBlockVector().add(new Vector(1, 0, 0)).toLocation(worlds[0]).getBlock().setType(Material.BARRIER);
@@ -381,6 +382,10 @@ public class GravityWorld {
 				switch (event.getItem().getType()) {
 				case SLIME_BALL:
 					Functions.sendToServer(hp.mcPlayer, "lobby0", plugin);
+					break;
+				case INK_SACK:
+					hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[hp.level]).toLocation(hp.mcPlayer.getWorld()));
+					hp.fails++;
 					break;
 				default:
 					break;

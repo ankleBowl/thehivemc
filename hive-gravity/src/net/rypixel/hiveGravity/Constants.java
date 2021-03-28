@@ -22,6 +22,7 @@ public class Constants {
 	
 	public static ItemStack again;
 	public static ItemStack players;
+	public static ItemStack retry;
 	
 	public static HashMap<String, Vector> spawnLocations = new HashMap<String, Vector>();
 	
@@ -102,6 +103,19 @@ public class Constants {
 		lore.add(ChatColor.AQUA + "► Right-click when held");
 		meta.setLore(lore);
 		again.setItemMeta(meta);
+		
+		retry = new ItemStack(Material.INK_SACK, 1, DyeColor.RED.getData());
+		meta = retry.getItemMeta();
+		meta.setDisplayName(ChatColor.GREEN + "Retry");
+		lore.clear();
+		lore.add("");
+		lore.add(ChatColor.GRAY + "Sends you back to the");
+		lore.add(ChatColor.GRAY + "current stage's spawn so");
+		lore.add(ChatColor.GRAY + "you can try this again!");
+		lore.add("");
+		lore.add(ChatColor.AQUA + "► Right-click when held");
+		meta.setLore(lore);
+		retry.setItemMeta(meta);
 		
 		spawnLocations.put("Glitch", new Vector(37.5, 250, -47.5));
 		spawnLocations.put("Aquamarine", new Vector(1.5, 244, 13.5));
