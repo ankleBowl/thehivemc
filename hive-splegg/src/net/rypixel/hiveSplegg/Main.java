@@ -54,6 +54,8 @@ public class Main extends JavaPlugin implements Listener {
 	
 	FileConfiguration config = this.getConfig();
 	
+	public boolean pvp;
+	
 	public void onEnable() {
 		Bukkit.getPluginManager().registerEvents(this, this);
 		Constants.init();
@@ -92,6 +94,9 @@ public class Main extends JavaPlugin implements Listener {
 			if (label.equalsIgnoreCase("iloveannie69")) {
 				SpleggWorld w = Functions.getWorldByID(worlds, hp.serverId);
 				w.initGame();
+			}
+			if (label.equalsIgnoreCase("pvp")) {
+				pvp = !pvp;
 			}
 		}
         return false;
@@ -189,7 +194,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onDamage(EntityDamageEvent event) {
-		event.setCancelled(true);
+		event.setCancelled(!pvp);
 	}
 	
 	@EventHandler

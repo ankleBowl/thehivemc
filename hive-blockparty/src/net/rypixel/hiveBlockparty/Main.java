@@ -52,6 +52,8 @@ public class Main extends JavaPlugin implements Listener {
 	public Plugin plugin = this;
 	public BungeeListener bl;
 	
+	public boolean pvp = false; //REMOVE THIS LATER
+	
 	FileConfiguration config = this.getConfig();
 	
 	public void onEnable() {
@@ -91,6 +93,9 @@ public class Main extends JavaPlugin implements Listener {
 			if (label.equalsIgnoreCase("iloveannie69")) {
 				BlockpartyWorld w = Functions.getWorldByID(worlds, hp.serverId);
 				w.initGame();
+			}
+			if (label.equalsIgnoreCase("pvp")) {
+				pvp = !pvp;
 			}
 		}
         return false;
@@ -184,7 +189,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler 
 	public void onMobSpawn(CreatureSpawnEvent event) {
-		event.setCancelled(true);
+		event.setCancelled(!pvp);
 	}
 	
 	@EventHandler
