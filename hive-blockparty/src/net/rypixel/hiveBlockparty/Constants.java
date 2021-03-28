@@ -211,6 +211,7 @@ public class Constants {
 		
 		intToSong.put(10, "makeacake.mp3");
 		intToSong.put(11, "revenge.mp3");
+		intToSong.put(12, "dontmineatnight.mp3");
 		
 	}
 	
@@ -294,6 +295,14 @@ public class Constants {
 		meta.setDisplayName(ChatColor.YELLOW + "Revenge");
 		item.setItemMeta(meta);
 		inv.setItem(11, item);
+		
+		item = new ItemStack(Material.STAINED_CLAY, 1, colors().get(random.nextInt(16)).getData());
+		meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.YELLOW + "Don't Mine At Night");
+		item.setItemMeta(meta);
+		inv.setItem(12, item);
+		
+		//Next is how do i craft this again
 		
 		inv.setItem(17, border);
 		inv.setItem(18, border);
