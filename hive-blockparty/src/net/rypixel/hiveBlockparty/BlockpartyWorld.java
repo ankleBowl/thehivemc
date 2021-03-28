@@ -123,6 +123,20 @@ public class BlockpartyWorld {
 					colorRain();
 					hp.mcPlayer.getInventory().remove(Material.MAGMA_CREAM);
 					break;
+				case INK_SACK:
+					hp.hidePlayers = !hp.hidePlayers;
+					if (hp.hidePlayers) {
+						for (BlockpartyPlayer hp1 : players) {
+							hp.mcPlayer.hidePlayer(hp1.mcPlayer);
+						}
+						hp.mcPlayer.getInventory().setItem(8, Constants.playersInvisible);
+					} else {
+						for (BlockpartyPlayer hp1 : players) {
+							hp.mcPlayer.showPlayer(hp1.mcPlayer);
+						}
+						hp.mcPlayer.getInventory().setItem(8, Constants.playersVisible);
+					}
+					break;
 				default:
 					break;
 				}
@@ -292,6 +306,7 @@ public class BlockpartyWorld {
 			hp.mcPlayer.teleport(new Vector(0, 1, 0).toLocation(world));
 			hp.isDead = false;
 			hp.mcPlayer.getInventory().clear();
+			hp.mcPlayer.getInventory().setItem(8, Constants.playersVisible);
 			hp.playedGames++;
 		}
 		inGame = true;

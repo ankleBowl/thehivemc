@@ -18,6 +18,9 @@ public class Constants {
 	public static ItemStack vote;
 	public static ItemStack locker;
 	public static ItemStack hub;
+
+	public static ItemStack playersVisible;
+	public static ItemStack playersInvisible;
 	
 	public static ItemStack again;
 	public static ItemStack players;
@@ -124,6 +127,16 @@ public class Constants {
 		meta = rain.getItemMeta();
 		meta.setDisplayName(ChatColor.GREEN + "Color Rain");
 		rain.setItemMeta(meta);
+		
+		playersVisible = new ItemStack(Material.INK_SACK, 1, DyeColor.LIME.getData());
+		meta = playersVisible.getItemMeta();
+		meta.setDisplayName(ChatColor.GREEN + "Players Visible");
+		playersVisible.setItemMeta(meta);
+		
+		playersInvisible = new ItemStack(Material.INK_SACK, 1, DyeColor.GRAY.getData());
+		meta = playersInvisible.getItemMeta();
+		meta.setDisplayName(ChatColor.GRAY + "Players Invisible");
+		playersInvisible.setItemMeta(meta);
 		
 		blockpartyText = new String[10];
 		blockpartyText[0] = "B";

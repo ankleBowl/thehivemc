@@ -21,6 +21,7 @@ public class HivePlayer {
 	public int serverId = 0;
 	public ScoreHelper scoreboard;
 	public boolean switchingServers;
+	public boolean hidePlayers;
 	public Plugin plugin;
 	
 	public int tokens = 0;
