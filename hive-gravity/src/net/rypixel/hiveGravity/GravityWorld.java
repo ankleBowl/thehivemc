@@ -282,6 +282,14 @@ public class GravityWorld {
 		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 5. " + generateVoteMessage(difficulties[4]) + ChatColor.GRAY + " [" + ChatColor.WHITE + votes[4] + ChatColor.GRAY + " Votes]");
 		
 		players.add(hp);
+		
+		for (GravityPlayer hp1 : players) {
+			for (GravityPlayer hp2 : players) {
+				if (hp1 != hp2) {
+					hp1.mcPlayer.showPlayer(hp2.mcPlayer);
+				}
+			}
+		}
 	}
 	
 	public void initGame() {
@@ -504,6 +512,13 @@ public class GravityWorld {
 				finished.add(hp);
 				hp.mcPlayer.sendMessage(ChatColor.GREEN + "You finished! " + ChatColor.GRAY + "You are now spectating...");
 				
+				for (GravityPlayer hp1 : players) {
+					if (!hp1.finished) {
+						hp1.mcPlayer.hidePlayer(hp.mcPlayer);
+					}
+					hp.mcPlayer.showPlayer(hp1.mcPlayer);
+				}
+				
 				if (finished.size() == players.size()) {
 					gameEnding();
 				}
@@ -612,6 +627,9 @@ public class GravityWorld {
 			hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[0]).toLocation(worlds[0]));
 			TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "Game. OVER!");
 			TitleAPI.sendSubtitle(hp.mcPlayer, 20, 20, 20, ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GRAY + " won the game");
+			for (GravityPlayer hp1 : players) {
+				hp.mcPlayer.showPlayer(hp1.mcPlayer);
+			}
 		}
 		new BukkitRunnable() {
 			public void run() {

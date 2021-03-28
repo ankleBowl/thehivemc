@@ -209,6 +209,13 @@ public class SpleggWorld {
 							hp.mcPlayer.getInventory().setItem(7, Constants.again);
 							hp.mcPlayer.getInventory().setItem(0, Constants.players);
 							hp.mcPlayer.getInventory().setItem(8, Constants.hub);
+							
+							for (SpleggPlayer hp1 : players) {
+								if (hp1.alive) {
+									hp1.mcPlayer.hidePlayer(hp.mcPlayer);
+								}
+								hp.mcPlayer.showPlayer(hp1.mcPlayer);
+							}
 						}
 					}
 					
@@ -249,6 +256,9 @@ public class SpleggWorld {
 						gameOver = true;
 						winner.wins++;
 						for (SpleggPlayer hp : players) {
+							for (SpleggPlayer hp1 : players) {
+								hp.mcPlayer.showPlayer(hp1.mcPlayer);
+							}
 							TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "Game. OVER!");
 							hp.played++;
 							MySQL.update("UPDATE splegg SET played=\"" + String.valueOf(hp.played) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
@@ -387,6 +397,14 @@ public class SpleggWorld {
 		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 3. " + ChatColor.GOLD + mapList[maps[2]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[2]) + ChatColor.GRAY + " Votes]");
 		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 4. " + ChatColor.GOLD + mapList[maps[3]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[3]) + ChatColor.GRAY + " Votes]");
 		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 5. " + ChatColor.GOLD + mapList[maps[4]].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + String.valueOf(voteArray[4]) + ChatColor.GRAY + " Votes]");
+	
+		for (SpleggPlayer hp1 : players) {
+			for (SpleggPlayer hp2 : players) {
+				if (hp1 != hp2) {
+					hp1.mcPlayer.showPlayer(hp2.mcPlayer);
+				}
+			}
+		}
 	}
 	
 	public void selectMaps() {
@@ -523,6 +541,7 @@ public class SpleggWorld {
 				eggMap.get((Egg) e.getEntity()).eggsLanded++;
 				eggMap.get((Egg) e.getEntity()).eggsLandedTemp++;
 			}
+			
 		}
 	}
 	

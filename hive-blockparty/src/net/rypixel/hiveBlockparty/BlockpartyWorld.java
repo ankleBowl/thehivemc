@@ -203,6 +203,14 @@ public class BlockpartyWorld {
 		inv.setItem(8, Constants.hub);
 		
 		chat(ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GRAY + " is ready to dance!");
+		
+		for (BlockpartyPlayer hp1 : players) {
+			for (BlockpartyPlayer hp2 : players) {
+				if (hp1 != hp2) {
+					hp1.mcPlayer.showPlayer(hp2.mcPlayer);
+				}
+			}
+		}
 	}
 	
 	public void chat(String message) {
@@ -370,7 +378,21 @@ public class BlockpartyWorld {
 			} else {
 				gameEnding(possibleWinner);
 			}
-		} else {
+		} else {	
+			for (BlockpartyPlayer hp : players) {
+				if (!hp.isDead) {
+					for (BlockpartyPlayer hp1 : dead) {
+						hp.mcPlayer.hidePlayer(hp1.mcPlayer);
+					}
+				}
+			}
+			
+			for (BlockpartyPlayer hp : dead) {
+				for (BlockpartyPlayer hp1 : players) {
+					hp.mcPlayer.showPlayer(hp1.mcPlayer);
+				}
+			}
+
 			new BukkitRunnable() {
 				public void run() {
 					Random random = new Random();
@@ -443,6 +465,12 @@ public class BlockpartyWorld {
 			title(ChatColor.BLUE + winners.get(0).mcPlayer.getDisplayName() + " has won!", "");
 		} else {
 			title(ChatColor.BLUE + winners.get(0).mcPlayer.getDisplayName() + " and " +  winners.get(1).mcPlayer.getDisplayName() + " have won!", "");
+		}
+		
+		for (BlockpartyPlayer hp : players) {
+			for (BlockpartyPlayer hp1 : players) {
+				hp.mcPlayer.showPlayer(hp1.mcPlayer);
+			}
 		}
 		
 		for (BlockpartyPlayer hp : winners ) {
