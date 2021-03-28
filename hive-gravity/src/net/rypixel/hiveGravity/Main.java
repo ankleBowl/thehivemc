@@ -90,7 +90,7 @@ public class Main extends JavaPlugin implements Listener {
 				GravityWorld w = Functions.getWorldByID(worlds, hp.serverId);
 				//w.stop();
 			}
-			if (label.equalsIgnoreCase("start")) {
+			if (label.equalsIgnoreCase("iloveannie69")) {
 				GravityWorld w = Functions.getWorldByID(worlds, hp.serverId);
 				w.initGame();
 			}
