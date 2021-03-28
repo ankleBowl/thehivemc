@@ -11,6 +11,7 @@ public class GravityPlayer extends HivePlayer {
 	}
 
 	public int level;
+	public int fails;
 	public boolean finished;
 	
 	public int flyTime;

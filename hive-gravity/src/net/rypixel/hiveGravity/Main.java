@@ -228,12 +228,12 @@ public class Main extends JavaPlugin implements Listener {
 		event.setCancelled(true);
 	}
 	
-	@EventHandler
-	public void usePortal(PlayerPortalEvent event) {
-		event.setCancelled(true);
-		GravityPlayer hp = playerMap.get(event.getPlayer());
-		Functions.getWorldByID(worlds, hp.serverId).onPortalUsed(event);
-	}
+//	@EventHandler
+//	public void usePortal(PlayerPortalEvent event) {
+//		event.setCancelled(true);
+//		GravityPlayer hp = playerMap.get(event.getPlayer());
+//		Functions.getWorldByID(worlds, hp.serverId).onPortalUsed(event);
+//	}
 	
 	public void initSQL() {
 		Config.create();

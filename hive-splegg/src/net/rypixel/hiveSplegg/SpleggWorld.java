@@ -202,6 +202,7 @@ public class SpleggWorld {
 							hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999, 1, false, true));
 							hp.mcPlayer.setAllowFlight(true);
 							hp.mcPlayer.setFlying(true);
+							hp.mcPlayer.getInventory().remove(Material.IRON_SPADE);
 							TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "YOU DIED!");
 							hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1, false, true));
 							hp.deaths++;
