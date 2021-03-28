@@ -452,27 +452,29 @@ public class GravityWorld {
 		} else {
 			hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[0]).toLocation(worlds[0]));
 			hp.level = 0;
-			hp.finished = true;
-			hp.mcPlayer.setAllowFlight(true);
-			hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999, 1, false, true));
-			finishTimes.put(hp, gameClock);
-			if (timeRemaining < 48000) {
-				timeRemaining = 48000;
-			}
-			if (finished.size() == 0) {
-				chat(chatPrefix() + " " + ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GREEN + " just finished 1st! The game will end in 2 minutes");
-			} else if (finished.size() == 1) {
-				chat(chatPrefix() + " " + ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GREEN + " just finished 2nd!");
-			} else if (finished.size() == 2) {
-				chat(chatPrefix() + " " + ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GREEN + " just finished 3rd!");
-			} else {
-				chat(chatPrefix() + " " + ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GREEN + " just finished " + String.valueOf(finished.size()) + "th!");
-			}
-			finished.add(hp);
-			hp.mcPlayer.sendMessage(ChatColor.GREEN + "You finished! " + ChatColor.GRAY + "You are now spectating...");
-			
-			if (finished.size() == players.size()) {
-				gameEnding();
+			if (!hp.finished) {
+				hp.finished = true;
+				hp.mcPlayer.setAllowFlight(true);
+				hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999, 1, false, true));
+				finishTimes.put(hp, gameClock);
+				if (timeRemaining < 48000) {
+					timeRemaining = 48000;
+				}
+				if (finished.size() == 0) {
+					chat(chatPrefix() + " " + ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GREEN + " just finished 1st! The game will end in 2 minutes");
+				} else if (finished.size() == 1) {
+					chat(chatPrefix() + " " + ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GREEN + " just finished 2nd!");
+				} else if (finished.size() == 2) {
+					chat(chatPrefix() + " " + ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GREEN + " just finished 3rd!");
+				} else {
+					chat(chatPrefix() + " " + ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GREEN + " just finished " + String.valueOf(finished.size()) + "th!");
+				}
+				finished.add(hp);
+				hp.mcPlayer.sendMessage(ChatColor.GREEN + "You finished! " + ChatColor.GRAY + "You are now spectating...");
+				
+				if (finished.size() == players.size()) {
+					gameEnding();
+				}
 			}
 		}
 	}
