@@ -68,7 +68,7 @@ public class BlockpartyWorld {
 	}
 	
 	public void init() {
-		
+		world = Functions.createNewWorld(Bukkit.getWorld("bpmap1"), String.valueOf("id"));
 		countdown = 1200;
 		update();
 	}
@@ -121,6 +121,7 @@ public class BlockpartyWorld {
     				break;
 				case MAGMA_CREAM:
 					colorRain();
+					hp.mcPlayer.getInventory().remove(Material.MAGMA_CREAM);
 					break;
 				default:
 					break;
