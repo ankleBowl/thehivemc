@@ -92,7 +92,7 @@ public class LobbyWorld {
 		    		player.scoreboard.setTitle(ChatColor.BOLD + "" + ChatColor.GOLD + "The" + ChatColor.YELLOW + "Hive");
 		    		player.scoreboard.setSlot(15, "");
 		    		player.scoreboard.setSlot(14, ChatColor.BOLD + "" + ChatColor.RED + "Rank");
-		    		player.scoreboard.setSlot(13, ChatColor.BLUE + "jfrehfeifrf"); //TODO
+		    		player.scoreboard.setSlot(13, ChatColor.BLUE + player.playerRank);
 		    		player.scoreboard.setSlot(12, "");
 		    		player.scoreboard.setSlot(11, ChatColor.BOLD + "" + ChatColor.GREEN + "Tokens");
 		    		player.scoreboard.setSlot(10, ChatColor.GRAY + String.valueOf(player.tokens));
