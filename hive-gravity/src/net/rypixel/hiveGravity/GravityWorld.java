@@ -263,6 +263,13 @@ public class GravityWorld {
 		hp.mcPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
 		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
 		
+		Inventory inv = hp.mcPlayer.getInventory();
+		inv.setItem(0, Constants.rules);
+		inv.setItem(1, Constants.vote);
+		inv.setItem(4, Constants.locker);
+		inv.setItem(7, Constants.settings);
+		inv.setItem(8, Constants.hub);
+		
 		chat(ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GRAY + " wants to fall!");
 		
 		int[] votes = tallyVotes();
@@ -284,7 +291,8 @@ public class GravityWorld {
 			hp.level = 0;
 			hp.finished = false;
 			hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[0]).toLocation(worlds[0]));
-			hp.mcPlayer.getInventory().setItem(5, Constants.retry);
+			hp.mcPlayer.getInventory().clear();
+			hp.mcPlayer.getInventory().setItem(4, Constants.retry);
 		}
 		
 		Constants.spawnLocations.get(maps[0]).toBlockVector().add(new Vector(1, 0, 0)).toLocation(worlds[0]).getBlock().setType(Material.BARRIER);
@@ -455,6 +463,8 @@ public class GravityWorld {
 				TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, "Stage " + String.valueOf(hp.level + 1));
 				TitleAPI.sendSubtitle(hp.mcPlayer, 20, 20, 20, maps[hp.level].replace('_', ' ') + ChatColor.DARK_GRAY + " - " + difficultyText(hp.level));
 				
+				hp.mcPlayer.getInventory().clear();
+				
 				hp.mcPlayer.sendMessage("");
 				hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " Map " + ChatColor.DARK_GRAY + ">>" + ChatColor.AQUA + " " + maps[hp.level]);
 				hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " Creator " + ChatColor.DARK_GRAY + ">>" + ChatColor.AQUA + " " + " N/A");
@@ -465,6 +475,11 @@ public class GravityWorld {
 				chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.GREEN + " finished " + ChatColor.AQUA + "Stage " + String.valueOf(hp.level) + ChatColor.GREEN + " in " + ChatColor.LIGHT_PURPLE + String.valueOf(hp.mapTime / 20) + " seconds");
 				
 				hp.mapTime = 0;
+				
+				Inventory inv = hp.mcPlayer.getInventory();
+				inv.setItem(0, Constants.players);
+				inv.setItem(7, Constants.again);
+				inv.setItem(8, Constants.hub);
 			}
 		} else {
 			hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[0]).toLocation(worlds[0]));

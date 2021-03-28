@@ -19,6 +19,7 @@ public class Constants {
 	public static ItemStack vote;
 	public static ItemStack locker;
 	public static ItemStack hub;
+	public static ItemStack settings;
 	
 	public static ItemStack again;
 	public static ItemStack players;
@@ -112,6 +113,19 @@ public class Constants {
 		lore.add(ChatColor.GRAY + "Sends you back to the");
 		lore.add(ChatColor.GRAY + "current stage's spawn so");
 		lore.add(ChatColor.GRAY + "you can try this again!");
+		lore.add("");
+		lore.add(ChatColor.AQUA + "► Right-click when held");
+		meta.setLore(lore);
+		retry.setItemMeta(meta);
+		
+		retry = new ItemStack(Material.REDSTONE_COMPARATOR, 1);
+		meta = retry.getItemMeta();
+		meta.setDisplayName(ChatColor.AQUA + "Your Settings");
+		lore.clear();
+		lore.add("");
+		lore.add(ChatColor.GRAY + "Allows you to view");
+		lore.add(ChatColor.GRAY + "and change your GRAV");
+		lore.add(ChatColor.GRAY + "settings");
 		lore.add("");
 		lore.add(ChatColor.AQUA + "► Right-click when held");
 		meta.setLore(lore);
