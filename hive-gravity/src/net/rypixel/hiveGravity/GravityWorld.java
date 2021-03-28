@@ -1,10 +1,13 @@
 package net.rypixel.hiveGravity;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -291,10 +294,19 @@ public class GravityWorld {
 		Constants.spawnLocations.get(maps[0]).toBlockVector().add(new Vector(0, 2, 0)).toLocation(worlds[0]).getBlock().setType(Material.BARRIER);
 		
 		for (GravityPlayer hp : players) {
-			TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, ChatColor.RED + "⑤");
-			TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, ChatColor.GRAY + "until start");
-			hp.mcPlayer.setLevel(5);
+			TitleAPI.sendTitle(hp.mcPlayer, 20, 40, 20, ChatColor.GOLD + "Gravity");
+			TitleAPI.sendSubtitle(hp.mcPlayer, 20, 40, 20, ChatColor.GRAY + "A " + ChatColor.WHITE + "play.HiveMC.com" + ChatColor.GRAY + " Creation");
 		}
+		
+		new BukkitRunnable() {
+			public void run() {
+				for (GravityPlayer hp : players) {
+					TitleAPI.sendTitle(hp.mcPlayer, 0, 21, 0, ChatColor.RED + "⑤");
+					TitleAPI.sendSubtitle(hp.mcPlayer, 0, 21, 0, ChatColor.GRAY + "until start");
+					hp.mcPlayer.setLevel(5);
+				}
+		    }
+		}.runTaskLater(plugin, 100L);
 		
 		new BukkitRunnable() {
 			public void run() {
@@ -304,7 +316,7 @@ public class GravityWorld {
 					hp.mcPlayer.setLevel(4);
 				}
 		    }
-		}.runTaskLater(plugin, 20L);
+		}.runTaskLater(plugin, 120L);
 		
 		new BukkitRunnable() {
 			public void run() {
@@ -314,7 +326,7 @@ public class GravityWorld {
 					hp.mcPlayer.setLevel(3);
 				}
 		    }
-		}.runTaskLater(plugin, 40L);
+		}.runTaskLater(plugin, 140L);
 		
 		new BukkitRunnable() {
 			public void run() {
@@ -324,7 +336,7 @@ public class GravityWorld {
 					hp.mcPlayer.setLevel(2);
 				}
 		    }
-		}.runTaskLater(plugin, 60L);
+		}.runTaskLater(plugin, 160L);
 		
 		new BukkitRunnable() {
 			public void run() {
@@ -334,7 +346,7 @@ public class GravityWorld {
 					hp.mcPlayer.setLevel(1);
 				}
 		    }
-		}.runTaskLater(plugin, 80L);
+		}.runTaskLater(plugin, 180L);
 		
 		new BukkitRunnable() {
 			public void run() {
@@ -355,7 +367,7 @@ public class GravityWorld {
 				Constants.spawnLocations.get(maps[0]).toBlockVector().add(new Vector(0, 0, -1)).toLocation(worlds[0]).getBlock().setType(Material.AIR);
 				Constants.spawnLocations.get(maps[0]).toBlockVector().add(new Vector(0, 2, 0)).toLocation(worlds[0]).getBlock().setType(Material.AIR);
 			}
-		}.runTaskLater(plugin, 100L);
+		}.runTaskLater(plugin, 200L);
 	}
 	
 	public void onPlayerLeave(GravityPlayer hp) {
@@ -615,6 +627,48 @@ public class GravityWorld {
 				}
 		    }
 		}.runTaskLater(plugin, 100L);
+		
+		new BukkitRunnable() {
+			public void run() {
+				for (GravityPlayer hp : players) {
+					sendToNewServer(hp);
+				}
+				
+				for (int i = 0; i < 5; i++) {
+					File folder = worlds[i].getWorldFolder();
+					Bukkit.unloadWorld(worlds[i], false);
+					try {
+						FileUtils.deleteDirectory(folder);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					//TODO Catch IndexOutOfBounds Exception
+				}
+				Main.worlds.remove(this);
+		    }
+		}.runTaskLater(plugin, 100L);
+	}
+	
+	public void sendToNewServer(GravityPlayer hp) {
+		boolean sent = false;
+		for (GravityWorld world : Main.worlds) {
+			if (!sent) {
+				if (world.players.size() < 20 && !world.inGame) {
+					world.welcomePlayer(hp);
+					sent = true;
+				}
+			}
+		}
+		
+		if (!sent) {
+			int id = Functions.getLowestWorldID(Main.worlds);
+			GravityWorld w = new GravityWorld(plugin, id);
+			w.init();
+			Main.worlds.add(w);
+			
+			w.welcomePlayer(hp);
+			sent = true;
+		}
 	}
 	
 	public String getMatchPlayedStr(GravityPlayer hp) {
