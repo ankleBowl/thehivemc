@@ -79,7 +79,7 @@ public class SpleggWorld {
 	public void stop() {
 		
 		for (SpleggPlayer hp : players) {
-			hp.mcPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
+			
 			hp.mcPlayer.setFlying(false);
 			hp.mcPlayer.setLevel(0);
 			
@@ -199,7 +199,6 @@ public class SpleggWorld {
 							hp.alive = false;
 							hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(gameWorld));
 							hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
-							hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999, 1, false, true));
 							hp.mcPlayer.setAllowFlight(true);
 							hp.mcPlayer.setFlying(true);
 							hp.mcPlayer.getInventory().remove(Material.IRON_SPADE);
@@ -379,7 +378,6 @@ public class SpleggWorld {
 		hp.mcPlayer.teleport(new Vector(0, 10, 0).toLocation(world));
 		hp.serverId = id;
 		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
-		hp.mcPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
 		hp.mcPlayer.setAllowFlight(false);
 		
 		Inventory inv = hp.mcPlayer.getInventory();

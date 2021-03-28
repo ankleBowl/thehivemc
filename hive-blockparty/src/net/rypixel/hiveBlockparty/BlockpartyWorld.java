@@ -188,7 +188,6 @@ public class BlockpartyWorld {
 		hp.mcPlayer.teleport(new Vector(34.5, 3, 8).toLocation(world));
 		hp.serverId = id;
 		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
-		hp.mcPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
 		hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 99999, 0, false, false));
 		hp.mcPlayer.setAllowFlight(false);
 		
@@ -319,7 +318,6 @@ public class BlockpartyWorld {
 			if (!hp.isDead && hp.mcPlayer.getLocation().getY() < 0) {
 				hp.isDead = true;
 				hp.mcPlayer.teleport(new Vector(0, 10, 0).toLocation(world));
-				hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999, 1, false, true));
 				hp.mcPlayer.setAllowFlight(true);
 				hp.mcPlayer.setFlying(true);
 				TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "YOU DIED!");
@@ -488,7 +486,6 @@ public class BlockpartyWorld {
 			inv.setItem(8, Constants.hub);
 			
 			hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
-			hp.mcPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
 			hp.mcPlayer.setAllowFlight(false);
 			
 			hp.mcPlayer.setFoodLevel(20);

@@ -260,7 +260,6 @@ public class GravityWorld {
 		hp.mcPlayer.teleport(new Vector(0.5, 172, 0.5).toLocation(world));
 		hp.serverId = id;
 		hp.mcPlayer.setAllowFlight(false);
-		hp.mcPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
 		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
 		
 		Inventory inv = hp.mcPlayer.getInventory();
@@ -495,7 +494,6 @@ public class GravityWorld {
 			if (!hp.finished) {
 				hp.finished = true;
 				hp.mcPlayer.setAllowFlight(true);
-				hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999, 1, false, true));
 				finishTimes.put(hp, gameClock);
 				if (timeRemaining < 48000) {
 					timeRemaining = 48000;
