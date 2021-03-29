@@ -1,5 +1,9 @@
 package net.rypixel.hiveBlockparty;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -23,4 +27,22 @@ public class BlockpartyPlayer extends HivePlayer {
 	public String powerUp;
 	
 	public String blockpartyCosmetics;
+	
+	public void hideAllPlayers(HashMap<Player, BlockpartyPlayer> map) {
+		for (Map.Entry<Player, BlockpartyPlayer> entry : map.entrySet()) {
+			mcPlayer.hidePlayer(entry.getKey());
+		}
+	}
+	
+	public void showPlayersInWorld(ArrayList<BlockpartyPlayer> list) {
+		for (BlockpartyPlayer hp : list) {
+			mcPlayer.hidePlayer(hp.mcPlayer);
+		}
+	}
+
+	public void hideAllPlayers(ArrayList<BlockpartyPlayer> players) {
+		for (BlockpartyPlayer hp : players) {
+			mcPlayer.hidePlayer(hp.mcPlayer);
+		}
+	}
 }

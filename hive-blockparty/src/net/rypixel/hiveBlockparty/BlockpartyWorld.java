@@ -136,13 +136,13 @@ public class BlockpartyWorld {
 				case INK_SACK:
 					hp.hidePlayers = !hp.hidePlayers;
 					if (hp.hidePlayers) {
-						for (BlockpartyPlayer hp1 : players) {
-							hp.mcPlayer.hidePlayer(hp1.mcPlayer);
-						}
+						hp.hideAllPlayers(players);
 						hp.mcPlayer.getInventory().setItem(8, Constants.playersInvisible);
 					} else {
 						for (BlockpartyPlayer hp1 : players) {
-							hp.mcPlayer.showPlayer(hp1.mcPlayer);
+							if (!hp1.isDead) {
+								hp.mcPlayer.showPlayer(hp1.mcPlayer);
+							}
 						}
 						hp.mcPlayer.getInventory().setItem(8, Constants.playersVisible);
 					}
@@ -206,6 +206,7 @@ public class BlockpartyWorld {
 	}
 
 	public void onInventoryClick(InventoryClickEvent event) {
+		event.setCancelled(true);
 		if (event.getCurrentItem() != null) {
 			if (!inGame) {
 				if (event.getCurrentItem().getType() == Material.STAINED_CLAY) {
@@ -236,15 +237,9 @@ public class BlockpartyWorld {
 		inv.setItem(4, Constants.locker);
 		inv.setItem(8, Constants.hub);
 		
-		chat(ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GRAY + " is ready to dance!");
+		hp.showPlayersInWorld(players);
 		
-		for (BlockpartyPlayer hp1 : players) {
-			for (BlockpartyPlayer hp2 : players) {
-				if (hp1 != hp2) {
-					hp1.mcPlayer.showPlayer(hp2.mcPlayer);
-				}
-			}
-		}
+		chat(ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GRAY + " is ready to dance!");
 	}
 	
 	public void chat(String message) {

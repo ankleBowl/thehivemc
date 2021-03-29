@@ -2,6 +2,7 @@ package net.rypixel.hiveBlockparty;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -142,6 +143,8 @@ public class Main extends JavaPlugin implements Listener {
 		event.setJoinMessage(null);
 		
 		boolean sent = false;
+		
+		hp.hideAllPlayers(playerMap);
 		
 		for (BlockpartyWorld world : worlds) {
 			if (!sent) {
