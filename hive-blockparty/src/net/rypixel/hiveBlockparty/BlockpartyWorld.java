@@ -153,7 +153,7 @@ public class BlockpartyWorld {
 			}
 			
 			Location l = hp.mcPlayer.getTargetBlock((HashSet<Byte>) null, 5).getLocation();
-			if (l.getBlock().getType() == Material.JUKEBOX) {
+			if (l.getBlock().getType() == Material.JUKEBOX && !hp.isDead) {
 				l.getBlock().setType(Material.AIR);
 				powerup = null;
 				Random random = new Random();
