@@ -224,6 +224,7 @@ public class BlockpartyWorld {
 		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
 		hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 99999, 0, false, false));
 		hp.mcPlayer.setAllowFlight(false);
+		hp.tempPoints = 0;
 		
 		JukeboxAPI.stopMusic(hp.mcPlayer);
 		
