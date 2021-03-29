@@ -309,7 +309,7 @@ public class BlockpartyWorld {
 							hp.mcPlayer.teleport(new Vector(34.5, 3, 8).toLocation(world));
 						}
 						
-						if (hp.mcPlayer.getLocation().distance(new Vector(0, 0, 0).toLocation(world)) > 150) {
+						if (hp.mcPlayer.getLocation().distance(new Vector(0, 0, 0).toLocation(world)) > 150 && hp.isDead) {
 							hp.mcPlayer.teleport(new Vector(34.5, 3, 8).toLocation(world));
 						}
 					}
@@ -372,7 +372,7 @@ public class BlockpartyWorld {
 			TitleAPI.sendSubtitle(hp.mcPlayer, 0, 61, 0, ChatColor.AQUA + "Waiting...");
 			TitleAPI.sendTitle(hp.mcPlayer, 0, 61, 0, "");
 			
-			if (!hp.isDead && hp.mcPlayer.getLocation().getY() < 0) {
+			if (!hp.isDead && hp.mcPlayer.getLocation().getY() < 0.5) {
 				hp.isDead = true;
 				hp.mcPlayer.teleport(new Vector(0, 10, 0).toLocation(world));
 				hp.mcPlayer.setAllowFlight(true);
@@ -529,7 +529,7 @@ public class BlockpartyWorld {
 			}
 		}
 		
-		for (BlockpartyPlayer hp : winners ) {
+		for (BlockpartyPlayer hp : winners) {
 			hp.wonGames++;
 			hp.winstreak++;
 		}
