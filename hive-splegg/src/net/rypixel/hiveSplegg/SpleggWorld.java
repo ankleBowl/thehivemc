@@ -17,6 +17,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Egg;
@@ -198,6 +199,7 @@ public class SpleggWorld {
 						if (hp.mcPlayer.getLocation().getBlockY() < 60 && hp.alive) {
 							chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.GRAY + " has fallen to their " + ChatColor.RED + "DEATH!");
 							hp.alive = false;
+							gameWorld.spawnEntity(hp.mcPlayer.getLocation(), EntityType.LIGHTNING);
 							hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(gameWorld));
 							hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
 							hp.mcPlayer.setAllowFlight(true);
@@ -491,6 +493,7 @@ public class SpleggWorld {
 						eggMap.put(egg, hp);
 						hp.eggsFired++;
 						hp.eggsFiredTemp++;
+						hp.mcPlayer.playSound(hp.mcPlayer.getLocation(), Sound.GHAST_FIREBALL, 1, 1);
 						break;
 					case COMPASS:
 						hp.mcPlayer.openInventory(Constants.playerSelector(players));
@@ -568,8 +571,10 @@ public class SpleggWorld {
 			if (new Vector(0, 100, 0).toLocation(gameWorld).distance(eggLoc) < 50) {
 				eggMap.get((Egg) e.getEntity()).eggsLanded++;
 				eggMap.get((Egg) e.getEntity()).eggsLandedTemp++;
+				for (SpleggPlayer hp : players) {
+					hp.mcPlayer.playSound(hp.mcPlayer.getLocation(), Sound.ITEM_PICKUP, 1, 1);
+				}
 			}
-			
 		}
 	}
 	
