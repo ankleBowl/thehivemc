@@ -1,0 +1,8 @@
+main: net.rypixel.hiveHide.Main
+name: Hive
+version: 1.0
+author: ankleBowl
+api-version: 1.8
+depend: [MySQL,TitleAPI]
+commands:
+    transfer:
