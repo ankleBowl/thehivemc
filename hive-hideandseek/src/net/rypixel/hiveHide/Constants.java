@@ -24,7 +24,7 @@ public class Constants {
 	public static ItemStack again;
 	public static ItemStack players;
 	
-	public static String[] mapList;
+	public static ArrayList<String> mapList;
 	public static HashMap<String, Vector> spawnLocations = new HashMap<String, Vector>();
 	public static HashMap<String, Material[]> blocksToHide = new HashMap<String, Material[]>(); 
 	
@@ -106,12 +106,12 @@ public class Constants {
 		meta.setLore(lore);
 		again.setItemMeta(meta);
 		
-		mapList = new String[5];
-		mapList[0] = "Chinatown";
-		mapList[1] = "N/A(1)";
-		mapList[2] = "N/A(2)";
-		mapList[3] = "N/A(3)";
-		mapList[4] = "N/A(4)";
+		mapList = new ArrayList<String>();
+		mapList.add("Chinatown");
+		mapList.add("Chinatown1");
+		mapList.add("Chinatown2");
+		mapList.add("Chinatown3");
+		mapList.add("Chinatown4");
 		
 		Material[] list = new Material[5];
 		list[0] = Material.STONE;
