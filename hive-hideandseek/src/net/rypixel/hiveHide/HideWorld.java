@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -17,7 +18,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+
+import com.connorlinfoot.titleapi.TitleAPI;
 
 public class HideWorld {
 
@@ -26,6 +31,9 @@ public class HideWorld {
 	
 	public boolean inGame;
 	public boolean canVote = true;
+	public boolean starting = false;
+	public BukkitTask timer;
+	public int countDown = 0;
 	
 	public ArrayList<HidePlayer> players = new ArrayList<HidePlayer>();
 	public HashMap<HidePlayer, Integer> votes = new HashMap<HidePlayer, Integer>();
@@ -43,6 +51,7 @@ public class HideWorld {
 	
 	public void init() {
 		world = Functions.createNewWorld(Bukkit.getWorld("hideandseekmap"), String.valueOf(id));
+		countDown = 20 * 20;
 	}
 	
 	public void welcomePlayer(HidePlayer hp) {
@@ -58,6 +67,9 @@ public class HideWorld {
 		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 3. " + ChatColor.GOLD + randomMaps[0] + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[2] + ChatColor.GRAY + " Votes]");
 		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 4. " + ChatColor.GOLD + randomMaps[0] + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[3] + ChatColor.GRAY + " Votes]");
 		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 5. " + ChatColor.GOLD + randomMaps[0] + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[4] + ChatColor.GRAY + " Votes]");
+	
+		
+		
 	}
 	
 	public int[] tallyVotes() {
@@ -128,8 +140,10 @@ public class HideWorld {
 		}
 	}
 	
-	public void chat(String messgae) {
-		
+	public void chat(String message) {
+		for (HidePlayer hp : players) {
+			hp.mcPlayer.sendMessage(message);
+		}
 	}
 	
 	public Inventory voteInv() {
@@ -160,6 +174,53 @@ public class HideWorld {
 			}
 		}
 		return inv;
+	}
+	
+	public void update() {
+		timer = new BukkitRunnable() {
+			public void run() {
+				if (!inGame) {
+					if (players.size() > 5 && !starting) {
+						starting = true;
+					} else {
+						for (HidePlayer hp : players) {
+							TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 0, "");
+							TitleAPI.sendSubtitle(hp.mcPlayer, 0, 20, 0, ChatColor.YELLOW + String.valueOf(6 - players.size()) + " players needed to start...");
+						}
+					}
+					
+					if (starting) {
+						countDown--;
+						
+						for (HidePlayer hp : players) {
+							TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 0, "");
+							TitleAPI.sendSubtitle(hp.mcPlayer, 0, 20, 0, ChatColor.GREEN + "Starting game in " + String.valueOf(countDown / 20));
+						}
+						
+						if (countDown == 0) {
+							initGame();
+							cancel();
+						}
+						
+						if (countDown == 300) {
+							canVote = false;
+							int[] votes = tallyVotes();
+							int highestN = 0;
+							int index = 0;
+							for (int i = 0; i < 5; i++) {
+								if (votes[i] < highestN) {
+									index = i;
+									highestN = votes[i];
+								}
+							}
+							//chat(chatPrefix() + ChatColor.DARK_AQUA + " Voting has ended!" + ChatColor.AQUA + " The map " + generateVoteMessage(difficulties[index]) + ChatColor.AQUA + "has won!");
+						}
+					}
+				} else {
+
+				}
+			}
+		}.runTaskTimer(plugin, 0L, 1L);
 	}
 	
 	public String chatPrefix() {
