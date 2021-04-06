@@ -116,27 +116,43 @@ public class Constants {
 		again.setItemMeta(meta);
 		
 		mapList = new String[21];
-		mapList[0] = "Splatter";
-		mapList[1] = "Petal_Power";
-		mapList[2] = "Ring_Ring";
-		mapList[3] = "Balance";
-		mapList[4] = "Starmie";
-		mapList[5] = "Palette";
-		mapList[6] = "Cell";
-		mapList[7] = "Burst";
-		mapList[8] = "Pokemon";
-		mapList[9] = "Mistic";
-		mapList[10] = "Golf";
-		mapList[11] = "Tree_Island";
-		mapList[12] = "Saturn";
-		mapList[13] = "Not_Mushroom_Here";
-		mapList[14] = "Tree_Fiddy";
-		mapList[15] = "Time_Travel";
-		mapList[16] = "Chocolate";
-		mapList[17] = "Making_It_Up";
-		mapList[18] = "Inferno";
-		mapList[19] = "Repercussions";
-		mapList[20] = "Catch_em_All";
+		mapList[0] = "Autumn_Leaves";
+		mapList[1] = "Bloom";
+		mapList[2] = "Busy_Bees";
+		mapList[3] = "Cell";
+		mapList[4] = "Gemmy Gears";
+		mapList[5] = "Making It Up";
+		mapList[6] = "Oversplegg";
+		mapList[7] = "Palette";
+		mapList[8] = "PinkMe";
+		mapList[9] = "Pokemon";
+		mapList[10] = "Saturn";
+		mapList[11] = "Splatter";
+		mapList[12] = "Storm";
+		mapList[13] = "Tree_Fiddy";
+		mapList[14] = "Tree_Island";
+		
+//		mapList[0] = "Splatter";
+//		mapList[1] = "Petal_Power";
+//		mapList[2] = "Ring_Ring";
+//		mapList[3] = "Balance";
+//		mapList[4] = "Starmie";
+//		mapList[5] = "Palette";
+//		mapList[6] = "Cell";
+//		mapList[7] = "Burst";
+//		mapList[8] = "Pokemon";
+//		mapList[9] = "Mistic";
+//		mapList[10] = "Golf";
+//		mapList[11] = "Tree_Island";
+//		mapList[12] = "Saturn";
+//		mapList[13] = "Not_Mushroom_Here";
+//		mapList[14] = "Tree_Fiddy";
+//		mapList[15] = "Time_Travel";
+//		mapList[16] = "Chocolate";
+//		mapList[17] = "Making_It_Up";
+//		mapList[18] = "Inferno";
+//		mapList[19] = "Repercussions";
+//		mapList[20] = "Catch_em_All";
 	}
 	
 	public static Inventory playerSelector(ArrayList<SpleggPlayer> players) {

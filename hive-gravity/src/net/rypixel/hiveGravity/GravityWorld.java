@@ -159,7 +159,6 @@ public class GravityWorld {
 						
 						if (countdown == 0) {
 							initGame();
-							cancel();
 						}
 						
 						if (countdown == 300) {

@@ -39,6 +39,7 @@ public class HideWorld {
 	public HashMap<HidePlayer, Integer> votes = new HashMap<HidePlayer, Integer>();
 	
 	public String[] randomMaps = new String[5];
+	public String mapName = "";
 	
 	public World world;
 	
@@ -67,9 +68,6 @@ public class HideWorld {
 		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 3. " + ChatColor.GOLD + randomMaps[0] + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[2] + ChatColor.GRAY + " Votes]");
 		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 4. " + ChatColor.GOLD + randomMaps[0] + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[3] + ChatColor.GRAY + " Votes]");
 		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 5. " + ChatColor.GOLD + randomMaps[0] + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[4] + ChatColor.GRAY + " Votes]");
-	
-		
-		
 	}
 	
 	public int[] tallyVotes() {
@@ -94,7 +92,7 @@ public class HideWorld {
 	}
 	
 	public void initGame() {
-
+		
 	}
 	
 	public void onPlayerLeave(HidePlayer hp) {
@@ -199,7 +197,6 @@ public class HideWorld {
 						
 						if (countDown == 0) {
 							initGame();
-							cancel();
 						}
 						
 						if (countDown == 300) {
@@ -213,7 +210,8 @@ public class HideWorld {
 									highestN = votes[i];
 								}
 							}
-							//chat(chatPrefix() + ChatColor.DARK_AQUA + " Voting has ended!" + ChatColor.AQUA + " The map " + generateVoteMessage(difficulties[index]) + ChatColor.AQUA + "has won!");
+							chat(chatPrefix() + ChatColor.DARK_AQUA + " Voting has ended!" + ChatColor.AQUA + " The map " + randomMaps[index] + ChatColor.AQUA + "has won!");
+							mapName = randomMaps[index];
 						}
 					}
 				} else {

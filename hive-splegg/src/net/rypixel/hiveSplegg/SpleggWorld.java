@@ -18,6 +18,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.block.Action;
@@ -306,7 +307,25 @@ public class SpleggWorld {
 	
 	public void initGame() {
 		inGame = true;
-		gameWorld = Functions.createNewWorld(Bukkit.getWorld("spleggmap1"), String.valueOf(id)); //Replace "spleggmap1" with the voted map later
+		
+		int[] votes = tallyVotes();
+		int highestNumber = 0;
+		Random random = new Random();
+		int mapNumber = random.nextInt(5);
+		int n = 0;
+		for (int i : votes) {
+			if (i > highestNumber) {
+				highestNumber = i;
+				mapNumber = n;
+			}
+			n++;
+		}
+		String[] mapList = Constants.mapList;
+		String mapName = mapList[maps[mapNumber]];
+		Bukkit.createWorld(new WorldCreator(mapName));
+		gameWorld = Functions.createNewWorld(Bukkit.getWorld(mapName), String.valueOf(id)); //Replace "spleggmap1" with the voted map later
+		Bukkit.unloadWorld(Bukkit.getWorld(mapName), false);
+		
 		for (SpleggPlayer hp : players) {
 			hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(gameWorld));
 			hp.mcPlayer.getInventory().clear();
