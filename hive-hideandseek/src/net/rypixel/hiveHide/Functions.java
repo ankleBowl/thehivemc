@@ -129,4 +129,12 @@ public class Functions {
 		}
 		return w;
 	}
+	
+	public static void showAllPlayers(ArrayList<HidePlayer> players) {
+		for (HidePlayer hp : players) {
+			for (HidePlayer hp1 : players) {
+				hp.mcPlayer.showPlayer(hp1.mcPlayer);
+			}
+		}
+	}
 }

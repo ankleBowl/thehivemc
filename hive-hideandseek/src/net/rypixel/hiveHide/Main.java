@@ -81,7 +81,7 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	public void loadWorlds() {
-		Bukkit.createWorld(new WorldCreator("gravitymap1"));
+		Bukkit.createWorld(new WorldCreator("hideandseekmap"));
 	}
 	
 	@Override
@@ -130,12 +130,6 @@ public class Main extends JavaPlugin implements Listener {
 //		}
 		
 		hp.scoreboard = ScoreHelper.createScore(hp.mcPlayer);
-		Scoreboard s = hp.mcPlayer.getScoreboard();
-		
-		if (hp.playerRank.equalsIgnoreCase("Regular Member")) {
-			//hp.mcPlayer.setPlayerListName(ChatColor.BLUE + hp.mcPlayer.getDisplayName());
-			//s.registerNewTeam("Regular Member").;
-		}
 		
 		event.setJoinMessage(null);
 		
