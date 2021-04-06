@@ -24,7 +24,9 @@ public class Constants {
 	public static ItemStack again;
 	public static ItemStack players;
 	
+	public static String[] mapList;
 	public static HashMap<String, Vector> spawnLocations = new HashMap<String, Vector>();
+	public static HashMap<String, Material[]> blocksToHide = new HashMap<String, Material[]>(); 
 	
 	public static void init() {
 		ItemMeta meta = null;
@@ -103,6 +105,22 @@ public class Constants {
 		lore.add(ChatColor.AQUA + "► Right-click when held");
 		meta.setLore(lore);
 		again.setItemMeta(meta);
+		
+		mapList = new String[5];
+		mapList[0] = "Chinatown";
+		mapList[1] = "N/A(1)";
+		mapList[2] = "N/A(2)";
+		mapList[3] = "N/A(3)";
+		mapList[4] = "N/A(4)";
+		
+		Material[] list = new Material[5];
+		list[0] = Material.STONE;
+		list[1] = Material.BOOKSHELF;
+		list[2] = Material.LOG;
+		list[3] = Material.LEAVES;
+		list[4] = Material.WOOL;
+		blocksToHide.put("Chinatown", list);
+		
 	}
 	
 	public static Inventory playerSelector(ArrayList<HidePlayer> players) {

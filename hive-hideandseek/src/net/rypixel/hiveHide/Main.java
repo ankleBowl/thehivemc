@@ -1,4 +1,4 @@
-package net.rypixel.hiveGravity;
+package net.rypixel.hiveHide;
 
 import java.util.ArrayList;
 import java.util.HashMap;
