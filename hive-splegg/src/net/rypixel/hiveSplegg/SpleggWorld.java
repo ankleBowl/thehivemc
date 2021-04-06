@@ -326,8 +326,18 @@ public class SpleggWorld {
 		gameWorld = Functions.createNewWorld(Bukkit.getWorld(mapName), String.valueOf(id)); //Replace "spleggmap1" with the voted map later
 		Bukkit.unloadWorld(Bukkit.getWorld(mapName), false);
 		
+		int tpIndex = 0;
 		for (SpleggPlayer hp : players) {
-			hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(gameWorld));
+			if (Constants.spawnLocations.containsKey(mapName)) {
+				if (tpIndex < Constants.spawnLocations.get(mapName).length) {
+					hp.mcPlayer.teleport(Constants.spawnLocations.get(mapName)[tpIndex].toLocation(gameWorld));
+				} else {
+					tpIndex = 0;
+					hp.mcPlayer.teleport(Constants.spawnLocations.get(mapName)[tpIndex].toLocation(gameWorld));
+				} 
+			} else {
+				hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(gameWorld));
+			}
 			hp.mcPlayer.getInventory().clear();
 			hp.mcPlayer.setFoodLevel(20);
 			hp.mcPlayer.setSaturation(20);
@@ -335,6 +345,7 @@ public class SpleggWorld {
 			hp.played++;
 			hp.eggsFiredTemp = 0;
 			hp.eggsLandedTemp = 0;
+			tpIndex++;
 		}
 		
 		for (SpleggPlayer hp : players) {

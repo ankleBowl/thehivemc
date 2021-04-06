@@ -1,6 +1,7 @@
 package net.rypixel.hiveSplegg;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,6 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.util.Vector;
 
 public class Constants {
 
@@ -23,6 +25,8 @@ public class Constants {
 	public static ItemStack spleggGun;
 	
 	public static String[] mapList;
+	
+	public static HashMap<String, Vector[]> spawnLocations = new HashMap<String, Vector[]>();
 	
 	public static void init() {
 		ItemMeta meta = null;
@@ -131,6 +135,100 @@ public class Constants {
 		mapList[12] = "Storm";
 		mapList[13] = "Tree_Fiddy";
 		mapList[14] = "Tree_Island";
+		
+		Vector[] spawnLocs = null;
+		
+		spawnLocs = new Vector[16];
+		spawnLocs[0] = new Vector(-20.5, 92, 17.5);
+		spawnLocs[1] = new Vector(-20.5, 92, -22.5);
+		spawnLocs[2] = new Vector(19.5, 92, -22.5);
+		spawnLocs[3] = new Vector(19.5, 92, 17.5);
+		spawnLocs[4] = new Vector(-0.5, 92, 20.5);
+		spawnLocs[5] = new Vector(-23.5, 92, -2.5);
+		spawnLocs[6] = new Vector(-0.5, 92, -25.5);
+		spawnLocs[7] = new Vector(22.5, 92, -2.5);
+		spawnLocs[8] = new Vector(21, 92, 6);
+		spawnLocs[9] = new Vector(8, 92, 20);
+		spawnLocs[10] = new Vector(-9, 92, 20);
+		spawnLocs[11] = new Vector(-23, 92, 6);
+		spawnLocs[12] = new Vector(-23, 92, -11);
+		spawnLocs[13] = new Vector(-9, 92, -25);
+		spawnLocs[14] = new Vector(8, 92, -25);
+		spawnLocs[15] = new Vector(22, 92, -11);
+		spawnLocations.put("Palette", spawnLocs);
+		
+		spawnLocs = new Vector[14];
+		spawnLocs[0] = new Vector(-1, 88, -25);
+		spawnLocs[1] = new Vector(-1, 88, 19);
+		spawnLocs[2] = new Vector(-23.5, 88, 0.5);
+		spawnLocs[3] = new Vector(21.5, 88, -5.5);
+		spawnLocs[4] = new Vector(-16.5, 88, 13.5);
+		spawnLocs[5] = new Vector(14.5, 88, -18.5);
+		spawnLocs[6] = new Vector(14.5, 88, 12.5);
+		spawnLocs[7] = new Vector(-17.5, 88, -16.5);
+		spawnLocs[8] = new Vector(-11.5, 88, -21.5);
+		spawnLocs[9] = new Vector(8.5, 89, 17.5);
+		spawnLocs[10] = new Vector(-9.5, 88, 17.5);
+		spawnLocs[11] = new Vector(7.5, 88, -22.5);
+		spawnLocs[12] = new Vector(-21.5, 88, -9.5);
+		spawnLocs[13] = new Vector(19.5, 88, 4.5);
+		spawnLocations.put("Autumn_Leaves", spawnLocs);
+		
+		spawnLocs = new Vector[16];
+		spawnLocs[0] = new Vector(0.5, 99, 10.5);
+		spawnLocs[1] = new Vector(0.5, 99, -14.5);
+		spawnLocs[2] = new Vector(13.5, 99, -2.5);
+		spawnLocs[3] = new Vector(-12.5, 99, -2.5);
+		spawnLocs[4] = new Vector(8.5, 99, -10.5);
+		spawnLocs[5] = new Vector(-8.5, 99, 6.5);
+		spawnLocs[6] = new Vector(-8.5, 99, -11.5);
+		spawnLocs[7] = new Vector(9.5, 100, 6.5);
+		spawnLocs[8] = new Vector(5.5, 99, 8.5);
+		spawnLocs[9] = new Vector(-4.5, 99, 8.5);
+		spawnLocs[10] = new Vector(-11.5, 99, 2.5);
+		spawnLocs[11] = new Vector(-11.5, 99, -6.5);
+		spawnLocs[12] = new Vector(-3.5, 99, -13.5);
+		spawnLocs[13] = new Vector(4.5, 99, -13.5);
+		spawnLocs[14] = new Vector(12.5, 99, -6.5);
+		spawnLocs[15] = new Vector(12.5, 99, 1.5);
+		spawnLocs[0] = new Vector();
+		spawnLocations.put("Splatter", spawnLocs);
+		
+		spawnLocs = new Vector[20];
+		spawnLocs[0] = new Vector(-2.5, 93, -20.5);
+		spawnLocs[1] = new Vector(-2.5, 93, -19.5);
+		spawnLocs[2] = new Vector(-22.5, 93, -0.5);
+		spawnLocs[3] = new Vector(17.5, 93, -0.5);
+		spawnLocs[4] = new Vector(11.5, 93, 13.5);
+		spawnLocs[5] = new Vector(-16.5, 93, -14.5);
+		spawnLocs[6] = new Vector(11.5, 93, -14.5);
+		spawnLocs[7] = new Vector(-16.5, 93, 13.5);
+		spawnLocs[8] = new Vector(5.5, 93, -19.5);
+		spawnLocs[9] = new Vector(-21.5, 93, 7.5);
+		spawnLocs[10] = new Vector(-10.5, 93, 18.5);
+		spawnLocs[11] = new Vector(4.5, 93, 18.5);
+		spawnLocs[12] = new Vector(16.5, 93, 7.5);
+		spawnLocs[13] = new Vector(16.5, 93, -8.5);
+		spawnLocs[14] = new Vector(-10.5, 93, -19.5);
+		spawnLocs[15] = new Vector(-21.5, 93, -8.5);
+		spawnLocations.put("Busy_Bees", spawnLocs);
+		
+		spawnLocs = new Vector[16];
+		spawnLocs[0] = new Vector();
+		spawnLocations.put("Splatter", spawnLocs);
+		
+		spawnLocs = new Vector[16];
+		spawnLocs[0] = new Vector();
+		spawnLocations.put("Splatter", spawnLocs);
+		
+		spawnLocs = new Vector[16];
+		spawnLocs[0] = new Vector();
+		spawnLocations.put("Splatter", spawnLocs);
+		
+		spawnLocs = new Vector[16];
+		spawnLocs[0] = new Vector();
+		spawnLocations.put("Splatter", spawnLocs);
+		
 		
 //		mapList[0] = "Splatter";
 //		mapList[1] = "Petal_Power";
