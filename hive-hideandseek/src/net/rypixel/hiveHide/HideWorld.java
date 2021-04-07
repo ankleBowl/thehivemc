@@ -110,7 +110,7 @@ public class HideWorld {
 		int highestN = 0;
 		int index = 0;
 		for (int i = 0; i < 5; i++) {
-			if (votes[i] < highestN) {
+			if (votes[i] > highestN) {
 				index = i;
 				highestN = votes[i];
 			}
@@ -252,7 +252,7 @@ public class HideWorld {
 	public void update() {
 		timer = new BukkitRunnable() {
 			public void run() {
-				if (!inGame) {
+				if (!starting && !inGame) {
 					if (players.size() > 5 && !starting) {
 						starting = true;
 					} else {
@@ -291,7 +291,7 @@ public class HideWorld {
 							mapName = randomMaps[index];
 						}
 					}
-				} else {
+				} else if (inGame) {
 
 				}
 			}
