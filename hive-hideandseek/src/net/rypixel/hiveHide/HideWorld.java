@@ -120,7 +120,7 @@ public class HideWorld {
 	
 	public Inventory blockSelectUI() {
 		Material[] blockList = Constants.blocksToHide.get(mapName);
-		Inventory select = Bukkit.createInventory(null, 5, "Pick A Block To Hide As");
+		Inventory select = Bukkit.createInventory(null, 9, "Pick A Block To Hide As");
 		for (int i = 0; i < 5; i++) {
 			ItemStack item = new ItemStack(blockList[i], 1);
 			ItemMeta meta = item.getItemMeta();
