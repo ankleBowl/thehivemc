@@ -1,6 +1,7 @@
 package net.rypixel.hiveHide;
 
 import org.bukkit.Material;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
@@ -17,5 +18,6 @@ public class HidePlayer extends HivePlayer {
 	public Vector lastCoords;
 	public int lastMoved;
 	public boolean solid;
-
+	public FallingBlock blockEntity;
+	public int attackCooldown;
 }

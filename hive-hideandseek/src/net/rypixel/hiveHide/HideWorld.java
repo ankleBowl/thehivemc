@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -21,6 +22,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
@@ -142,7 +145,12 @@ public class HideWorld {
 				
 				
 				ArrayList<HidePlayer> playersTemp = players;
-				for (int i = 0; i < players.size() / 4; i++) {
+				int seekerCount = players.size() / 4;
+				if (seekerCount == 0) {
+					seekerCount = 1;
+				}
+				
+				for (int i = 0; i < seekerCount; i++) {
 					int randomNumber = r.nextInt(playersTemp.size());
 					playersTemp.get(randomNumber).isHunter = true;
 					playersTemp.remove(randomNumber);
@@ -150,6 +158,15 @@ public class HideWorld {
 				
 				for (HidePlayer hp : players) {
 					//teleport the player
+					if (!hp.isHunter) {
+						gameWorld.spawnFallingBlock(new Vector(0, 0, 0).toLocation(gameWorld), hp.block, (byte) 0);
+						hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10000, 100, true));
+						Inventory playerInv = hp.mcPlayer.getInventory();
+						playerInv.setItem(0, new ItemStack(Material.WOOD_SWORD, 1));
+					} else {
+						Inventory playerInv = hp.mcPlayer.getInventory();
+						playerInv.setItem(0, new ItemStack(Material.DIAMOND_SWORD, 1));
+					}
 				}
 			}
 		}.runTaskLater(plugin, 200L);
@@ -240,6 +257,20 @@ public class HideWorld {
 	public void onEntityDamage(EntityDamageEvent event) {
 		if (!inGame) {
 			event.setCancelled(true);
+		}
+	}
+	
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+		HidePlayer hp = Main.playerMap.get(event.getDamager());
+		HidePlayer block = Main.playerMap.get(event.getDamage());
+		if (!inGame) {
+			event.setCancelled(true);
+		} else if (inGame) {
+			if (block.solid) {
+				if (hp.attackCooldown < 10) {
+					event.setCancelled(true);
+				}
+			}
 		}
 	}
 	
@@ -340,6 +371,9 @@ public class HideWorld {
 						if (hp.lastMoved == 100) {
 							hp.solid = true;
 							hp.lastCoords.toLocation(gameWorld).getBlock().setType(hp.block);
+							hp.blockEntity.teleport(new Vector(0, 0, 0).toLocation(gameWorld));
+						} else {
+							hp.blockEntity.teleport(hp.mcPlayer);
 						}
 					}
 				}

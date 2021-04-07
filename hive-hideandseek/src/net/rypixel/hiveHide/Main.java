@@ -19,6 +19,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -193,6 +196,14 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	@EventHandler
+	public void onEntityDamage(EntityDamageByEntityEvent event) {
+		if (event.getEntity() instanceof Player) {
+			HivePlayer hp = Main.playerMap.get(event.getEntity());
+			Functions.getWorldByID(worlds, hp.serverId).onEntityDamageByEntity(event);
+		}
+	}
+	
+	@EventHandler
 	public void onInteract(PlayerInteractEvent event) {
 		HidePlayer hp = playerMap.get(event.getPlayer());
 		HideWorld world = Functions.getWorldByID(worlds, hp.serverId);
@@ -238,6 +249,11 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler
 	public void onBlockUpdate(BlockPhysicsEvent event) {
+		event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onEntityChangeBlockEvent(EntityChangeBlockEvent event) {
 		event.setCancelled(true);
 	}
 	
