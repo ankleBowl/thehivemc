@@ -180,7 +180,7 @@ public class HideWorld {
 		} else if (starting) {
 			if (event.getCurrentItem() != null) {
 				boolean validItem = false;
-				for (Material m : Constants.blocksToHide.get("mapName")) {
+				for (Material m : Constants.blocksToHide.get(mapName)) {
 					if (event.getCurrentItem().getType() == m) {
 						validItem = true;
 					}
