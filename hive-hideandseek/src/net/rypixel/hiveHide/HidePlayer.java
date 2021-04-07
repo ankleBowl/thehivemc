@@ -3,6 +3,7 @@ package net.rypixel.hiveHide;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.Vector;
 
 public class HidePlayer extends HivePlayer {
 
@@ -12,5 +13,9 @@ public class HidePlayer extends HivePlayer {
 	}
 	
 	public Material block;
+	public boolean isHunter;
+	public Vector lastCoords;
+	public int lastMoved;
+	public boolean solid;
 
 }

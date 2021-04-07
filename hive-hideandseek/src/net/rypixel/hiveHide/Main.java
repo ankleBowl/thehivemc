@@ -206,11 +206,11 @@ public class Main extends JavaPlugin implements Listener {
 		world.onInventoryClick(event);
 	}
 	
-//	@EventHandler
-//	public void onPlayerMove(PlayerMoveEvent event) {
-//		HidePlayer hp = playerMap.get(event.getPlayer());
-//		Functions.getWorldByID(worlds, hp.serverId).onPlayerMove(event);
-//	}
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent event) {
+		HidePlayer hp = playerMap.get(event.getPlayer());
+		Functions.getWorldByID(worlds, hp.serverId).onPlayerMove(event);
+	}
 	
 	@EventHandler
 	public void onChatSend(PlayerChatEvent event) {

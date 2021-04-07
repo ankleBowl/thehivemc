@@ -10,10 +10,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -124,6 +126,34 @@ public class HideWorld {
 			hp.mcPlayer.openInventory(blockSelectUI);
 		}
 		
+		new BukkitRunnable() {
+			public void run() {
+				inGame = true;
+				Random r = new Random();
+				for (HidePlayer hp : players) {
+					if (hp.block == null) {
+						hp.block = Constants.blocksToHide.get(mapName)[r.nextInt(5)];
+					}
+				}
+				
+				Bukkit.createWorld(new WorldCreator(mapName));
+				gameWorld = Functions.createNewWorld(Bukkit.getWorld(mapName), String.valueOf(id));
+				Bukkit.unloadWorld(Bukkit.getWorld(mapName), false);
+				
+				
+				ArrayList<HidePlayer> playersTemp = players;
+				for (int i = 0; i < players.size() / 4; i++) {
+					int randomNumber = r.nextInt(playersTemp.size());
+					playersTemp.get(randomNumber).isHunter = true;
+					playersTemp.remove(randomNumber);
+				}
+				
+				for (HidePlayer hp : players) {
+					//teleport the player
+				}
+			}
+		}.runTaskLater(plugin, 200L);
+		
 	}
 	
 	public void onPlayerLeave(HidePlayer hp) {
@@ -213,6 +243,19 @@ public class HideWorld {
 		}
 	}
 	
+	public void onPlayerMove(PlayerMoveEvent event) {
+		HidePlayer hp = Main.playerMap.get(event.getPlayer());
+		Vector loc = new Vector(hp.mcPlayer.getLocation().getBlockX(), hp.mcPlayer.getLocation().getBlockY(), hp.mcPlayer.getLocation().getBlockZ());
+		if (hp.lastCoords != loc) {
+			if (hp.solid = true) {
+				hp.lastCoords.toLocation(gameWorld).getBlock().setType(Material.AIR);
+				hp.solid = false;
+			}
+			hp.lastCoords = loc;
+			hp.lastMoved = 0;
+		}
+	}
+	
 	public void chat(String message) {
 		for (HidePlayer hp : players) {
 			hp.mcPlayer.sendMessage(message);
@@ -292,7 +335,13 @@ public class HideWorld {
 						}
 					}
 				} else if (inGame) {
-
+					for (HidePlayer hp : players) {
+						hp.lastMoved++;
+						if (hp.lastMoved == 100) {
+							hp.solid = true;
+							hp.lastCoords.toLocation(gameWorld).getBlock().setType(hp.block);
+						}
+					}
 				}
 			}
 		}.runTaskTimer(plugin, 0L, 1L);
