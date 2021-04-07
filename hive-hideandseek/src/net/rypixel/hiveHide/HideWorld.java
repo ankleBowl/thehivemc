@@ -31,6 +31,7 @@ public class HideWorld {
 	public int id;
 	
 	public boolean inGame;
+	public boolean loadingGame;
 	public boolean canVote = true;
 	public boolean starting = false;
 	public BukkitTask timer;
@@ -95,12 +96,44 @@ public class HideWorld {
 	}
 	
 	public void initGame() {
+		loadingGame = true;
+		
+		Inventory blockSelectUI = blockSelectUI();
+		for (HidePlayer hp : players) {
+			TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.GREEN + "" + ChatColor.BOLD + "Choose Block");
+			TitleAPI.sendSubtitle(hp.mcPlayer, 20, 20, 20, ChatColor.DARK_AQUA + "Choose your block!");
+			hp.mcPlayer.openInventory(blockSelectUI);
+		}
 		
 	}
 	
 	public void onPlayerLeave(HidePlayer hp) {
 		
 	}
+	
+	public Inventory blockSelectUI() {
+		Material[] blockList = Constants.blocksToHide.get(mapName);
+		Inventory select = Bukkit.createInventory(null, 5, "Pick A Block To Hide As");
+		for (int i = 0; i < 5; i++) {
+			ItemStack item = new ItemStack(blockList[i], 1);
+			ItemMeta meta = item.getItemMeta();
+			meta.setDisplayName(ChatColor.YELLOW + Functions.fixCapitalization(blockList[i].toString()));
+			ArrayList<String> lore = new ArrayList<String>();
+			lore.add("");
+			lore.add(ChatColor.GRAY + "Will this " + Functions.fixCapitalization(blockList[i].toString()) + " to");
+			lore.add(ChatColor.GRAY + "a good choice?");
+			lore.add("");
+			lore.add(ChatColor.AQUA + "" + ChatColor.BOLD + "Block Level");
+			lore.add(ChatColor.GRAY + "N/A");
+			lore.add("");
+			lore.add(ChatColor.AQUA + "► Click to Select");
+			meta.setLore(lore);
+			item.setItemMeta(meta);
+			select.setItem(i, item);
+		}
+		return select;
+	}
+	
 	
 	public void onInteract(PlayerInteractEvent event) {
 		HidePlayer hp = Main.playerMap.get(event.getPlayer());
@@ -125,6 +158,19 @@ public class HideWorld {
 		HidePlayer hp = Main.playerMap.get(event.getWhoClicked());
 		if (inGame) {
 			
+		} else if (starting) {
+			if (event.getCurrentItem() != null) {
+				boolean validItem = false;
+				for (Material m : Constants.blocksToHide.get("mapName")) {
+					if (event.getCurrentItem().getType() == m) {
+						validItem = true;
+					}
+				}
+				if (validItem == true) {
+					hp.block = event.getCurrentItem().getType();
+				}
+				hp.mcPlayer.closeInventory();
+			}
 		} else {
 			if (event.getCurrentItem() != null) {
 				switch (event.getCurrentItem().getType()) {
@@ -200,9 +246,11 @@ public class HideWorld {
 					if (starting) {
 						countDown--;
 						
-						for (HidePlayer hp : players) {
-							TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 0, "");
-							TitleAPI.sendSubtitle(hp.mcPlayer, 0, 20, 0, ChatColor.GREEN + "Starting game in " + String.valueOf(countDown / 20));
+						if (countDown > 0) {
+							for (HidePlayer hp : players) {
+								TitleAPI.sendTitle(hp.mcPlayer, 0, 20, 0, "");
+								TitleAPI.sendSubtitle(hp.mcPlayer, 0, 20, 0, ChatColor.GREEN + "Starting game in " + String.valueOf(countDown / 20));
+							}
 						}
 						
 						if (countDown == 0) {

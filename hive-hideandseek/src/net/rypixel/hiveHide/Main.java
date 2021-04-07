@@ -137,7 +137,7 @@ public class Main extends JavaPlugin implements Listener {
 		
 		for (HideWorld world : worlds) {
 			if (!sent) {
-				if (world.players.size() < 20 && !world.inGame) {
+				if (world.players.size() < 20 && !world.loadingGame) {
 					world.welcomePlayer(hp);
 					sent = true;
 				}

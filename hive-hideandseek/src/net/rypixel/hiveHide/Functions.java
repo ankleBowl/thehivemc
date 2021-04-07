@@ -130,6 +130,25 @@ public class Functions {
 		return w;
 	}
 	
+	public static String fixCapitalization(String input) {
+		String s = "";
+		int index = 0;
+		for (char c : input.toCharArray()) {
+			if (index == 0 && Character.isLetter(c)) {
+				s += Character.toUpperCase(c);
+			} else if (Character.isLetter(c)) {
+				s += Character.toLowerCase(c);
+			} else {
+				s += c;
+			}
+			
+			if (c == ' ') {
+				index = 0;
+			}
+		}
+		return s;
+	}
+	
 	public static void showAllPlayers(ArrayList<HidePlayer> players) {
 		for (HidePlayer hp : players) {
 			for (HidePlayer hp1 : players) {
