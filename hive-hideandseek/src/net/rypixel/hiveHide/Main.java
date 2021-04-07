@@ -92,7 +92,7 @@ public class Main extends JavaPlugin implements Listener {
 				HideWorld w = Functions.getWorldByID(worlds, hp.serverId);
 				//w.stop();
 			}
-			if (label.equalsIgnoreCase("iloveannie69")) {
+			if (label.equalsIgnoreCase("start")) {
 				HideWorld w = Functions.getWorldByID(worlds, hp.serverId);
 				w.initGame();
 			}

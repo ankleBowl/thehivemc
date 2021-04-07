@@ -72,6 +72,13 @@ public class HideWorld {
 		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 3. " + ChatColor.GOLD + randomMaps[2] + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[2] + ChatColor.GRAY + " Votes]");
 		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 4. " + ChatColor.GOLD + randomMaps[3] + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[3] + ChatColor.GRAY + " Votes]");
 		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 5. " + ChatColor.GOLD + randomMaps[4] + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[4] + ChatColor.GRAY + " Votes]");
+	
+		Inventory inv = hp.mcPlayer.getInventory();
+		inv.clear();
+		inv.setItem(0, Constants.rules);
+		inv.setItem(1, Constants.vote);
+		inv.setItem(4, Constants.locker);
+		inv.setItem(8, Constants.hub);
 	}
 	
 	public int[] tallyVotes() {
