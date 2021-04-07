@@ -51,43 +51,43 @@ public class LobbyWorld {
 		    		player.mcPlayer.setFoodLevel(20);
 		    		
 		    		//Check for launchpad locations
-		    		for (Vector vec : Constants.launchpads1) {
-		    			Location loc = vec.toLocation(world);
-		    			if (player.mcPlayer.getLocation().distance(loc) < 1) {
-		    				Vector dic = player.mcPlayer.getLocation().getDirection();
-		    				Vector velocity = new Vector(dic.getX() * 10, 1.5, dic.getY() * 10);
-		    				player.mcPlayer.setVelocity(velocity);
-		    			}
-		    		}
-		    		for (Vector vec : Constants.launchpads2) {
-		    			Location loc = vec.toLocation(world);
-		    			if (player.mcPlayer.getLocation().distance(loc) < 1) {
-		    				Vector dic = player.mcPlayer.getLocation().getDirection();
-		    				Vector velocity = new Vector(dic.getX() * 10, 1.5, dic.getY() * 10);
-		    				player.mcPlayer.setVelocity(velocity);
-		    			}
-		    		}
-		    		for (Vector vec : Constants.launchpads3) {
-		    			Location loc = vec.toLocation(world);
-		    			if (player.mcPlayer.getLocation().distance(loc) < 1) {
-		    				Vector dic = player.mcPlayer.getLocation().getDirection();
-		    				Vector velocity = new Vector(dic.getX() * 10, 1.5, dic.getY() * 10);
-		    				player.mcPlayer.setVelocity(velocity);
-		    			}
-		    		}
-		    		
-		    		if (player.mcPlayer.getLocation().distance(Constants.parkourLocations[0].toLocation(world)) < 1 && player.inParkour == false) {
-	    				player.startParkour();
-	    			}
-		    		
-		    		if (player.inParkour) {
-		    			if (player.mcPlayer.getLocation().distance(Constants.parkourLocations[player.parkourCheckpoint + 1].toLocation(world)) < 1) {
-		    				player.checkpointParkour();
-		    				if (player.parkourCheckpoint == 3) {
-		    					player.completeParkour();
-		    				}
-		    			}
-		    		}
+//		    		for (Vector vec : Constants.launchpads1) {
+//		    			Location loc = vec.toLocation(world);
+//		    			if (player.mcPlayer.getLocation().distance(loc) < 1) {
+//		    				Vector dic = player.mcPlayer.getLocation().getDirection();
+//		    				Vector velocity = new Vector(dic.getX() * 10, 1.5, dic.getY() * 10);
+//		    				player.mcPlayer.setVelocity(velocity);
+//		    			}
+//		    		}
+//		    		for (Vector vec : Constants.launchpads2) {
+//		    			Location loc = vec.toLocation(world);
+//		    			if (player.mcPlayer.getLocation().distance(loc) < 1) {
+//		    				Vector dic = player.mcPlayer.getLocation().getDirection();
+//		    				Vector velocity = new Vector(dic.getX() * 10, 1.5, dic.getY() * 10);
+//		    				player.mcPlayer.setVelocity(velocity);
+//		    			}
+//		    		}
+//		    		for (Vector vec : Constants.launchpads3) {
+//		    			Location loc = vec.toLocation(world);
+//		    			if (player.mcPlayer.getLocation().distance(loc) < 1) {
+//		    				Vector dic = player.mcPlayer.getLocation().getDirection();
+//		    				Vector velocity = new Vector(dic.getX() * 10, 1.5, dic.getY() * 10);
+//		    				player.mcPlayer.setVelocity(velocity);
+//		    			}
+//		    		}
+//		    		
+//		    		if (player.mcPlayer.getLocation().distance(Constants.parkourLocations[0].toLocation(world)) < 1 && player.inParkour == false) {
+//	    				player.startParkour();
+//	    			}
+//		    		
+//		    		if (player.inParkour) {
+//		    			if (player.mcPlayer.getLocation().distance(Constants.parkourLocations[player.parkourCheckpoint + 1].toLocation(world)) < 1) {
+//		    				player.checkpointParkour();
+//		    				if (player.parkourCheckpoint == 3) {
+//		    					player.completeParkour();
+//		    				}
+//		    			}
+//		    		}
 		    		
 		    		player.scoreboard.setTitle(ChatColor.BOLD + "" + ChatColor.GOLD + "The" + ChatColor.YELLOW + "Hive");
 		    		player.scoreboard.setSlot(15, "");
@@ -114,6 +114,7 @@ public class LobbyWorld {
 	}
 	
 	public void welcomePlayer(LobbyPlayer hp) {
+		hp.mcPlayer.teleport(new Vector(0.5, 110, 0.5).toLocation(world));
 		TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.GREEN + "play" + ChatColor.AQUA + " HiveMC " + ChatColor.GREEN + "com");
 	}
 	

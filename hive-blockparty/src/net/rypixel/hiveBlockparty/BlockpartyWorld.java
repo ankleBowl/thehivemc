@@ -343,13 +343,13 @@ public class BlockpartyWorld {
 			}
 		}
 		
+		
 		song = Constants.intToSong.get(index);
 		song.setVolume(100);
 		
 		for (BlockpartyPlayer hp : players) {
 			JukeboxAPI.play(hp.mcPlayer, song);
 		}
-		//Index is used for the song
 		
 		inGame = true;
 		titleTimer = 10;

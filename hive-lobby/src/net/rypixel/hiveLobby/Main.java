@@ -116,7 +116,6 @@ public class Main extends JavaPlugin implements Listener {
 		
 		for (int i = 0; i < lobbies.length; i++) {
 			if (lobbies[i].playerList.size() < 20) {
-				hp.mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[i].world));
 				lobbies[i].playerList.add(hp);
 				lobbies[i].welcomePlayer(hp);
 				hp.serverId = i;
@@ -171,7 +170,7 @@ public class Main extends JavaPlugin implements Listener {
 			if (event.getCurrentItem() != null) {
 				String strId = event.getCurrentItem().getItemMeta().getDisplayName();
 				int serverId = Integer.parseInt(strId) - 1;
-				hp.mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[serverId].world));
+				hp.mcPlayer.teleport(new Vector(0.5, 110, 0.5).toLocation(lobbies[serverId].world));
 				lobbies[hp.serverId].playerList.remove(hp);
 				lobbies[serverId].playerList.add(hp);
 				hp.serverId = serverId;
