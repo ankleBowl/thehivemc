@@ -184,13 +184,13 @@ public class Main extends JavaPlugin implements Listener {
 		event.setCancelled(true);
 	}
 	
-//	@EventHandler
-//	public void onDamage(EntityDamageEvent event) {
-//		if (event.getEntity() instanceof Player) {
-//			HivePlayer hp = Main.playerMap.get(event.getEntity());
-//			Functions.getWorldByID(worlds, hp.serverId).onEntityDamage(event);
-//		}
-//	}
+	@EventHandler
+	public void onDamage(EntityDamageEvent event) {
+		if (event.getEntity() instanceof Player) {
+			HivePlayer hp = Main.playerMap.get(event.getEntity());
+			Functions.getWorldByID(worlds, hp.serverId).onEntityDamage(event);
+		}
+	}
 	
 	@EventHandler
 	public void onInteract(PlayerInteractEvent event) {

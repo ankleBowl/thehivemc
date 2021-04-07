@@ -11,6 +11,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -138,6 +139,12 @@ public class HideWorld {
 					break;
 				}
 			}
+		}
+	}
+	
+	public void onEntityDamage(EntityDamageEvent event) {
+		if (!inGame) {
+			event.setCancelled(true);
 		}
 	}
 	
