@@ -105,6 +105,18 @@ public class HideWorld {
 	public void initGame() {
 		loadingGame = true;
 		
+		canVote = false;
+		int[] votes = tallyVotes();
+		int highestN = 0;
+		int index = 0;
+		for (int i = 0; i < 5; i++) {
+			if (votes[i] < highestN) {
+				index = i;
+				highestN = votes[i];
+			}
+		}
+		mapName = randomMaps[index];
+		
 		Inventory blockSelectUI = blockSelectUI();
 		for (HidePlayer hp : players) {
 			TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.GREEN + "" + ChatColor.BOLD + "Choose Block");
