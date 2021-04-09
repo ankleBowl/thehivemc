@@ -185,7 +185,8 @@ public class BlockpartyWorld {
 					Functions.sendToServer(hp.mcPlayer, "lobby0", plugin);
 					break;
 				case DIAMOND:
-					hp.mcPlayer.openInventory(Constants.pickSong());
+					//hp.mcPlayer.openInventory(Constants.pickSong());
+					hp.mcPlayer.sendMessage(ChatColor.RED + "This is not implemented yet!");
 				default:
 					break;
 				}
