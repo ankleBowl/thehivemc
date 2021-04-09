@@ -47,9 +47,7 @@ import me.vagdedes.mysql.database.SQL;
 public class Main extends JavaPlugin implements Listener {
 
 	public static HashMap<Player, BlockpartyPlayer> playerMap = new HashMap<Player, BlockpartyPlayer>();
-	
-	public static BukkitTask requestRunnable;
-	
+
 	public static ArrayList<BlockpartyWorld> worlds = new ArrayList<BlockpartyWorld>();
 	
 	public Plugin plugin = this;
@@ -70,7 +68,6 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	public void onDisable() {
-		requestRunnable.cancel();
 		for (Map.Entry<Player, BlockpartyPlayer> set : playerMap.entrySet()) {
 			set.getValue().mcPlayer.sendMessage(ChatColor.RED + "The server you were on is shutting down");
 			Functions.sendToServer(set.getValue().mcPlayer, "lobby0", plugin);
