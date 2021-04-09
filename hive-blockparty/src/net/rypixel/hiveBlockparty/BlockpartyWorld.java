@@ -327,6 +327,10 @@ public class BlockpartyWorld {
 			hp.mcPlayer.getInventory().setItem(8, Constants.playersVisible);
 			hp.playedGames++;
 			
+			for (BlockpartyPlayer hp1 : players) {
+				hp.mcPlayer.showPlayer(hp1.mcPlayer);
+			}
+			
 		}
 		
 		int[] votes = new int[54];
