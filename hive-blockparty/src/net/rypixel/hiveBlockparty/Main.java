@@ -3,6 +3,7 @@ package net.rypixel.hiveBlockparty;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -70,7 +71,13 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public void onDisable() {
 		requestRunnable.cancel();
-		Bukkit.getConsoleSender().sendMessage("/kick @a");
+		for (Map.Entry<Player, BlockpartyPlayer> set : playerMap.entrySet()) {
+			set.getValue().mcPlayer.sendMessage(ChatColor.RED + "The server you were on is shutting down");
+			Functions.sendToServer(set.getValue().mcPlayer, "lobby0", plugin);
+		}
+		for (BlockpartyWorld w : worlds) {
+			w.stop();
+		}
 		MySQL.disconnect();
 	}
 	
