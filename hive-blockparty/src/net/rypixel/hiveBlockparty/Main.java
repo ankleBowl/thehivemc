@@ -239,11 +239,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public void initSQL() {
 		Config.create();
-		Config.setHost("66.85.144.162");
-		Config.setUser("server_326179");
-		Config.setPassword("RFO1mx4AEB03CTGVr*Ppz");
-		Config.setDatabase("server_326179_a13bfe4c");
-		Config.setPort("3306");
+
 		Config.setSSL(true);
 		MySQL.connect();
 		MySQL.update("CREATE TABLE IF NOT EXISTS blockparty(UUID varchar(64) PRIMARY KEY, points int, played int, wins int, winstreak int, hardcorepoints int, hardcorewins int, placings int, cosmetics varchar(9999));");
