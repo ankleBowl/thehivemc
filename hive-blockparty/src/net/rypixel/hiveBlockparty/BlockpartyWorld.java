@@ -223,6 +223,7 @@ public class BlockpartyWorld {
 					if (event.getSlot() == 12) {
 						hp.hardcoreMode = !hp.hardcoreMode;
 						hp.mcPlayer.playSound(hp.mcPlayer.getLocation(), Sound.NOTE_PIANO, 1, 1);
+						hp.mcPlayer.openInventory(Constants.settings(hp));
 					}
 					break;
 				default:
