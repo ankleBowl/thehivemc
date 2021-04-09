@@ -62,9 +62,9 @@ public class Main extends JavaPlugin implements Listener {
 	public void onEnable() {
 		Bukkit.getPluginManager().registerEvents(this, this);
 		Constants.init();
+		loadConfig();
 		loadWorlds();
 		initSQL();
-		loadConfig();
 		bl = new BungeeListener(this);
 		bl.init();
 	}
@@ -83,6 +83,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public void loadConfig() {
 		config.addDefault("bungeeName", "");
+		config.addDefault("sqlpasword", "");
 		config.options().copyDefaults(true);
 		saveConfig();
 	}
@@ -239,7 +240,11 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public void initSQL() {
 		Config.create();
-
+		Config.setHost("66.85.144.162");
+		Config.setUser("server_326179");
+		Config.setPassword(config.getString("sqlpassword"));
+		Config.setDatabase("server_326179_a13bfe4c");
+		Config.setPort("3306");
 		Config.setSSL(true);
 		MySQL.connect();
 		MySQL.update("CREATE TABLE IF NOT EXISTS blockparty(UUID varchar(64) PRIMARY KEY, points int, played int, wins int, winstreak int, hardcorepoints int, hardcorewins int, placings int, cosmetics varchar(9999));");

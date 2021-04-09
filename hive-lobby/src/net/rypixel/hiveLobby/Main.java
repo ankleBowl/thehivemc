@@ -68,6 +68,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public void loadConfig() {
 		config.addDefault("bungeeName", "");
+		config.addDefault("sqlpassword", "");
 		config.options().copyDefaults(true);
 		saveConfig();
 	}
@@ -212,7 +213,7 @@ public class Main extends JavaPlugin implements Listener {
 		Config.create();
 		Config.setHost("66.85.144.162");
 		Config.setUser("server_326179");
-		Config.setPassword("RFO1mx4AEB03CTGVr*Ppz");
+		Config.setPassword(config.getString("sqlpassword"));
 		Config.setDatabase("server_326179_a13bfe4c");
 		Config.setPort("3306");
 		Config.setSSL(true);
