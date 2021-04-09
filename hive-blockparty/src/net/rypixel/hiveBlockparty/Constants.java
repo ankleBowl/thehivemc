@@ -357,9 +357,9 @@ public class Constants {
 		if (hp.hardcoreMode) {
 			item = new ItemStack(Material.INK_SACK, 1, DyeColor.LIME.getData());
 		} else {
-			item = new ItemStack(Material.INK_SACK, 1, DyeColor.GRAY.getData());
+			item = new ItemStack(Material.INK_SACK, 1, DyeColor.SILVER.getData());
 		}
-		meta = rules.getItemMeta();
+		meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.RED + "Hardcore Mode");
 		lore.clear();
 		lore.add("");

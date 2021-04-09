@@ -87,7 +87,7 @@ public class BlockpartyWorld {
 	public void onPlayerLeave(Player p) {
 		BlockpartyPlayer hp = Main.playerMap.get(p);
 		players.remove(hp);
-		if (!ending && !starting) {
+		if (!ending && !starting && inGame) {
 			chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " -> " + ChatColor.RED + "ELIMINATED!");
 			world.spawnEntity(hp.mcPlayer.getLocation(), EntityType.LIGHTNING);
 		}
@@ -295,6 +295,9 @@ public class BlockpartyWorld {
 						hp.scoreboard.setSlot(3, "");
 						hp.scoreboard.setSlot(2, ChatColor.DARK_GRAY + "----------------");
 						hp.scoreboard.setSlot(1, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
+						
+						hp.mcPlayer.setFoodLevel(20);
+						hp.mcPlayer.setSaturation(20);
 						
 					}
 					
