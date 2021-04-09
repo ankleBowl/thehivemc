@@ -119,7 +119,7 @@ public class Constants {
 		meta.setLore(lore);
 		again.setItemMeta(meta);
 		
-		mapList = new String[21];
+		mapList = new String[15];
 		mapList[0] = "Autumn_Leaves";
 		mapList[1] = "Bloom";
 		mapList[2] = "Busy_Bees";
