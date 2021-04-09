@@ -437,12 +437,12 @@ public class SpleggWorld {
 		}
 	}
 	
-	public void selectMaps() {
+	public void selectMaps() {		
 		ArrayList<Integer> usedNumbers = new ArrayList<Integer>();
 		Random random = new Random();
 		int i = 0;
 		while (i < 5) {
-			int randomInt = random.nextInt(21);
+			int randomInt = random.nextInt(Constants.mapList.length);
 			
 			boolean used = false;
 			for (Integer n : usedNumbers) {

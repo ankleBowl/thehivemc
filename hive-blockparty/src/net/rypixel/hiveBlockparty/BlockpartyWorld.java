@@ -320,7 +320,7 @@ public class BlockpartyWorld {
 	
 	public void initGame() {
 		for (BlockpartyPlayer hp : players) {
-			hp.mcPlayer.teleport(new Vector(23, 101, 23).toLocation(world));
+			hp.mcPlayer.teleport(new Vector(23, 101, -23).toLocation(world));
 			hp.isDead = false;
 			hp.mcPlayer.getInventory().clear();
 			hp.mcPlayer.getInventory().setItem(8, Constants.playersVisible);
@@ -372,9 +372,9 @@ public class BlockpartyWorld {
 			TitleAPI.sendSubtitle(hp.mcPlayer, 0, 61, 0, ChatColor.AQUA + "Waiting...");
 			TitleAPI.sendTitle(hp.mcPlayer, 0, 61, 0, "");
 			
-			if (!hp.isDead && hp.mcPlayer.getLocation().getY() < 0.5) {
+			if (!hp.isDead && hp.mcPlayer.getLocation().getY() < 100.5) {
 				hp.isDead = true;
-				hp.mcPlayer.teleport(new Vector(23, 110, 23).toLocation(world));
+				hp.mcPlayer.teleport(new Vector(23, 110, -23).toLocation(world));
 				hp.mcPlayer.setAllowFlight(true);
 				hp.mcPlayer.setFlying(true);
 				TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "YOU DIED!");
@@ -609,7 +609,7 @@ public class BlockpartyWorld {
 	public void removeFloor(DyeColor color) {
 		for (int x = 0; x < 48; x++) {
 			for (int z = 0; z < 48; z++) {
-				Block c = world.getBlockAt(x, 100, z);
+				Block c = world.getBlockAt(x, 100, z - 47);
 				if (c.getData() != colorToRemove.getData()) {
 					c.setType(Material.AIR);
 				}
@@ -631,7 +631,7 @@ public class BlockpartyWorld {
 			for (int z = 0; z < 48; z++) {
 				Block b = world.getBlockAt(new Vector(x + 100, map, z).toLocation(world));
 				DyeColor color = DyeColor.getByData(b.getData());
-				Block c = world.getBlockAt(x, 100, z);
+				Block c = world.getBlockAt(x, 100, z - 47);
 				c.setType(Material.STAINED_CLAY);
 				c.setData(colorMap.get(color).getData());
 				if (!colorsUsed.contains(colorMap.get(color))) {
