@@ -18,6 +18,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -184,6 +185,9 @@ public class BlockpartyWorld {
 				case SLIME_BALL:
 					Functions.sendToServer(hp.mcPlayer, "lobby0", plugin);
 					break;
+				case REDSTONE_COMPARATOR:
+					hp.mcPlayer.openInventory(Constants.settings(hp));
+					break;
 				case DIAMOND:
 					//hp.mcPlayer.openInventory(Constants.pickSong());
 					hp.mcPlayer.sendMessage(ChatColor.RED + "This is not implemented yet!");
@@ -208,11 +212,21 @@ public class BlockpartyWorld {
 
 	public void onInventoryClick(InventoryClickEvent event) {
 		event.setCancelled(true);
+		BlockpartyPlayer hp = Main.playerMap.get(event.getWhoClicked());
 		if (event.getCurrentItem() != null) {
 			if (!inGame) {
-				if (event.getCurrentItem().getType() == Material.STAINED_CLAY) {
-					BlockpartyPlayer hp = Main.playerMap.get(event.getWhoClicked());
+				switch (event.getCurrentItem().getType()) {
+				case STAINED_CLAY:
 					songVotes.put(hp, event.getSlot());
+					break;
+				case INK_SACK:
+					if (event.getSlot() == 12) {
+						hp.hardcoreMode = !hp.hardcoreMode;
+						hp.mcPlayer.playSound(hp.mcPlayer.getLocation(), Sound.NOTE_PIANO, 1, 1);
+					}
+					break;
+				default:
+					break;
 				}
 			}
 		}
@@ -237,6 +251,7 @@ public class BlockpartyWorld {
 		inv.setItem(0, Constants.rules);
 		inv.setItem(1, Constants.vote);
 		inv.setItem(4, Constants.locker);
+		inv.setItem(7, Constants.settings);
 		inv.setItem(8, Constants.hub);
 		
 		hp.showPlayersInWorld(players);
@@ -324,13 +339,18 @@ public class BlockpartyWorld {
 			hp.mcPlayer.teleport(new Vector(23, 101, -23).toLocation(world));
 			hp.isDead = false;
 			hp.mcPlayer.getInventory().clear();
-			hp.mcPlayer.getInventory().setItem(8, Constants.playersVisible);
+			if (!hp.hardcoreMode) {
+				hp.mcPlayer.getInventory().setItem(8, Constants.playersVisible);
+			}
 			hp.playedGames++;
 			
 			for (BlockpartyPlayer hp1 : players) {
-				hp.mcPlayer.showPlayer(hp1.mcPlayer);
+				if (hp.hardcoreMode) {
+					hp.mcPlayer.hidePlayer(hp1.mcPlayer);
+				} else {
+					hp.mcPlayer.showPlayer(hp1.mcPlayer);
+				}
 			}
-			
 		}
 		
 		int[] votes = new int[54];
@@ -408,8 +428,12 @@ public class BlockpartyWorld {
 			if (!hp.isDead) {
 				possibleWinner.add(hp);
 				if (level != 0) {
+					if (hp.hardcoreMode) {
+						hp.hardcorePoints++;
+					} else {
+						hp.points++;
+					}
 					hp.tempPoints++;
-					hp.points++;
 				}
 			}
 		}
@@ -463,7 +487,7 @@ public class BlockpartyWorld {
 					Random random = new Random();
 					colorToRemove = colorsUsed.get(random.nextInt(colorsUsed.size()));
 					for (BlockpartyPlayer hp : players) {
-						if (!hp.isDead) {
+						if (!hp.isDead && !hp.hardcoreMode) {
 							hp.mcPlayer.getInventory().setItem(4, Constants.blockpartyBlock(colorToRemove));
 							countDown(runTime);
 						}
@@ -504,15 +528,23 @@ public class BlockpartyWorld {
 		new BukkitRunnable() {
 			public void run() {
 				if (ticks > 9) {
-					String message = Constants.colorToChat.get(colorToRemove) + "";
-					for (int i = 0; i < ticks / 10; i++) {
-						message += "■";
-					}
-					message += " " + Constants.colorToName.get(colorToRemove) + " ";
-					for (int i = 0; i < ticks / 10; i++) {
-						message += "■";
-					}
 					for (BlockpartyPlayer hp : players) {
+						String message = "";
+						if (hp.hardcoreMode) {
+							Random r = new Random();
+							ArrayList<DyeColor> colors = new ArrayList<DyeColor>(Constants.colorToChat.keySet());;
+							message = "" + colors.get(r.nextInt(colors.size()));
+						} else {
+							message = Constants.colorToChat.get(colorToRemove) + "";
+						}
+						for (int i = 0; i < ticks / 10 - 20; i++) {
+							message += "■";
+						}
+						message += " " + Constants.colorToName.get(colorToRemove) + " ";
+						for (int i = 0; i < ticks / 10 - 20; i++) {
+							message += "■";
+						}
+						
 						TitleAPI.sendSubtitle(hp.mcPlayer, 0, 11, 0, message);
 						TitleAPI.sendTitle(hp.mcPlayer, 0, 11, 0, "");
 					}

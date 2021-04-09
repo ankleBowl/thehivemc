@@ -21,6 +21,7 @@ public class Constants {
 	public static ItemStack rules;
 	public static ItemStack vote;
 	public static ItemStack locker;
+	public static ItemStack settings;
 	public static ItemStack hub;
 
 	public static ItemStack playersVisible;
@@ -117,6 +118,19 @@ public class Constants {
 		lore.add(ChatColor.AQUA + "► Right-click when held");
 		meta.setLore(lore);
 		again.setItemMeta(meta);
+		
+		settings = new ItemStack(Material.REDSTONE_COMPARATOR, 1);
+		meta = settings.getItemMeta();
+		meta.setDisplayName(ChatColor.AQUA + "Your Settings");
+		lore.clear();
+		lore.add("");
+		lore.add(ChatColor.GRAY + "Allows you to view");
+		lore.add(ChatColor.GRAY + "and change your BP");
+		lore.add(ChatColor.GRAY + "settings.");
+		lore.add("");
+		lore.add(ChatColor.AQUA + "► Right-click when held");
+		meta.setLore(lore);
+		settings.setItemMeta(meta);
 		
 		jump = new ItemStack(Material.FEATHER, 1);
 		meta = jump.getItemMeta();
@@ -317,6 +331,60 @@ public class Constants {
 		inv.setItem(36, border);
 		
 		for (int i = 44; i < 54; i++) {
+			inv.setItem(i, border);
+		}
+		
+		return inv;
+	}
+	
+	public static Inventory settings(BlockpartyPlayer hp) {
+		Inventory inv = Bukkit.createInventory(null, 27, "Your Settings");
+		
+		ItemStack item = null;
+		ItemStack border = null;
+		ItemMeta meta = null;
+		ArrayList<String> lore = new ArrayList<String>();
+		
+		border = new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.GRAY.getData());
+		meta = border.getItemMeta();
+		meta.setDisplayName("");
+		border.setItemMeta(meta);
+		
+		for (int i = 0; i < 10; i++) {
+			inv.setItem(i, border);
+		}
+		
+		if (hp.hardcoreMode) {
+			item = new ItemStack(Material.INK_SACK, 1, DyeColor.LIME.getData());
+		} else {
+			item = new ItemStack(Material.INK_SACK, 1, DyeColor.GRAY.getData());
+		}
+		meta = rules.getItemMeta();
+		meta.setDisplayName(ChatColor.RED + "Hardcore Mode");
+		lore.clear();
+		lore.add("");
+		lore.add(ChatColor.GRAY + "Hardcore is a new way to");
+		lore.add(ChatColor.GRAY + "play BlockParty!");
+		lore.add(ChatColor.GRAY + "Here's what's different:");
+		lore.add("");
+		lore.add(ChatColor.GRAY + " - NO Blocks in your inventory");
+		lore.add(ChatColor.GRAY + " - NO BossBar message");
+		lore.add(ChatColor.GRAY + " - Invisible players in round");
+		lore.add(ChatColor.GRAY + " - Mismatched color messages");
+		lore.add("");
+		lore.add(ChatColor.GRAY + "Current Selection");
+		if (hp.hardcoreMode) {
+			lore.add(ChatColor.GREEN + "Enabled");
+		} else {
+			lore.add(ChatColor.RED + "Disabled");
+		}
+		lore.add("");
+		lore.add(ChatColor.AQUA + "► Click to Cycle");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		inv.setItem(12, item);
+		
+		for (int i = 17; i < 27; i++) {
 			inv.setItem(i, border);
 		}
 		

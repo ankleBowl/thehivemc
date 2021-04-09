@@ -15,6 +15,7 @@ public class BlockpartyPlayer extends HivePlayer {
 	}
 
 	public boolean isDead;
+	public boolean hardcoreMode;
 	public int tempPoints;
 	public int points;
 	public int playedGames;
