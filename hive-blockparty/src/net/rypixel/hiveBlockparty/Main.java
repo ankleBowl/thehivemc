@@ -95,16 +95,9 @@ public class Main extends JavaPlugin implements Listener {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player) {
 			BlockpartyPlayer hp = playerMap.get((Player) sender);
-			if (label.equalsIgnoreCase("close")) {
-				BlockpartyWorld w = Functions.getWorldByID(worlds, hp.serverId);
-				//w.stop();
-			}
-			if (label.equalsIgnoreCase("iloveannie69")) {
+			if (label.equalsIgnoreCase("start")) {
 				BlockpartyWorld w = Functions.getWorldByID(worlds, hp.serverId);
 				w.initGame();
-			}
-			if (label.equalsIgnoreCase("pvp")) {
-				pvp = !pvp;
 			}
 		}
         return false;
@@ -200,7 +193,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@EventHandler 
 	public void onMobSpawn(CreatureSpawnEvent event) {
-		event.setCancelled(!pvp);
+		event.setCancelled(true);
 	}
 	
 	@EventHandler
