@@ -345,12 +345,17 @@ public class BlockpartyWorld {
 		
 		
 		song = Constants.intToSong.get(index);
-		song.setVolume(100);
 		
-		for (BlockpartyPlayer hp : players) {
-			JukeboxAPI.play(hp.mcPlayer, song);
+		if (song != null) {
+			
+			song.setVolume(100);
+			
+			for (BlockpartyPlayer hp : players) {
+				JukeboxAPI.play(hp.mcPlayer, song);
+			}
+			
 		}
-		
+
 		inGame = true;
 		titleTimer = 10;
 		
@@ -644,8 +649,8 @@ public class BlockpartyWorld {
 			if (powerup == null) {
 				int x = random.nextInt(48);
 				int y = random.nextInt(48);
-				world.getBlockAt(x, 1, y).setType(Material.JUKEBOX);
-				powerup = new Vector(x, 1, y).toLocation(world);
+				world.getBlockAt(x, 1, y - 48).setType(Material.JUKEBOX);
+				powerup = new Vector(x, 1, y - 48).toLocation(world);
 			}
 		}
 	}
