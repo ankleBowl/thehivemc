@@ -533,7 +533,10 @@ public class BlockpartyWorld {
 						String message = "";
 						if (hp.hardcoreMode) {
 							Random r = new Random();
-							ArrayList<DyeColor> colors = new ArrayList<DyeColor>(Constants.colorToChat.keySet());;
+							ArrayList<ChatColor> colors = new ArrayList<ChatColor>();
+							for (Map.Entry<DyeColor, ChatColor> set : Constants.colorToChat.entrySet()) {
+								colors.add(set.getValue());
+							}
 							message = "" + colors.get(r.nextInt(colors.size()));
 						} else {
 							message = Constants.colorToChat.get(colorToRemove) + "";
