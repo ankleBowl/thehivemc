@@ -219,7 +219,7 @@ public class BlockpartyWorld {
 	
 	public void welcomePlayer(BlockpartyPlayer hp) {
 		players.add(hp);
-		hp.mcPlayer.teleport(new Vector(34.5, 3, 8).toLocation(world));
+		hp.mcPlayer.teleport(new Vector(-10, 106, 11).toLocation(world));
 		hp.serverId = id;
 		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
 		hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 99999, 0, false, false));
@@ -306,11 +306,11 @@ public class BlockpartyWorld {
 				} else {
 					for (BlockpartyPlayer hp : players) {
 						if (hp.isDead && hp.mcPlayer.getLocation().getY() < -50) {
-							hp.mcPlayer.teleport(new Vector(34.5, 3, 8).toLocation(world));
+							hp.mcPlayer.teleport(new Vector(-10, 106, 11).toLocation(world));
 						}
 						
 						if (hp.mcPlayer.getLocation().distance(new Vector(0, 0, 0).toLocation(world)) > 150 && hp.isDead) {
-							hp.mcPlayer.teleport(new Vector(34.5, 3, 8).toLocation(world));
+							hp.mcPlayer.teleport(new Vector(-10, 106, 11).toLocation(world));
 						}
 					}
 				}
@@ -320,7 +320,7 @@ public class BlockpartyWorld {
 	
 	public void initGame() {
 		for (BlockpartyPlayer hp : players) {
-			hp.mcPlayer.teleport(new Vector(0, 1, 0).toLocation(world));
+			hp.mcPlayer.teleport(new Vector(23, 101, 23).toLocation(world));
 			hp.isDead = false;
 			hp.mcPlayer.getInventory().clear();
 			hp.mcPlayer.getInventory().setItem(8, Constants.playersVisible);
@@ -374,7 +374,7 @@ public class BlockpartyWorld {
 			
 			if (!hp.isDead && hp.mcPlayer.getLocation().getY() < 0.5) {
 				hp.isDead = true;
-				hp.mcPlayer.teleport(new Vector(0, 10, 0).toLocation(world));
+				hp.mcPlayer.teleport(new Vector(23, 110, 23).toLocation(world));
 				hp.mcPlayer.setAllowFlight(true);
 				hp.mcPlayer.setFlying(true);
 				TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "YOU DIED!");
@@ -535,7 +535,7 @@ public class BlockpartyWorld {
 		}
 		
 		for (BlockpartyPlayer hp : players) {
-			hp.mcPlayer.teleport(new Vector(-61.5, 7, 6.5).toLocation(world));
+			hp.mcPlayer.teleport(new Vector(-11, 106, 10).toLocation(world));
 			
 			Inventory inv = hp.mcPlayer.getInventory();
 			inv.clear();
@@ -609,7 +609,7 @@ public class BlockpartyWorld {
 	public void removeFloor(DyeColor color) {
 		for (int x = 0; x < 48; x++) {
 			for (int z = 0; z < 48; z++) {
-				Block c = world.getBlockAt(x - 32, 0, z - 16);
+				Block c = world.getBlockAt(x, 100, z);
 				if (c.getData() != colorToRemove.getData()) {
 					c.setType(Material.AIR);
 				}
@@ -631,7 +631,7 @@ public class BlockpartyWorld {
 			for (int z = 0; z < 48; z++) {
 				Block b = world.getBlockAt(new Vector(x + 100, map, z).toLocation(world));
 				DyeColor color = DyeColor.getByData(b.getData());
-				Block c = world.getBlockAt(x - 32, 0, z - 16);
+				Block c = world.getBlockAt(x, 100, z);
 				c.setType(Material.STAINED_CLAY);
 				c.setData(colorMap.get(color).getData());
 				if (!colorsUsed.contains(colorMap.get(color))) {
@@ -642,8 +642,8 @@ public class BlockpartyWorld {
 		
 		if (random.nextDouble() < 0.1) {
 			if (powerup == null) {
-				int x = random.nextInt(48) - 32;
-				int y = random.nextInt(48) - 16;
+				int x = random.nextInt(48);
+				int y = random.nextInt(48);
 				world.getBlockAt(x, 1, y).setType(Material.JUKEBOX);
 				powerup = new Vector(x, 1, y).toLocation(world);
 			}

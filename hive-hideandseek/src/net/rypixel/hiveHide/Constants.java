@@ -107,11 +107,11 @@ public class Constants {
 		again.setItemMeta(meta);
 		
 		mapList = new ArrayList<String>();
-		mapList.add("Chinatown");
-		mapList.add("Chinatown1");
-		mapList.add("Chinatown2");
-		mapList.add("Chinatown3");
-		mapList.add("Chinatown4");
+		mapList.add("Flower_Forest");
+		mapList.add("Flower_Forest1");
+		mapList.add("Flower_Forest2");
+		mapList.add("Flower_Forest3");
+		mapList.add("Flower_Forest4");
 		
 		Material[] list = new Material[5];
 		list[0] = Material.STONE;
@@ -119,7 +119,7 @@ public class Constants {
 		list[2] = Material.LOG;
 		list[3] = Material.LEAVES;
 		list[4] = Material.WOOL;
-		blocksToHide.put("Chinatown", list);
+		blocksToHide.put("Flower_Forest", list);
 		
 	}
 	

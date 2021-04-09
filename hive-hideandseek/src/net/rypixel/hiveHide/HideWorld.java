@@ -8,10 +8,13 @@ import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -68,15 +71,17 @@ public class HideWorld {
 		players.add(hp);
 		Functions.showAllPlayers(players);
 		hp.mcPlayer.teleport(new Vector(-79.5, 90, 61.5).toLocation(world));
+		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
+		hp.mcPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
 		
 		int[] tempVotes = tallyVotes();
 		
 		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.YELLOW + " Vote for a map! " + ChatColor.GRAY + "Use " + ChatColor.WHITE + "/v #" + ChatColor.WHITE + " or click.");
-		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 1. " + ChatColor.GOLD + randomMaps[0] + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[0] + ChatColor.GRAY + " Votes]");
-		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 2. " + ChatColor.GOLD + randomMaps[1] + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[1] + ChatColor.GRAY + " Votes]");
-		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 3. " + ChatColor.GOLD + randomMaps[2] + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[2] + ChatColor.GRAY + " Votes]");
-		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 4. " + ChatColor.GOLD + randomMaps[3] + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[3] + ChatColor.GRAY + " Votes]");
-		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 5. " + ChatColor.GOLD + randomMaps[4] + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[4] + ChatColor.GRAY + " Votes]");
+		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 1. " + ChatColor.GOLD + randomMaps[0].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[0] + ChatColor.GRAY + " Votes]");
+		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 2. " + ChatColor.GOLD + randomMaps[1].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[1] + ChatColor.GRAY + " Votes]");
+		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 3. " + ChatColor.GOLD + randomMaps[2].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[2] + ChatColor.GRAY + " Votes]");
+		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 4. " + ChatColor.GOLD + randomMaps[3].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[3] + ChatColor.GRAY + " Votes]");
+		hp.mcPlayer.sendMessage(chatPrefix() + ChatColor.GRAY + " 5. " + ChatColor.GOLD + randomMaps[4].replace('_', ' ') + ChatColor.GRAY + " [" + ChatColor.WHITE + tempVotes[4] + ChatColor.GRAY + " Votes]");
 	
 		Inventory inv = hp.mcPlayer.getInventory();
 		inv.clear();
@@ -131,7 +136,6 @@ public class HideWorld {
 		
 		new BukkitRunnable() {
 			public void run() {
-				inGame = true;
 				Random r = new Random();
 				for (HidePlayer hp : players) {
 					if (hp.block == null) {
@@ -144,7 +148,11 @@ public class HideWorld {
 				Bukkit.unloadWorld(Bukkit.getWorld(mapName), false);
 				
 				
-				ArrayList<HidePlayer> playersTemp = players;
+				ArrayList<HidePlayer> playersTemp = new ArrayList<HidePlayer>();
+				for (HidePlayer p : players) {
+					playersTemp.add(p);
+				}
+				
 				int seekerCount = players.size() / 4;
 				if (seekerCount == 0) {
 					seekerCount = 1;
@@ -157,24 +165,48 @@ public class HideWorld {
 				}
 				
 				for (HidePlayer hp : players) {
-					//teleport the player
+					hp.solid = false;
+					hp.lastLoc = new Vector(0, 0, 0);
 					if (!hp.isHunter) {
-						gameWorld.spawnFallingBlock(new Vector(0, 0, 0).toLocation(gameWorld), hp.block, (byte) 0);
-						hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10000, 100, true));
+						hp.blockEntity = gameWorld.spawnFallingBlock(new Vector(0, 0, 0).toLocation(gameWorld), hp.block, (byte) 0);
+						hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10000, 100, false));
 						Inventory playerInv = hp.mcPlayer.getInventory();
 						playerInv.setItem(0, new ItemStack(Material.WOOD_SWORD, 1));
+						hp.mcPlayer.teleport(new Vector(0.5, 101, 0.5).toLocation(gameWorld));
 					} else {
 						Inventory playerInv = hp.mcPlayer.getInventory();
+						ItemStack[] armorContents = new ItemStack[4];
+						armorContents[0] = new ItemStack(Material.IRON_HELMET, 1);
+						armorContents[0] = new ItemStack(Material.IRON_CHESTPLATE, 1);
+						armorContents[0] = new ItemStack(Material.IRON_LEGGINGS, 1);
+						armorContents[0] = new ItemStack(Material.IRON_BOOTS, 1);
 						playerInv.setItem(0, new ItemStack(Material.DIAMOND_SWORD, 1));
 					}
 				}
+				inGame = true;
 			}
 		}.runTaskLater(plugin, 200L);
+		
+		new BukkitRunnable() {
+			public void run() {
+				blockTransform();
+			}
+		}.runTaskLater(plugin, 300L);
+		
+		new BukkitRunnable() {
+			public void run() {
+				for (HidePlayer hp : players) {
+					if (hp.isHunter) {
+						hp.mcPlayer.teleport(new Vector(0.5, 101, 0.5).toLocation(gameWorld));
+					}
+				}
+			}
+		}.runTaskLater(plugin, 800L);
 		
 	}
 	
 	public void onPlayerLeave(HidePlayer hp) {
-		
+		players.remove(hp);
 	}
 	
 	public Inventory blockSelectUI() {
@@ -204,7 +236,9 @@ public class HideWorld {
 	public void onInteract(PlayerInteractEvent event) {
 		HidePlayer hp = Main.playerMap.get(event.getPlayer());
 		if (inGame) {
-			
+			if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+				
+			}
 		} else {
 			if (event.getItem() != null) {
 				switch (event.getItem().getType()) {
@@ -261,30 +295,28 @@ public class HideWorld {
 	}
 	
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-		HidePlayer hp = Main.playerMap.get(event.getDamager());
-		HidePlayer block = Main.playerMap.get(event.getDamage());
+		HidePlayer seeker = Main.playerMap.get(event.getDamager());
+		HidePlayer hider = Main.playerMap.get(event.getEntity());
 		if (!inGame) {
 			event.setCancelled(true);
 		} else if (inGame) {
-			if (block.solid) {
-				if (hp.attackCooldown < 10) {
-					event.setCancelled(true);
-				}
+			if (hider.mcPlayer.getHealth() - event.getFinalDamage() < 0) {
+				hider.isHunter = true;
+				hider.mcPlayer.teleport(new Vector(0.5, 101, 0.5).toLocation(gameWorld));
+				
+				Inventory playerInv = hider.mcPlayer.getInventory();
+				ItemStack[] armorContents = new ItemStack[4];
+				armorContents[0] = new ItemStack(Material.IRON_HELMET, 1);
+				armorContents[0] = new ItemStack(Material.IRON_CHESTPLATE, 1);
+				armorContents[0] = new ItemStack(Material.IRON_LEGGINGS, 1);
+				armorContents[0] = new ItemStack(Material.IRON_BOOTS, 1);
+				playerInv.setItem(0, new ItemStack(Material.DIAMOND_SWORD, 1));
 			}
 		}
 	}
 	
 	public void onPlayerMove(PlayerMoveEvent event) {
 		HidePlayer hp = Main.playerMap.get(event.getPlayer());
-		Vector loc = new Vector(hp.mcPlayer.getLocation().getBlockX(), hp.mcPlayer.getLocation().getBlockY(), hp.mcPlayer.getLocation().getBlockZ());
-		if (hp.lastCoords != loc) {
-			if (hp.solid = true) {
-				hp.lastCoords.toLocation(gameWorld).getBlock().setType(Material.AIR);
-				hp.solid = false;
-			}
-			hp.lastCoords = loc;
-			hp.lastMoved = 0;
-		}
 	}
 	
 	public void chat(String message) {
@@ -326,6 +358,12 @@ public class HideWorld {
 	public void update() {
 		timer = new BukkitRunnable() {
 			public void run() {
+				
+				for (HidePlayer hp : players) {
+					hp.mcPlayer.setFoodLevel(20);
+					hp.mcPlayer.setSaturation(20);
+				}
+				
 				if (!starting && !inGame) {
 					if (players.size() > 5 && !starting) {
 						starting = true;
@@ -365,20 +403,49 @@ public class HideWorld {
 							mapName = randomMaps[index];
 						}
 					}
-				} else if (inGame) {
-					for (HidePlayer hp : players) {
+				}
+			}
+		}.runTaskTimer(plugin, 0L, 1L);
+	}
+	
+	public void blockTransform() {
+		timer = new BukkitRunnable() {
+			public void run() {
+				for (HidePlayer hp : players) {
+					if (!hp.isHunter) {
 						hp.lastMoved++;
-						if (hp.lastMoved == 100) {
+						//Bukkit.broadcastMessage(hp.mcPlayer.getDisplayName() + " " + String.valueOf(hp.lastMoved));
+						
+						Vector loc = new Vector(hp.mcPlayer.getLocation().getBlockX(), hp.mcPlayer.getLocation().getBlockY(), hp.mcPlayer.getLocation().getBlockZ());
+						if (hp.lastLoc.distance(loc) > 0.5) {
+							hp.lastMoved = 0;
+						}
+						
+						hp.lastLoc = loc;
+						
+						if (hp.lastMoved > 100 && !hp.solid) {
+							hp.placedBlock = hp.mcPlayer.getLocation().getBlock();
+							hp.mcPlayer.setGameMode(GameMode.SPECTATOR);
+							hp.placedBlock.setType(hp.block);
+							Vector location = loc;
+							location = location.add(new Vector(0.5, 0, 0.5));
+							hp.mcPlayer.teleport(location.toLocation(gameWorld));
 							hp.solid = true;
-							hp.lastCoords.toLocation(gameWorld).getBlock().setType(hp.block);
-							hp.blockEntity.teleport(new Vector(0, 0, 0).toLocation(gameWorld));
-						} else {
+						}
+						
+						if (hp.lastMoved < 100 && hp.solid) {
+							hp.solid = false;
+							hp.placedBlock.setType(Material.AIR);
+							hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
+						}
+						
+						if (!hp.solid) {
 							hp.blockEntity.teleport(hp.mcPlayer);
 						}
 					}
 				}
 			}
-		}.runTaskTimer(plugin, 0L, 1L);
+		}.runTaskTimer(plugin, 0L, 2L);
 	}
 	
 	public String chatPrefix() {
