@@ -172,6 +172,7 @@ public class Main extends JavaPlugin implements Listener {
 		world.onPlayerLeave(event.getPlayer());
 		
 		MySQL.update("UPDATE playerInfo SET lobby=\"Offline\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE playerInfo SET tokens=\"" + hp.tokens + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		
 		MySQL.update("UPDATE blockparty SET played=\"" + String.valueOf(hp.playedGames) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		MySQL.update("UPDATE blockparty SET wins=\"" + String.valueOf(hp.wonGames) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");

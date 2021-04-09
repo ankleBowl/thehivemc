@@ -87,7 +87,7 @@ public class BlockpartyWorld {
 	public void onPlayerLeave(Player p) {
 		BlockpartyPlayer hp = Main.playerMap.get(p);
 		players.remove(hp);
-		if (!ending && !starting && inGame) {
+		if (!ending && !starting) {
 			chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " -> " + ChatColor.RED + "ELIMINATED!");
 			world.spawnEntity(hp.mcPlayer.getLocation(), EntityType.LIGHTNING);
 		}
@@ -176,6 +176,8 @@ public class BlockpartyWorld {
 					hp.mcPlayer.getInventory().addItem(Constants.rain);
 					break;
 				}
+				hp.mcPlayer.sendMessage(ChatColor.AQUA + " ✚ 10" + ChatColor.GRAY + "tokens! (Powerup)");
+				hp.tokens += 10;
 			}
 			
 			
@@ -419,6 +421,10 @@ public class BlockpartyWorld {
 				chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " -> " + ChatColor.RED + "ELIMINATED!");
 				world.spawnEntity(hp.mcPlayer.getLocation(), EntityType.LIGHTNING);
 				hp.winstreak = 0;
+				
+				hp.tokens += 5;
+				hp.mcPlayer.sendMessage(ChatColor.AQUA + " ✚ 5 " + ChatColor.GRAY + "tokens!");
+				
 				dead.add(hp);
 			}
 		}
@@ -565,10 +571,20 @@ public class BlockpartyWorld {
 		ending = true;
 		if (winners.size() > 2) {
 			title(ChatColor.BLUE + "Multiple players have won!", "");
+			for (BlockpartyPlayer hp : winners) {
+				hp.tokens += 20;
+				hp.mcPlayer.sendMessage(ChatColor.AQUA + " ✚ 20" + ChatColor.GRAY + "tokens! (Victory)");
+			}
 		} else if (winners.size() == 1) {
 			title(ChatColor.BLUE + winners.get(0).mcPlayer.getDisplayName() + " has won!", "");
+			winners.get(0).tokens += 25;
+			winners.get(0).mcPlayer.sendMessage(ChatColor.AQUA + " ✚ 25" + ChatColor.GRAY + "tokens! (Solo Victory)");
 		} else {
 			title(ChatColor.BLUE + winners.get(0).mcPlayer.getDisplayName() + " and " +  winners.get(1).mcPlayer.getDisplayName() + " have won!", "");
+			for (BlockpartyPlayer hp : winners) {
+				hp.tokens += 20;
+				hp.mcPlayer.sendMessage(ChatColor.AQUA + " ✚ 20" + ChatColor.GRAY + "tokens! (Victory)");
+			}
 		}
 		
 		for (BlockpartyPlayer hp : players) {
