@@ -541,11 +541,11 @@ public class BlockpartyWorld {
 						} else {
 							message = Constants.colorToChat.get(colorToRemove) + "";
 						}
-						for (int i = 0; i < ticks - 20 / 10; i++) {
+						for (int i = 0; i < ticks / 10 - 1; i++) {
 							message += "■";
 						}
 						message += " " + Constants.colorToName.get(colorToRemove) + " ";
-						for (int i = 0; i < ticks - 20 / 10; i++) {
+						for (int i = 0; i < ticks / 10 - 1; i++) {
 							message += "■";
 						}
 						
