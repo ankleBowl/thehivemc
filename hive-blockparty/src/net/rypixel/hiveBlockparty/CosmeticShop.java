@@ -9,7 +9,7 @@ public class CosmeticShop {
 		if (c != null) {
 			if (hp.ownedBlockpartyCosmetics.contains(c.name)) {
 				if (hp.activeBling == id) {
-					hp.activeBling = "";
+					hp.activeBling = "null";
 				} else {
 					hp.activeBling = id;
 				}

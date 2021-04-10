@@ -125,10 +125,14 @@ public class Main extends JavaPlugin implements Listener {
 			hp.placings = Integer.parseInt(SQL.get("placings", "UUID", "=", event.getPlayer().getUniqueId().toString(), "blockparty").toString());
 			hp.blockpartyCosmetics = SQL.get("cosmetics", "UUID", "=", event.getPlayer().getUniqueId().toString(), "blockparty").toString();
 			hp.ownedBlockpartyCosmetics = Functions.ArrayToListConversion(hp.blockpartyCosmetics.split(","));
-			
+			String[] activeCosmetics = SQL.get("activeCosmetics", "UUID", "=", event.getPlayer().getUniqueId().toString(), "blockparty").toString().split(",");
+			hp.activeBling = activeCosmetics[0];
+			hp.activeJoin = activeCosmetics[1];
+			hp.activeSound = activeCosmetics[2];
+			hp.activeTrail = activeCosmetics[3];
 			MySQL.update("UPDATE playerInfo SET lobby=\"BlockParty\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		} else {
-			MySQL.update("Insert into blockparty values (\"" + event.getPlayer().getUniqueId().toString() + "\", 0, 0, 0, 0, 0, 0, 0, \"\");");
+			MySQL.update("Insert into blockparty values (\"" + event.getPlayer().getUniqueId().toString() + "\", 0, 0, 0, 0, 0, 0, 0, \"\", \"null,null,null,null\");");
 		}
 		
 		hp.scoreboard = ScoreHelper.createScore(hp.mcPlayer);
@@ -182,6 +186,7 @@ public class Main extends JavaPlugin implements Listener {
 		MySQL.update("UPDATE blockparty SET hardcorewins=\"" + String.valueOf(hp.hardcoreWins) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		MySQL.update("UPDATE blockparty SET placings=\"" + String.valueOf(hp.placings) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		MySQL.update("UPDATE blockparty SET cosmetics=\"" + Functions.ListToCSV(hp.ownedBlockpartyCosmetics) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE blockparty SET activeCosmetics=\"" + hp.activeBling + "," + hp.activeJoin + "," + hp.activeSound + "," + hp.activeTrail + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		//TODO FIX THIS LATER
 		
 		
@@ -246,6 +251,6 @@ public class Main extends JavaPlugin implements Listener {
 		Config.setPort("3306");
 		Config.setSSL(true);
 		MySQL.connect();
-		MySQL.update("CREATE TABLE IF NOT EXISTS blockparty(UUID varchar(64) PRIMARY KEY, points int, played int, wins int, winstreak int, hardcorepoints int, hardcorewins int, placings int, cosmetics varchar(9999));");
+		MySQL.update("CREATE TABLE IF NOT EXISTS blockparty(UUID varchar(64) PRIMARY KEY, points int, played int, wins int, winstreak int, hardcorepoints int, hardcorewins int, placings int, cosmetics varchar(9999), activeCosmetics varchar(128));");
 	}
 }
