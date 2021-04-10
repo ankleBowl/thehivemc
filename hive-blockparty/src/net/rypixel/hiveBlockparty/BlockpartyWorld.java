@@ -93,7 +93,13 @@ public class BlockpartyWorld {
 		players.remove(hp);
 		if (!ending && !starting && inGame) {
 			chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " -> " + ChatColor.RED + "ELIMINATED!");
-			world.spawnEntity(hp.mcPlayer.getLocation(), EntityType.LIGHTNING);
+			Sound s = Constants.sounds.get(hp.activeSound).sound;
+			if (s == null) {
+				s = Sound.AMBIENCE_THUNDER;
+			}
+			for (BlockpartyPlayer hp1 : players) {
+				hp1.mcPlayer.playSound(hp1.mcPlayer.getLocation(), s, 1, 1);
+			}
 		}
 	}
 	
@@ -226,12 +232,25 @@ public class BlockpartyWorld {
 			if (!inGame) {
 				switch (event.getInventory().getContents().length) {
 				case 54:
-					switch (event.getInventory().getContents()[53].getType()) {
-					case GOLD_BOOTS:
-						CosmeticShop.blingShop(event, hp);
-						break;
-					default:
-						break;
+					if (event.getSlot() != 0 && event.getSlot() != 8 && event.getSlot() != 17 && event.getSlot() != 26) {
+						switch (event.getInventory().getContents()[53].getType()) {
+						case GOLD_BOOTS:
+							CosmeticShop.blingShop(event, hp);
+							break;
+						case JUKEBOX:
+							
+						default:
+							break;
+						}
+					} else {
+						switch (event.getCurrentItem().getType()) {
+						case GOLD_BOOTS:
+							hp.mcPlayer.openInventory(Constants.shopBling(hp));
+							break;
+						case JUKEBOX:
+							hp.mcPlayer.openInventory(Constants.shopSounds(hp));
+							break;
+						}
 					}
 					break;
 				case 27:
@@ -386,7 +405,7 @@ public class BlockpartyWorld {
 				}
 			}
 			
-			Cosmetic c = Constants.cosmetics.get(hp.activeBling);
+			Cosmetic c = Constants.bling.get(hp.activeBling);
 			if (c != null) {
 				ItemStack item = ItemStack.deserialize(c.getItem());
 				ItemStack[] armor = new ItemStack[4];
@@ -482,7 +501,13 @@ public class BlockpartyWorld {
 				hp.mcPlayer.getInventory().setItem(8, Constants.hub);
 				hp.mcPlayer.getInventory().setArmorContents(null);
 				chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " -> " + ChatColor.RED + "ELIMINATED!");
-				world.spawnEntity(hp.mcPlayer.getLocation(), EntityType.LIGHTNING);
+				Sound s = Constants.sounds.get(hp.activeSound).sound;
+				if (s == null) {
+					s = Sound.AMBIENCE_THUNDER;
+				}
+				for (BlockpartyPlayer hp1 : players) {
+					hp1.mcPlayer.playSound(hp1.mcPlayer.getLocation(), s, 1, 1);
+				}
 				hp.winstreak = 0;
 				
 				hp.tokens += 5;

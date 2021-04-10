@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -43,7 +44,8 @@ public class Constants {
 	public static HashMap<DyeColor, ChatColor> colorToChat = new HashMap<DyeColor, ChatColor>();
 	public static HashMap<Integer, Media> intToSong = new HashMap<Integer, Media>();
 	
-	public static HashMap<String, Cosmetic> cosmetics = new HashMap<String, Cosmetic>();
+	public static HashMap<String, Cosmetic> bling = new HashMap<String, Cosmetic>();
+	public static HashMap<String, Cosmetic> sounds = new HashMap<String, Cosmetic>();
 	
 	public static void init() {
 		ItemMeta meta = null;
@@ -235,19 +237,31 @@ public class Constants {
 		intToSong.put(12, new Media(ResourceType.MUSIC, "https://raw.githubusercontent.com/ankleBowl/thehivemc/main/blockpartysongs/dontmineatnight.ogg")); //dont mine at night
 		
 		ItemStack item = null;
+		Cosmetic c = null;
 		
 		item = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
 		LeatherArmorMeta meta1 = (LeatherArmorMeta) item.getItemMeta();
 		meta1.setColor(Color.GREEN);
 		meta1.setDisplayName(ChatColor.AQUA + "Cactus");
 		item.setItemMeta(meta1);
-		cosmetics.put("GOLD_BOOTS12", new Cosmetic(12, 100, Material.GOLD_BOOTS, "Cactus", item.serialize()));
+		bling.put("GOLD_BOOTS12", new Cosmetic(12, 100, Material.GOLD_BOOTS, "Cactus", item.serialize()));
 		
 		item = new ItemStack(Material.DIRT, 1);
 		meta = item.getItemMeta();
-		meta1.setDisplayName(ChatColor.AQUA + "Dirt");
-		item.setItemMeta(meta1);
-		cosmetics.put("GOLD_BOOTS13", new Cosmetic(13, 200, Material.GOLD_BOOTS, "Dirt", item.serialize()));
+		meta.setDisplayName(ChatColor.AQUA + "Dirt");
+		item.setItemMeta(meta);
+		bling.put("GOLD_BOOTS13", new Cosmetic(13, 200, Material.GOLD_BOOTS, "Dirt", item.serialize()));
+		
+		
+		
+		item = new ItemStack(Material.BONE, 1);
+		meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.AQUA + "Wolf Cry");
+		item.setItemMeta(meta);
+		c = new Cosmetic(12, 100, Material.JUKEBOX, "Wolf Cry", item.serialize());
+		c.setSound(Sound.WOLF_HOWL);
+		sounds.put("JUKEBOX12", c);
+		
 	}
 	
 	public static Inventory playerSelector(ArrayList<BlockpartyPlayer> players) {
@@ -481,13 +495,13 @@ public class Constants {
 		inv.setItem(7, borderRed);
 		inv.setItem(8, borderRed);
 		
-		item = ItemStack.deserialize(cosmetics.get("GOLD_BOOTS12").getItem());
+		item = ItemStack.deserialize(bling.get("GOLD_BOOTS12").getItem());
 		if (!hp.ownedBlockpartyCosmetics.contains("Cactus")) {
 			item.setType(Material.INK_SACK);
 		}
 		inv.setItem(12, item);
 		
-		item = ItemStack.deserialize(cosmetics.get("GOLD_BOOTS13").getItem());
+		item = ItemStack.deserialize(bling.get("GOLD_BOOTS13").getItem());
 		if (!hp.ownedBlockpartyCosmetics.contains("Dirt")) {
 			item.setType(Material.INK_SACK);
 		}
@@ -520,6 +534,90 @@ public class Constants {
 		item = new ItemStack(Material.GOLD_BOOTS, 1);
 		meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Bling");
+		lore.clear();
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		inv.setItem(53, item);
+		
+		return inv;
+	}
+	
+	public static Inventory shopSounds(BlockpartyPlayer hp) {
+		Inventory inv = shopSidebar();
+		
+		ItemStack item = null;
+		ItemStack borderRed = null;
+		ItemStack borderBlack = null;
+		ItemStack notOwned = null;
+		Material originalType = null;
+		
+		ItemMeta meta = null;
+		ArrayList<String> lore = new ArrayList<String>();
+	
+		borderRed = new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.RED.getData());
+		meta = borderRed.getItemMeta();
+		meta.setDisplayName("");
+		borderRed.setItemMeta(meta);
+		
+		borderBlack = new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.BLACK.getData());
+		meta = borderBlack.getItemMeta();
+		meta.setDisplayName("");
+		borderBlack.setItemMeta(meta);
+		
+		notOwned = new ItemStack(Material.INK_SACK, 1, DyeColor.SILVER.getData());
+		meta = borderBlack.getItemMeta();
+		meta.setDisplayName("");
+		borderBlack.setItemMeta(meta);
+		
+		inv.setItem(1, borderBlack);
+		inv.setItem(2, borderRed);
+		inv.setItem(3, borderRed);
+		inv.setItem(4, borderRed);
+		inv.setItem(5, borderRed);
+		inv.setItem(6, borderRed);
+		inv.setItem(7, borderRed);
+		inv.setItem(8, borderRed);
+
+
+		inv.setItem(10, borderRed);
+		inv.setItem(11, borderRed);
+		
+		item = ItemStack.deserialize(sounds.get("JUKEBOX12").getItem());
+		if (!hp.ownedBlockpartyCosmetics.contains("Wolf")) {
+			item.setType(Material.INK_SACK);
+		}
+		inv.setItem(12, item);
+		
+//		item = ItemStack.deserialize(bling.get("GOLD_BOOTS13").getItem());
+//		if (!hp.ownedBlockpartyCosmetics.contains("Dirt")) {
+//			item.setType(Material.INK_SACK);
+//		}
+//		inv.setItem(13, item);
+		
+		inv.setItem(17, borderRed);
+		inv.setItem(19, borderBlack);
+		inv.setItem(20, borderRed);
+		
+		inv.setItem(26, borderRed);
+		inv.setItem(28, borderBlack);
+		inv.setItem(29, borderRed);
+		
+		inv.setItem(35, borderRed);
+		inv.setItem(37, borderBlack);
+		inv.setItem(38, borderRed);
+		
+		inv.setItem(44, borderRed);
+		inv.setItem(46, borderBlack);
+		inv.setItem(47, borderRed);
+		inv.setItem(48, borderRed);
+		inv.setItem(49, borderRed);
+		inv.setItem(50, borderRed);
+		inv.setItem(51, borderRed);
+		inv.setItem(52, borderRed);
+		
+		item = new ItemStack(Material.JUKEBOX, 1);
+		meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Sounds");
 		lore.clear();
 		meta.setLore(lore);
 		item.setItemMeta(meta);
