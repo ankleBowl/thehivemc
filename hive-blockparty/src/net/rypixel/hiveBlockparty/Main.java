@@ -181,7 +181,7 @@ public class Main extends JavaPlugin implements Listener {
 		MySQL.update("UPDATE blockparty SET hardcorepoints=\"" + String.valueOf(hp.hardcorePoints) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		MySQL.update("UPDATE blockparty SET hardcorewins=\"" + String.valueOf(hp.hardcoreWins) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		MySQL.update("UPDATE blockparty SET placings=\"" + String.valueOf(hp.placings) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
-		MySQL.update("UPDATE blockparty SET cosmetics=\"" + hp.blockpartyCosmetics + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE blockparty SET cosmetics=\"" + Functions.ListToCSV(hp.ownedBlockpartyCosmetics) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		//TODO FIX THIS LATER
 		
 		

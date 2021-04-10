@@ -43,6 +43,8 @@ public class Constants {
 	public static HashMap<DyeColor, ChatColor> colorToChat = new HashMap<DyeColor, ChatColor>();
 	public static HashMap<Integer, Media> intToSong = new HashMap<Integer, Media>();
 	
+	public static HashMap<String, Cosmetic> cosmetics = new HashMap<String, Cosmetic>();
+	
 	public static void init() {
 		ItemMeta meta = null;
 		ArrayList<String> lore = new ArrayList<String>();;
@@ -232,6 +234,20 @@ public class Constants {
 		intToSong.put(11, new Media(ResourceType.MUSIC, "https://raw.githubusercontent.com/ankleBowl/thehivemc/main/blockpartysongs/revenge.ogg")); //revenge
 		intToSong.put(12, new Media(ResourceType.MUSIC, "https://raw.githubusercontent.com/ankleBowl/thehivemc/main/blockpartysongs/dontmineatnight.ogg")); //dont mine at night
 		
+		ItemStack item = null;
+		
+		item = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
+		LeatherArmorMeta meta1 = (LeatherArmorMeta) item.getItemMeta();
+		meta1.setColor(Color.GREEN);
+		meta1.setDisplayName(ChatColor.AQUA + "Cactus");
+		item.setItemMeta(meta1);
+		cosmetics.put("GOLD_BOOTS12", new Cosmetic(12, 100, Material.GOLD_BOOTS, "Cactus", item));
+		
+		item = new ItemStack(Material.DIRT, 1);
+		meta = (LeatherArmorMeta) item.getItemMeta();
+		meta1.setDisplayName(ChatColor.AQUA + "Dirt");
+		item.setItemMeta(meta1);
+		cosmetics.put("GOLD_BOOTS13", new Cosmetic(13, 200, Material.GOLD_BOOTS, "Dirt", item));
 	}
 	
 	public static Inventory playerSelector(ArrayList<BlockpartyPlayer> players) {
@@ -436,16 +452,17 @@ public class Constants {
 		ItemStack borderRed = null;
 		ItemStack borderBlack = null;
 		ItemStack notOwned = null;
+		Material originalType = null;
 		
 		ItemMeta meta = null;
 		ArrayList<String> lore = new ArrayList<String>();
 	
-		borderRed = new ItemStack(Material.STAINED_GLASS_PANE, 1);
+		borderRed = new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.RED.getData());
 		meta = borderRed.getItemMeta();
 		meta.setDisplayName("");
 		borderRed.setItemMeta(meta);
 		
-		borderBlack = new ItemStack(Material.STAINED_GLASS_PANE, 1);
+		borderBlack = new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.BLACK.getData());
 		meta = borderBlack.getItemMeta();
 		meta.setDisplayName("");
 		borderBlack.setItemMeta(meta);
@@ -464,25 +481,18 @@ public class Constants {
 		inv.setItem(7, borderRed);
 		inv.setItem(8, borderRed);
 		
-		if (hp.ownedCosmetics.contains("Cactus")) {
-			item = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
-			LeatherArmorMeta meta1 = (LeatherArmorMeta) item.getItemMeta();
-			meta1.setColor(Color.GREEN);
-			meta1.setDisplayName(ChatColor.AQUA + "Cactus");
-			lore.clear();
-			meta1.setLore(lore);
-			item.setItemMeta(meta1);
-			inv.setItem(12, item);
-		} else { 
-			item = new ItemStack(Material.INK_SACK, 1, DyeColor.SILVER.getData());
-			meta = (LeatherArmorMeta) item.getItemMeta();
-			meta.setDisplayName(ChatColor.AQUA + "Cactus");
-			lore.clear();
-			lore.add("100 Tokens");
-			meta.setLore(lore);
-			item.setItemMeta(meta);
-			inv.setItem(12, item);
+		item = cosmetics.get("GOLD_BOOTS12").getItem();
+		if (!hp.ownedBlockpartyCosmetics.contains("Cactus")) {
+			item.setType(Material.INK_SACK);
 		}
+		inv.setItem(12, item);
+		
+		item = cosmetics.get("GOLD_BOOTS13").getItem();
+		if (!hp.ownedBlockpartyCosmetics.contains("Dirt")) {
+			item.setType(Material.INK_SACK);
+		}
+		inv.setItem(13, item);
+		
 		
 		inv.setItem(10, borderBlack);
 		inv.setItem(11, borderRed);

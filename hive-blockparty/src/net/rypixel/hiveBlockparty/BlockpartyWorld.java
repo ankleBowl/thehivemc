@@ -89,7 +89,7 @@ public class BlockpartyWorld {
 	public void onPlayerLeave(Player p) {
 		BlockpartyPlayer hp = Main.playerMap.get(p);
 		players.remove(hp);
-		if (!ending && !starting) {
+		if (!ending && !starting && inGame) {
 			chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " -> " + ChatColor.RED + "ELIMINATED!");
 			world.spawnEntity(hp.mcPlayer.getLocation(), EntityType.LIGHTNING);
 		}
@@ -149,9 +149,6 @@ public class BlockpartyWorld {
 						}
 						hp.mcPlayer.getInventory().setItem(8, Constants.playersVisible);
 					}
-				case YELLOW_FLOWER:
-					hp.mcPlayer.openInventory(Constants.shopBling(hp));
-					break;
 				default:
 					break;
 				}
@@ -197,6 +194,9 @@ public class BlockpartyWorld {
 				case DIAMOND:
 					//hp.mcPlayer.openInventory(Constants.pickSong());
 					hp.mcPlayer.sendMessage(ChatColor.RED + "This is not implemented yet!");
+				case YELLOW_FLOWER:
+					hp.mcPlayer.openInventory(Constants.shopBling(hp));
+					break;
 				default:
 					break;
 				}
@@ -223,25 +223,11 @@ public class BlockpartyWorld {
 			if (!inGame) {
 				switch (event.getInventory().getContents().length) {
 				case 54:
-					switch (event.getSlot()) {
-					case 12: //12 Gold Boots = Cactus
-						if (hp.ownedBlockpartyCosmetics.contains("Cactus")) {
-							ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
-							LeatherArmorMeta meta1 = (LeatherArmorMeta) item.getItemMeta();
-							meta1.setColor(Color.GREEN);
-							meta1.setDisplayName(ChatColor.AQUA + "Cactus");
-							item.setItemMeta(meta1);
-							if (hp.activeBling == item) {
-								hp.activeBling = null;
-							} else {
-								hp.activeBling = item;
-							}
-						} else {
-							if (hp.tokens > 100) {
-								hp.tokens -= 100;
-								hp.ownedBlockpartyCosmetics.add("Cactus");
-							}
-						}
+					switch (event.getInventory().getContents()[53].getType()) {
+					case GOLD_BOOTS:
+						CosmeticShop.blingShop(event, hp);
+						break;
+					default:
 						break;
 					}
 					break;
@@ -387,6 +373,39 @@ public class BlockpartyWorld {
 				} else {
 					hp.mcPlayer.showPlayer(hp1.mcPlayer);
 				}
+			}
+			
+			if (hp.activeBling != "") {
+				ItemStack[] armor = new ItemStack[4];
+				ItemStack item = Constants.cosmetics.get(hp.activeBling).getItem();
+				if (item.getType().toString().contains("HELMET")) {
+					armor[0] = item;
+				} else {
+					armor[0] = null;
+				}
+				if (item.getType().toString().contains("CHESTPLATE")) {
+					armor[1] = item;
+				} else {
+					armor[1] = null;
+				}
+				if (item.getType().toString().contains("LEGGINGS")) {
+					armor[2] = item;
+				} else {
+					armor[2] = null;
+				}
+				if (item.getType().toString().contains("BOOTS")) {
+					armor[3] = item;
+				} else {
+					armor[3] = null;
+				}
+				if (!item.getType().toString().contains("HELMET") && 
+						!item.getType().toString().contains("CHESTPLATE") &&
+						!item.getType().toString().contains("LEGGINGS") &&
+						!item.getType().toString().contains("BOOTS")) {
+					armor[0] = item;
+				}
+				
+				hp.mcPlayer.getInventory().setArmorContents(armor); 
 			}
 		}
 		
@@ -677,7 +696,7 @@ public class BlockpartyWorld {
 			loc.getBlock().setData(colorsUsed.get(random).getData());
 		}
 	}
-	
+
 	public String generateTitle(int spacing) {
 		if (spacing > -1) {
 			String string = "";

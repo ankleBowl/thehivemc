@@ -26,10 +26,10 @@ public class BlockpartyPlayer extends HivePlayer {
 	public int hardcoreWins;
 	public int placings;
 	
-	public ItemStack activeBling;
-	public ItemStack activeSound;
-	public ItemStack activeJoin;
-	public ItemStack activeTrail;
+	public String activeBling;
+	public String activeSound;
+	public String activeJoin;
+	public String activeTrail;
 	
 	public String powerUp;
 	
