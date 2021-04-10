@@ -403,7 +403,7 @@ public class BlockpartyWorld {
 						!item.getType().toString().contains("CHESTPLATE") &&
 						!item.getType().toString().contains("LEGGINGS") &&
 						!item.getType().toString().contains("BOOTS")) {
-					armor[0] = item;
+					armor[3] = item;
 				}
 				
 				hp.mcPlayer.getInventory().setArmorContents(armor); 
