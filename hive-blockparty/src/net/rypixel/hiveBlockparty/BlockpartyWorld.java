@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.persistence.spi.PersistenceUnitTransactionType;
 
@@ -33,6 +34,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -101,6 +103,7 @@ public class BlockpartyWorld {
 			if (event.getItem() != null) {
 				switch (event.getItem().getType()) {
 				case COMPASS:
+					hp.mcPlayer.openInventory(Constants.playerSelector(players));
 					break;
 				case MINECART:
 					players.remove(hp);
@@ -246,6 +249,14 @@ public class BlockpartyWorld {
 					default:
 						break;
 					}
+					break;
+				}
+			} else {
+				switch (event.getCurrentItem().getType()) {
+				case SKULL:
+					SkullMeta meta = (SkullMeta) event.getCurrentItem().getItemMeta();
+					BlockpartyPlayer owner = Main.playerMap.get(Bukkit.getPlayer(UUID.fromString(meta.getOwner())));
+					hp.mcPlayer.teleport(owner.mcPlayer);
 					break;
 				}
 			}
