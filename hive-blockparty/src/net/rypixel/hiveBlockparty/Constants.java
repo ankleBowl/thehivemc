@@ -244,7 +244,7 @@ public class Constants {
 		cosmetics.put("GOLD_BOOTS12", new Cosmetic(12, 100, Material.GOLD_BOOTS, "Cactus", item));
 		
 		item = new ItemStack(Material.DIRT, 1);
-		meta = (LeatherArmorMeta) item.getItemMeta();
+		meta = item.getItemMeta();
 		meta1.setDisplayName(ChatColor.AQUA + "Dirt");
 		item.setItemMeta(meta1);
 		cosmetics.put("GOLD_BOOTS13", new Cosmetic(13, 200, Material.GOLD_BOOTS, "Dirt", item));
