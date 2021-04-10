@@ -14,6 +14,7 @@ import javax.persistence.spi.PersistenceUnitTransactionType;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -31,6 +32,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -147,6 +149,8 @@ public class BlockpartyWorld {
 						}
 						hp.mcPlayer.getInventory().setItem(8, Constants.playersVisible);
 					}
+				case YELLOW_FLOWER:
+					hp.mcPlayer.openInventory(Constants.shopBling(hp));
 					break;
 				default:
 					break;
@@ -217,18 +221,45 @@ public class BlockpartyWorld {
 		BlockpartyPlayer hp = Main.playerMap.get(event.getWhoClicked());
 		if (event.getCurrentItem() != null) {
 			if (!inGame) {
-				switch (event.getCurrentItem().getType()) {
-				case STAINED_CLAY:
-					songVotes.put(hp, event.getSlot());
-					break;
-				case INK_SACK:
-					if (event.getSlot() == 12) {
-						hp.hardcoreMode = !hp.hardcoreMode;
-						hp.mcPlayer.playSound(hp.mcPlayer.getLocation(), Sound.NOTE_PIANO, 1, 1);
-						hp.mcPlayer.openInventory(Constants.settings(hp));
+				switch (event.getInventory().getContents().length) {
+				case 54:
+					switch (event.getSlot()) {
+					case 12: //12 Gold Boots = Cactus
+						if (hp.ownedBlockpartyCosmetics.contains("Cactus")) {
+							ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
+							LeatherArmorMeta meta1 = (LeatherArmorMeta) item.getItemMeta();
+							meta1.setColor(Color.GREEN);
+							meta1.setDisplayName(ChatColor.AQUA + "Cactus");
+							item.setItemMeta(meta1);
+							if (hp.activeBling == item) {
+								hp.activeBling = null;
+							} else {
+								hp.activeBling = item;
+							}
+						} else {
+							if (hp.tokens > 100) {
+								hp.tokens -= 100;
+								hp.ownedBlockpartyCosmetics.add("Cactus");
+							}
+						}
+						break;
 					}
 					break;
-				default:
+				case 27:
+					switch (event.getCurrentItem().getType()) {
+					case STAINED_CLAY:
+						songVotes.put(hp, event.getSlot());
+						break;
+					case INK_SACK:
+						if (event.getSlot() == 12) {
+							hp.hardcoreMode = !hp.hardcoreMode;
+							hp.mcPlayer.playSound(hp.mcPlayer.getLocation(), Sound.NOTE_PIANO, 1, 1);
+							hp.mcPlayer.openInventory(Constants.settings(hp));
+						}
+						break;
+					default:
+						break;
+					}
 					break;
 				}
 			}

@@ -6,11 +6,13 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import net.mcjukebox.plugin.bukkit.api.ResourceType;
@@ -387,6 +389,132 @@ public class Constants {
 		for (int i = 17; i < 27; i++) {
 			inv.setItem(i, border);
 		}
+		
+		return inv;
+	}
+	
+	public static Inventory shopSidebar() {
+		Inventory inv = Bukkit.createInventory(null, 54, "Unlock Selector");
+		
+		ItemStack item = null;
+		ItemMeta meta = null;
+		ArrayList<String> lore = new ArrayList<String>();
+		
+		item = new ItemStack(Material.GOLD_BOOTS, 1);
+		meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Bling");
+		lore.clear();
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		inv.setItem(0, item);
+		
+		item = new ItemStack(Material.JUKEBOX, 1);
+		meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "Death Sounds");
+		item.setItemMeta(meta);
+		inv.setItem(9, item);
+		
+		item = new ItemStack(Material.PAPER, 1);
+		meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Join Message");
+		item.setItemMeta(meta);
+		inv.setItem(18, item);
+		
+		item = new ItemStack(Material.ENDER_PEARL, 1);
+		meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.AQUA + "" + ChatColor.BOLD + "Trails");
+		item.setItemMeta(meta);
+		inv.setItem(27, item);
+		
+		return inv;
+	}
+	
+	public static Inventory shopBling(BlockpartyPlayer hp) {
+		Inventory inv = shopSidebar();
+		
+		ItemStack item = null;
+		ItemStack borderRed = null;
+		ItemStack borderBlack = null;
+		ItemStack notOwned = null;
+		
+		ItemMeta meta = null;
+		ArrayList<String> lore = new ArrayList<String>();
+	
+		borderRed = new ItemStack(Material.STAINED_GLASS_PANE, 1);
+		meta = borderRed.getItemMeta();
+		meta.setDisplayName("");
+		borderRed.setItemMeta(meta);
+		
+		borderBlack = new ItemStack(Material.STAINED_GLASS_PANE, 1);
+		meta = borderBlack.getItemMeta();
+		meta.setDisplayName("");
+		borderBlack.setItemMeta(meta);
+		
+		notOwned = new ItemStack(Material.INK_SACK, 1, DyeColor.SILVER.getData());
+		meta = borderBlack.getItemMeta();
+		meta.setDisplayName("");
+		borderBlack.setItemMeta(meta);
+		
+		inv.setItem(1, borderRed);
+		inv.setItem(2, borderRed);
+		inv.setItem(3, borderRed);
+		inv.setItem(4, borderRed);
+		inv.setItem(5, borderRed);
+		inv.setItem(6, borderRed);
+		inv.setItem(7, borderRed);
+		inv.setItem(8, borderRed);
+		
+		if (hp.ownedCosmetics.contains("Cactus")) {
+			item = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
+			LeatherArmorMeta meta1 = (LeatherArmorMeta) item.getItemMeta();
+			meta1.setColor(Color.GREEN);
+			meta1.setDisplayName(ChatColor.AQUA + "Cactus");
+			lore.clear();
+			meta1.setLore(lore);
+			item.setItemMeta(meta1);
+			inv.setItem(12, item);
+		} else { 
+			item = new ItemStack(Material.INK_SACK, 1, DyeColor.SILVER.getData());
+			meta = (LeatherArmorMeta) item.getItemMeta();
+			meta.setDisplayName(ChatColor.AQUA + "Cactus");
+			lore.clear();
+			lore.add("100 Tokens");
+			meta.setLore(lore);
+			item.setItemMeta(meta);
+			inv.setItem(12, item);
+		}
+		
+		inv.setItem(10, borderBlack);
+		inv.setItem(11, borderRed);
+		
+		inv.setItem(17, borderRed);
+		inv.setItem(19, borderBlack);
+		inv.setItem(20, borderRed);
+		
+		inv.setItem(26, borderRed);
+		inv.setItem(28, borderBlack);
+		inv.setItem(29, borderRed);
+		
+		inv.setItem(35, borderRed);
+		inv.setItem(37, borderBlack);
+		inv.setItem(38, borderRed);
+		
+		inv.setItem(44, borderRed);
+		inv.setItem(46, borderBlack);
+		inv.setItem(47, borderRed);
+		inv.setItem(48, borderRed);
+		inv.setItem(49, borderRed);
+		inv.setItem(50, borderRed);
+		inv.setItem(51, borderRed);
+		inv.setItem(52, borderRed);
+		
+		item = new ItemStack(Material.GOLD_BOOTS, 1);
+		meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Bling");
+		lore.clear();
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		inv.setItem(53, item);
 		
 		return inv;
 	}

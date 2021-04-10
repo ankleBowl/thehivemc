@@ -124,6 +124,7 @@ public class Main extends JavaPlugin implements Listener {
 			hp.hardcorePoints = Integer.parseInt(SQL.get("hardcorepoints", "UUID", "=", event.getPlayer().getUniqueId().toString(), "blockparty").toString());
 			hp.placings = Integer.parseInt(SQL.get("placings", "UUID", "=", event.getPlayer().getUniqueId().toString(), "blockparty").toString());
 			hp.blockpartyCosmetics = SQL.get("cosmetics", "UUID", "=", event.getPlayer().getUniqueId().toString(), "blockparty").toString();
+			hp.ownedBlockpartyCosmetics = Functions.ArrayToListConversion(hp.blockpartyCosmetics.split(","));
 			
 			MySQL.update("UPDATE playerInfo SET lobby=\"BlockParty\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		} else {

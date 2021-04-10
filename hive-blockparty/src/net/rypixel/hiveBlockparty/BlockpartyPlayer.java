@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 public class BlockpartyPlayer extends HivePlayer {
@@ -25,9 +26,15 @@ public class BlockpartyPlayer extends HivePlayer {
 	public int hardcoreWins;
 	public int placings;
 	
+	public ItemStack activeBling;
+	public ItemStack activeSound;
+	public ItemStack activeJoin;
+	public ItemStack activeTrail;
+	
 	public String powerUp;
 	
 	public String blockpartyCosmetics;
+	public ArrayList<String> ownedBlockpartyCosmetics;
 	
 	public void hideAllPlayers(HashMap<Player, BlockpartyPlayer> map) {
 		for (Map.Entry<Player, BlockpartyPlayer> entry : map.entrySet()) {
