@@ -241,13 +241,13 @@ public class Constants {
 		meta1.setColor(Color.GREEN);
 		meta1.setDisplayName(ChatColor.AQUA + "Cactus");
 		item.setItemMeta(meta1);
-		cosmetics.put("GOLD_BOOTS12", new Cosmetic(12, 100, Material.GOLD_BOOTS, "Cactus", item));
+		cosmetics.put("GOLD_BOOTS12", new Cosmetic(12, 100, Material.GOLD_BOOTS, "Cactus", item.serialize()));
 		
 		item = new ItemStack(Material.DIRT, 1);
 		meta = item.getItemMeta();
 		meta1.setDisplayName(ChatColor.AQUA + "Dirt");
 		item.setItemMeta(meta1);
-		cosmetics.put("GOLD_BOOTS13", new Cosmetic(13, 200, Material.GOLD_BOOTS, "Dirt", item));
+		cosmetics.put("GOLD_BOOTS13", new Cosmetic(13, 200, Material.GOLD_BOOTS, "Dirt", item.serialize()));
 	}
 	
 	public static Inventory playerSelector(ArrayList<BlockpartyPlayer> players) {
@@ -481,19 +481,18 @@ public class Constants {
 		inv.setItem(7, borderRed);
 		inv.setItem(8, borderRed);
 		
-		item = cosmetics.get("GOLD_BOOTS12").getItem();
+		item = ItemStack.deserialize(cosmetics.get("GOLD_BOOTS12").getItem());
 		if (!hp.ownedBlockpartyCosmetics.contains("Cactus")) {
 			item.setType(Material.INK_SACK);
 		}
 		inv.setItem(12, item);
 		
-		item = cosmetics.get("GOLD_BOOTS13").getItem();
+		item = ItemStack.deserialize(cosmetics.get("GOLD_BOOTS13").getItem());
 		if (!hp.ownedBlockpartyCosmetics.contains("Dirt")) {
 			item.setType(Material.INK_SACK);
 		}
 		inv.setItem(13, item);
-		
-		
+
 		inv.setItem(10, borderBlack);
 		inv.setItem(11, borderRed);
 		

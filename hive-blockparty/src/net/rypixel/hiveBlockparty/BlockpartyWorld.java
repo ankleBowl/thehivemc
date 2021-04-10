@@ -375,28 +375,29 @@ public class BlockpartyWorld {
 				}
 			}
 			
-			if (hp.activeBling != "") {
+			Cosmetic c = Constants.cosmetics.get(hp.activeBling);
+			if (c != null) {
+				ItemStack item = ItemStack.deserialize(c.getItem());
 				ItemStack[] armor = new ItemStack[4];
-				ItemStack item = Constants.cosmetics.get(hp.activeBling).getItem();
 				if (item.getType().toString().contains("HELMET")) {
-					armor[0] = item;
+					armor[3] = item;
 				} else {
-					armor[0] = null;
+					armor[3] = null;
 				}
 				if (item.getType().toString().contains("CHESTPLATE")) {
-					armor[1] = item;
-				} else {
-					armor[1] = null;
-				}
-				if (item.getType().toString().contains("LEGGINGS")) {
 					armor[2] = item;
 				} else {
 					armor[2] = null;
 				}
-				if (item.getType().toString().contains("BOOTS")) {
-					armor[3] = item;
+				if (item.getType().toString().contains("LEGGINGS")) {
+					armor[1] = item;
 				} else {
-					armor[3] = null;
+					armor[1] = null;
+				}
+				if (item.getType().toString().contains("BOOTS")) {
+					armor[0] = item;
+				} else {
+					armor[0] = null;
 				}
 				if (!item.getType().toString().contains("HELMET") && 
 						!item.getType().toString().contains("CHESTPLATE") &&
@@ -468,6 +469,7 @@ public class BlockpartyWorld {
 				hp.mcPlayer.getInventory().setItem(7, Constants.again);
 				hp.mcPlayer.getInventory().setItem(0, Constants.players);
 				hp.mcPlayer.getInventory().setItem(8, Constants.hub);
+				hp.mcPlayer.getInventory().setArmorContents(null);
 				chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " -> " + ChatColor.RED + "ELIMINATED!");
 				world.spawnEntity(hp.mcPlayer.getLocation(), EntityType.LIGHTNING);
 				hp.winstreak = 0;
@@ -623,17 +625,17 @@ public class BlockpartyWorld {
 			title(ChatColor.BLUE + "Multiple players have won!", "");
 			for (BlockpartyPlayer hp : winners) {
 				hp.tokens += 20;
-				hp.mcPlayer.sendMessage(ChatColor.AQUA + " ✚ 20" + ChatColor.GRAY + "tokens! (Victory)");
+				hp.mcPlayer.sendMessage(ChatColor.AQUA + " ✚ 20" + ChatColor.GRAY + " tokens! (Victory)");
 			}
 		} else if (winners.size() == 1) {
 			title(ChatColor.BLUE + winners.get(0).mcPlayer.getDisplayName() + " has won!", "");
 			winners.get(0).tokens += 25;
-			winners.get(0).mcPlayer.sendMessage(ChatColor.AQUA + " ✚ 25" + ChatColor.GRAY + "tokens! (Solo Victory)");
+			winners.get(0).mcPlayer.sendMessage(ChatColor.AQUA + " ✚ 25" + ChatColor.GRAY + " tokens! (Solo Victory)");
 		} else {
 			title(ChatColor.BLUE + winners.get(0).mcPlayer.getDisplayName() + " and " +  winners.get(1).mcPlayer.getDisplayName() + " have won!", "");
 			for (BlockpartyPlayer hp : winners) {
 				hp.tokens += 20;
-				hp.mcPlayer.sendMessage(ChatColor.AQUA + " ✚ 20" + ChatColor.GRAY + "tokens! (Victory)");
+				hp.mcPlayer.sendMessage(ChatColor.AQUA + " ✚ 20" + ChatColor.GRAY + " tokens! (Victory)");
 			}
 		}
 		
