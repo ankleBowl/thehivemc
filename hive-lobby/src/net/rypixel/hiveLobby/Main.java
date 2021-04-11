@@ -180,10 +180,10 @@ public class Main extends JavaPlugin implements Listener {
 			if (event.getCurrentItem() != null) {
 				switch (event.getCurrentItem().getType()) {
 				case COMPASS:
-					hp.mcPlayer.teleport(new Vector(0.5, 22, 0.5).toLocation(lobbies[hp.serverId].world));
+					hp.mcPlayer.teleport(new Vector(0.5, 101, 0.5).toLocation(lobbies[hp.serverId].world));
 					break;
 				case SLIME_BALL:
-					hp.mcPlayer.teleport(new Vector(-60.5, 18, 60.5).toLocation(lobbies[hp.serverId].world));
+					hp.mcPlayer.teleport(new Vector(18.5, 101, -5.5).toLocation(lobbies[hp.serverId].world));
 					break;
 				case EGG:
 					Functions.sendToServer(hp.mcPlayer, "splegg", this);

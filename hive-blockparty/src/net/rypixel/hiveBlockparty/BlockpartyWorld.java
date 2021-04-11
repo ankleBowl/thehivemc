@@ -93,9 +93,11 @@ public class BlockpartyWorld {
 		players.remove(hp);
 		if (!ending && !starting && inGame) {
 			chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " -> " + ChatColor.RED + "ELIMINATED!");
-			Sound s = Constants.sounds.get(hp.activeSound).sound;
-			if (s == null) {
-				s = Sound.AMBIENCE_THUNDER;
+			Sound s = null;
+			if (Constants.sounds.containsKey(hp.activeSound)) {
+				s = Constants.sounds.get(hp.activeSound).sound;
+			} else {
+				s = Sound.BAT_DEATH;
 			}
 			for (BlockpartyPlayer hp1 : players) {
 				hp1.mcPlayer.playSound(hp1.mcPlayer.getLocation(), s, 1, 1);
@@ -232,13 +234,13 @@ public class BlockpartyWorld {
 			if (!inGame) {
 				switch (event.getInventory().getContents().length) {
 				case 54:
-					if (event.getSlot() != 0 && event.getSlot() != 8 && event.getSlot() != 17 && event.getSlot() != 26) {
+					if (event.getSlot() != 0 && event.getSlot() != 9 && event.getSlot() != 18 && event.getSlot() != 27) {
 						switch (event.getInventory().getContents()[53].getType()) {
 						case GOLD_BOOTS:
 							CosmeticShop.blingShop(event, hp);
 							break;
 						case JUKEBOX:
-							
+							CosmeticShop.soundShop(event, hp);
 						default:
 							break;
 						}
@@ -501,11 +503,14 @@ public class BlockpartyWorld {
 				hp.mcPlayer.getInventory().setItem(8, Constants.hub);
 				hp.mcPlayer.getInventory().setArmorContents(null);
 				chat(chatPrefix() + ChatColor.BLUE + " " + hp.mcPlayer.getDisplayName() + ChatColor.DARK_GRAY + " -> " + ChatColor.RED + "ELIMINATED!");
-				Sound s = Constants.sounds.get(hp.activeSound).sound;
-				if (s == null) {
-					s = Sound.AMBIENCE_THUNDER;
+				Sound s = null;
+				if (Constants.sounds.containsKey(hp.activeSound)) {
+					s = Constants.sounds.get(hp.activeSound).sound;
+				} else {
+					s = Sound.BAT_DEATH;
 				}
 				for (BlockpartyPlayer hp1 : players) {
+					hp1.mcPlayer.sendMessage("fhhf");
 					hp1.mcPlayer.playSound(hp1.mcPlayer.getLocation(), s, 1, 1);
 				}
 				hp.winstreak = 0;

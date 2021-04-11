@@ -583,7 +583,7 @@ public class Constants {
 		inv.setItem(11, borderRed);
 		
 		item = ItemStack.deserialize(sounds.get("JUKEBOX12").getItem());
-		if (!hp.ownedBlockpartyCosmetics.contains("Wolf")) {
+		if (!hp.ownedBlockpartyCosmetics.contains("Wolf Cry")) {
 			item.setType(Material.INK_SACK);
 		}
 		inv.setItem(12, item);
