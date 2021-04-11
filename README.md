@@ -21,6 +21,14 @@ Blockparty
 - Powerups
 - Scoreboards
 - Titles
+- Hardcore Mode
+- Cosmetics
+
+Gravity
+- Basic gameplay loop (still some bugs)
+
+Hide and Seek
+- Literally nothing
 
 What's not done: Literally everything else
 
