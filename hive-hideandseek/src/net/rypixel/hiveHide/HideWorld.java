@@ -2,6 +2,7 @@ package net.rypixel.hiveHide;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 
 import org.apache.commons.lang.time.DurationFormatUtils;
@@ -9,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -236,8 +238,19 @@ public class HideWorld {
 	public void onInteract(PlayerInteractEvent event) {
 		HidePlayer hp = Main.playerMap.get(event.getPlayer());
 		if (inGame) {
-			if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-				
+			if (event.getAction() == Action.LEFT_CLICK_BLOCK && hp.isHunter) {
+				if (hp.attackCooldown >= 10) {
+					Location location = hp.mcPlayer.getTargetBlock((HashSet<Byte>) null, 5).getLocation();
+					for (HidePlayer hider : players) {
+						if (!hider.isHunter) {
+							if (location.getBlock() == hider.placedBlock) {
+								hp.lastMoved = 0;
+							}
+						}
+					}
+				} else {
+					hp.mcPlayer.sendMessage(ChatColor.RED + "Enter the chill zone!");
+				}
 			}
 		} else {
 			if (event.getItem() != null) {
@@ -442,6 +455,8 @@ public class HideWorld {
 						if (!hp.solid) {
 							hp.blockEntity.teleport(hp.mcPlayer);
 						}
+					} else {
+						hp.attackCooldown++;
 					}
 				}
 			}
