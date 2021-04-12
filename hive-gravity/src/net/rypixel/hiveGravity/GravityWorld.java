@@ -676,6 +676,24 @@ public class GravityWorld {
 					//TODO Catch IndexOutOfBounds Exception
 				}
 				timer.cancel();
+				for (World w : worlds) {
+					File folder = w.getWorldFolder();
+					Bukkit.unloadWorld(w, false);
+					try {
+						FileUtils.deleteDirectory(folder);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				File folder = world.getWorldFolder();
+				Bukkit.unloadWorld(world, false);
+				try {
+					FileUtils.deleteDirectory(folder);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
 				Main.worlds.remove(this);
 		    }
 		}.runTaskLater(plugin, 200L);
