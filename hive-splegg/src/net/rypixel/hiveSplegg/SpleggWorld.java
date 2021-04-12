@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 
@@ -226,6 +227,9 @@ public class SpleggWorld {
 						}
 					}
 					
+					for (Entry<Egg, SpleggPlayer> entry : eggMap.entrySet()) {
+						entry.getKey().getWorld().playEffect(entry.getKey().getLocation(), Constants.trails.get(entry.getValue().activeTrails).trail, 10);
+					}
 					//Check if game is over
 					int alivePlayers = 0;
 					SpleggPlayer winner = null;
