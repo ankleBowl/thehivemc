@@ -414,7 +414,11 @@ public class SpleggWorld {
 		new BukkitRunnable() {
 			public void run() {
 				for (SpleggPlayer hp : players) {
-					hp.mcPlayer.getInventory().setItem(0, Constants.spleggGun);
+					if (Constants.guns.containsKey(hp.activeGun)) {
+						hp.mcPlayer.getInventory().setItem(0, ItemStack.deserialize(Constants.guns.get(hp.activeGun).item));
+					} else {
+						hp.mcPlayer.getInventory().setItem(0, Constants.spleggGun);
+					}
 				}
 		    }
 		}.runTaskLater(plugin, 100L);
@@ -501,66 +505,69 @@ public class SpleggWorld {
 						break;
 					}
 				} else {
-					switch (e.getItem().getType()) {
-					case IRON_SPADE:
-						Egg egg = hp.mcPlayer.launchProjectile(Egg.class);
-						Vector direction = hp.mcPlayer.getLocation().getDirection();
-						egg.setVelocity(direction.multiply(1.5));
-						eggMap.put(egg, hp);
-						if (hp.currentPowerup == "shotgun") {
-							Egg egg1 = hp.mcPlayer.launchProjectile(Egg.class);
-							Vector direction1 = hp.mcPlayer.getLocation().getDirection();
-							egg1.setVelocity(direction.multiply(1.5).add(new Vector(-1, 0, 0)));
-							eggMap.put(egg1, hp);
-							
-							Egg egg2 = hp.mcPlayer.launchProjectile(Egg.class);
-							Vector direction2 = hp.mcPlayer.getLocation().getDirection();
-							egg2.setVelocity(direction.multiply(1.5).add(new Vector(1, 0, 0)));
-							eggMap.put(egg2, hp);
-						} else if (hp.currentPowerup == "rapid") {
-							new BukkitRunnable() {
-								public void run() {
-									Egg egg1 = hp.mcPlayer.launchProjectile(Egg.class);
-									Vector direction1 = hp.mcPlayer.getLocation().getDirection();
-									egg1.setVelocity(direction.multiply(1.5));
-									eggMap.put(egg1, hp);
-								}
-							}.runTaskLater(plugin, 2L);
+					if (hp.alive) {
+						if (e.getItem() != null) {
+							Egg egg = hp.mcPlayer.launchProjectile(Egg.class);
+							Vector direction = hp.mcPlayer.getLocation().getDirection();
+							egg.setVelocity(direction.multiply(1.5));
+							eggMap.put(egg, hp);
+							if (hp.currentPowerup == "shotgun") {
+								Egg egg1 = hp.mcPlayer.launchProjectile(Egg.class);
+								Vector direction1 = hp.mcPlayer.getLocation().getDirection();
+								egg1.setVelocity(direction.multiply(1.5).add(new Vector(-1, 0, 0)));
+								eggMap.put(egg1, hp);
+								
+								Egg egg2 = hp.mcPlayer.launchProjectile(Egg.class);
+								Vector direction2 = hp.mcPlayer.getLocation().getDirection();
+								egg2.setVelocity(direction.multiply(1.5).add(new Vector(1, 0, 0)));
+								eggMap.put(egg2, hp);
+							} else if (hp.currentPowerup == "rapid") {
+								new BukkitRunnable() {
+									public void run() {
+										Egg egg1 = hp.mcPlayer.launchProjectile(Egg.class);
+										Vector direction1 = hp.mcPlayer.getLocation().getDirection();
+										egg1.setVelocity(direction.multiply(1.5));
+										eggMap.put(egg1, hp);
+									}
+								}.runTaskLater(plugin, 2L);
+							}
+							hp.eggsFired++;
+							hp.eggsFiredTemp++;
+							hp.mcPlayer.playSound(hp.mcPlayer.getLocation(), Sound.GHAST_FIREBALL, 1, 1);
 						}
-						hp.eggsFired++;
-						hp.eggsFiredTemp++;
-						hp.mcPlayer.playSound(hp.mcPlayer.getLocation(), Sound.GHAST_FIREBALL, 1, 1);
-						break;
-					case COMPASS:
-						hp.mcPlayer.openInventory(Constants.playerSelector(players));
-						break;
-					case MINECART:
-						players.remove(hp);
-						boolean sent = false;
-						for (SpleggWorld world : Main.worlds) {
-							if (!sent && world != this) {
-								if (world.players.size() < 10) {
-									world.welcomePlayer(hp);
-									sent = true;
+					} else {
+						switch (e.getItem().getType()) {
+						case COMPASS:
+							hp.mcPlayer.openInventory(Constants.playerSelector(players));
+							break;
+						case MINECART:
+							players.remove(hp);
+							boolean sent = false;
+							for (SpleggWorld world : Main.worlds) {
+								if (!sent && world != this) {
+									if (world.players.size() < 10) {
+										world.welcomePlayer(hp);
+										sent = true;
+									}
 								}
 							}
-						}
-						
-						if (!sent) {
-							int id = Functions.getLowestWorldID(Main.worlds);
-							SpleggWorld w = new SpleggWorld(plugin, id);
-							w.init();
-							Main.worlds.add(w);
 							
-							w.welcomePlayer(hp);
-							sent = true;
+							if (!sent) {
+								int id = Functions.getLowestWorldID(Main.worlds);
+								SpleggWorld w = new SpleggWorld(plugin, id);
+								w.init();
+								Main.worlds.add(w);
+								
+								w.welcomePlayer(hp);
+								sent = true;
+							}
+							break;
+						case SLIME_BALL:
+							Functions.sendToServer(hp.mcPlayer, "lobby0", plugin);
+							break;
+						default:
+							break;
 						}
-						break;
-					case SLIME_BALL:
-						Functions.sendToServer(hp.mcPlayer, "lobby0", plugin);
-						break;
-					default:
-						break;
 					}
 				}
 			}
@@ -589,7 +596,14 @@ public class SpleggWorld {
 						CosmeticShop.gunShop(e, hp);
 						break;
 					case EGG:
-						//CosmeticShop.soundShop(e, hp);
+						CosmeticShop.entityShop(e, hp);
+						break;
+					case ARROW:
+						CosmeticShop.trailShop(e, hp);
+						break;
+					case NETHER_STAR:
+						CosmeticShop.winShop(e, hp);
+						break;
 					default:
 						break;
 					}
@@ -598,9 +612,15 @@ public class SpleggWorld {
 					case GOLD_SPADE:
 						hp.mcPlayer.openInventory(Constants.shopGuns(hp));
 						break;
-//					case EGG:
-//						hp.mcPlayer.openInventory(Constants.shopSounds(hp));
-//						break;
+					case EGG:
+						hp.mcPlayer.openInventory(Constants.shopEntities(hp));
+						break;
+					case ARROW:
+						hp.mcPlayer.openInventory(Constants.shopTrails(hp));
+						break;
+					case NETHER_STAR:
+						hp.mcPlayer.openInventory(Constants.shopWins(hp));
+						break;
 					}
 				}
 			} else {

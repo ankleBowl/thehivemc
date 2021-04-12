@@ -6,7 +6,9 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
+import org.bukkit.Effect;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -30,6 +32,9 @@ public class Constants {
 	public static HashMap<String, Vector[]> spawnLocations = new HashMap<String, Vector[]>();
 	
 	public static HashMap<String, Cosmetic> guns = new HashMap<String, Cosmetic>();
+	public static HashMap<String, Cosmetic> entities = new HashMap<String, Cosmetic>();
+	public static HashMap<String, Cosmetic> trails = new HashMap<String, Cosmetic>();
+	public static HashMap<String, Cosmetic> wins = new HashMap<String, Cosmetic>();
 	
 	public static void init() {
 		ItemMeta meta = null;
@@ -262,6 +267,32 @@ public class Constants {
 		meta.setDisplayName(ChatColor.AQUA + "Wand");
 		item.setItemMeta(meta);
 		guns.put("GOLD_SPADE12", new Cosmetic(100, "Wand", item.serialize()));
+		
+		
+		item = new ItemStack(Material.STICK, 1);
+		meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.GREEN + "Creeper");
+		item.setItemMeta(meta);
+		Cosmetic c = new Cosmetic(100, "Creeper", item.serialize());
+		c.setEntity(EntityType.CREEPER);
+		entities.put("EGG12", c);
+		
+		
+		item = new ItemStack(Material.FLINT_AND_STEEL, 1);
+		meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.RED + "Fire");
+		item.setItemMeta(meta);
+		c = new Cosmetic(100, "Fire", item.serialize());
+		c.setTrail(Effect.LAVADRIP);
+		trails.put("ARROW12", c);
+		
+		
+		item = new ItemStack(Material.BEACON, 1);
+		meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.AQUA + "Jump Boost");
+		item.setItemMeta(meta);
+		c = new Cosmetic(100, "Jump", item.serialize());
+		wins.put("NETHER_STAR12", c);
 	}
 	
 	public static Inventory playerSelector(ArrayList<SpleggPlayer> players) {
@@ -396,7 +427,7 @@ public class Constants {
 		return inv;
 	}
 	
-	public static Inventory shopSounds(SpleggPlayer hp) {
+	public static Inventory shopEntities(SpleggPlayer hp) {
 		Inventory inv = shopSidebar();
 		
 		ItemStack item = null;
@@ -436,11 +467,11 @@ public class Constants {
 		inv.setItem(10, borderRed);
 		inv.setItem(11, borderRed);
 		
-//		item = ItemStack.deserialize(sounds.get("JUKEBOX12").getItem());
-//		if (!hp.ownedBlockpartyCosmetics.contains("Wolf Cry")) {
-//			item.setType(Material.INK_SACK);
-//		}
-//		inv.setItem(12, item);
+		item = ItemStack.deserialize(entities.get("EGG12").getItem());
+		if (!hp.spleggCosmetics.contains("Creeper")) {
+			item.setType(Material.INK_SACK);
+		}
+		inv.setItem(12, item);
 		
 //		item = ItemStack.deserialize(bling.get("GOLD_BOOTS13").getItem());
 //		if (!hp.ownedBlockpartyCosmetics.contains("Dirt")) {
@@ -469,9 +500,177 @@ public class Constants {
 		inv.setItem(51, borderRed);
 		inv.setItem(52, borderRed);
 		
-		item = new ItemStack(Material.GOLD_SPADE, 1);
+		item = new ItemStack(Material.EGG, 1);
 		meta = item.getItemMeta();
-		meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Sounds");
+		meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Explosive Entities");
+		lore.clear();
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		inv.setItem(53, item);
+		
+		return inv;
+	}
+	
+	public static Inventory shopTrails(SpleggPlayer hp) {
+		Inventory inv = shopSidebar();
+		
+		ItemStack item = null;
+		ItemStack borderRed = null;
+		ItemStack borderBlack = null;
+		ItemStack notOwned = null;
+		Material originalType = null;
+		
+		ItemMeta meta = null;
+		ArrayList<String> lore = new ArrayList<String>();
+	
+		borderRed = new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.RED.getData());
+		meta = borderRed.getItemMeta();
+		meta.setDisplayName("");
+		borderRed.setItemMeta(meta);
+		
+		borderBlack = new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.BLACK.getData());
+		meta = borderBlack.getItemMeta();
+		meta.setDisplayName("");
+		borderBlack.setItemMeta(meta);
+		
+		notOwned = new ItemStack(Material.INK_SACK, 1, DyeColor.SILVER.getData());
+		meta = borderBlack.getItemMeta();
+		meta.setDisplayName("");
+		borderBlack.setItemMeta(meta);
+		
+		inv.setItem(1, borderBlack);
+		inv.setItem(2, borderRed);
+		inv.setItem(3, borderRed);
+		inv.setItem(4, borderRed);
+		inv.setItem(5, borderRed);
+		inv.setItem(6, borderRed);
+		inv.setItem(7, borderRed);
+		inv.setItem(8, borderRed);
+
+
+		inv.setItem(10, borderBlack);
+		inv.setItem(11, borderRed);
+		
+		item = ItemStack.deserialize(trails.get("ARROW12").getItem());
+		if (!hp.spleggCosmetics.contains("Fire")) {
+			item.setType(Material.INK_SACK);
+		}
+		inv.setItem(12, item);
+		
+//		item = ItemStack.deserialize(bling.get("GOLD_BOOTS13").getItem());
+//		if (!hp.ownedBlockpartyCosmetics.contains("Dirt")) {
+//			item.setType(Material.INK_SACK);
+//		}
+//		inv.setItem(13, item);
+		
+		inv.setItem(17, borderRed);
+		inv.setItem(19, borderRed);
+		inv.setItem(20, borderRed);
+		
+		inv.setItem(26, borderRed);
+		inv.setItem(28, borderBlack);
+		inv.setItem(29, borderRed);
+		
+		inv.setItem(35, borderRed);
+		inv.setItem(37, borderBlack);
+		inv.setItem(38, borderRed);
+		
+		inv.setItem(44, borderRed);
+		inv.setItem(46, borderBlack);
+		inv.setItem(47, borderRed);
+		inv.setItem(48, borderRed);
+		inv.setItem(49, borderRed);
+		inv.setItem(50, borderRed);
+		inv.setItem(51, borderRed);
+		inv.setItem(52, borderRed);
+		
+		item = new ItemStack(Material.ARROW, 1);
+		meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Trails");
+		lore.clear();
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		inv.setItem(53, item);
+		
+		return inv;
+	}
+	
+	public static Inventory shopWins(SpleggPlayer hp) {
+		Inventory inv = shopSidebar();
+		
+		ItemStack item = null;
+		ItemStack borderRed = null;
+		ItemStack borderBlack = null;
+		ItemStack notOwned = null;
+		Material originalType = null;
+		
+		ItemMeta meta = null;
+		ArrayList<String> lore = new ArrayList<String>();
+	
+		borderRed = new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.RED.getData());
+		meta = borderRed.getItemMeta();
+		meta.setDisplayName("");
+		borderRed.setItemMeta(meta);
+		
+		borderBlack = new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.BLACK.getData());
+		meta = borderBlack.getItemMeta();
+		meta.setDisplayName("");
+		borderBlack.setItemMeta(meta);
+		
+		notOwned = new ItemStack(Material.INK_SACK, 1, DyeColor.SILVER.getData());
+		meta = borderBlack.getItemMeta();
+		meta.setDisplayName("");
+		borderBlack.setItemMeta(meta);
+		
+		inv.setItem(1, borderBlack);
+		inv.setItem(2, borderRed);
+		inv.setItem(3, borderRed);
+		inv.setItem(4, borderRed);
+		inv.setItem(5, borderRed);
+		inv.setItem(6, borderRed);
+		inv.setItem(7, borderRed);
+		inv.setItem(8, borderRed);
+
+
+		inv.setItem(10, borderBlack);
+		inv.setItem(11, borderRed);
+		
+		item = ItemStack.deserialize(wins.get("NETHER_STAR12").getItem());
+		if (!hp.spleggCosmetics.contains("Jump Boost")) {
+			item.setType(Material.INK_SACK);
+		}
+		inv.setItem(12, item);
+		
+//		item = ItemStack.deserialize(bling.get("GOLD_BOOTS13").getItem());
+//		if (!hp.ownedBlockpartyCosmetics.contains("Dirt")) {
+//			item.setType(Material.INK_SACK);
+//		}
+//		inv.setItem(13, item);
+		
+		inv.setItem(17, borderRed);
+		inv.setItem(19, borderBlack);
+		inv.setItem(20, borderRed);
+		
+		inv.setItem(26, borderRed);
+		inv.setItem(28, borderRed);
+		inv.setItem(29, borderRed);
+		
+		inv.setItem(35, borderRed);
+		inv.setItem(37, borderBlack);
+		inv.setItem(38, borderRed);
+		
+		inv.setItem(44, borderRed);
+		inv.setItem(46, borderBlack);
+		inv.setItem(47, borderRed);
+		inv.setItem(48, borderRed);
+		inv.setItem(49, borderRed);
+		inv.setItem(50, borderRed);
+		inv.setItem(51, borderRed);
+		inv.setItem(52, borderRed);
+		
+		item = new ItemStack(Material.NETHER_STAR, 1);
+		meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Win Celebrations");
 		lore.clear();
 		meta.setLore(lore);
 		item.setItemMeta(meta);

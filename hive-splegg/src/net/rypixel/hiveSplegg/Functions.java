@@ -39,7 +39,7 @@ public class Functions {
 			if (output == "") {
 				output = v;
 			} else {
-				output += v;
+				output += "," + v;
 			}
 		}
 		return output;
