@@ -425,18 +425,18 @@ public class HideWorld {
 						
 						if (hp.lastMoved > 100 && !hp.solid) {
 							hp.placedBlock = hp.mcPlayer.getLocation().getBlock();
-							hp.mcPlayer.setGameMode(GameMode.SPECTATOR);
+							//hp.mcPlayer.setGameMode(GameMode.SPECTATOR);
 							hp.placedBlock.setType(hp.block);
+							hp.mcPlayer.sendBlockChange(hp.placedBlock.getLocation(), Material.AIR, (byte) 0);
 							Vector location = loc;
 							location = location.add(new Vector(0.5, 0, 0.5));
-							hp.mcPlayer.teleport(location.toLocation(gameWorld));
 							hp.solid = true;
 						}
 						
 						if (hp.lastMoved < 100 && hp.solid) {
 							hp.solid = false;
 							hp.placedBlock.setType(Material.AIR);
-							hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
+							//hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
 						}
 						
 						if (!hp.solid) {
