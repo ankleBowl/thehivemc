@@ -10,10 +10,13 @@ The Lobby
 
 Splegg
 - Basic Matchmaking
+- Basic Game Loop
 - Records/Saved Data
 - Egg Gun
 - Time Remaining
 - Misc. Titles/Scoreboards
+- Cosmetics
+- Powerups
 
 Blockparty
 - Basic Matchmaking
@@ -25,10 +28,14 @@ Blockparty
 - Cosmetics
 
 Gravity
-- Basic gameplay loop
+- Basic Matchmaking
+- Basic Game Loop
+- Scoreboards/Titles
 
 Hide and Seek
+- Basic Matchmaking 
 - Almost complete with the basic gameplay loop
+- Some scoreboards/titles
 
 What's not done: Literally everything else
 
