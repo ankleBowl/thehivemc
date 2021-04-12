@@ -596,7 +596,7 @@ public class SpleggWorld {
             Vector vec = e.getEntity().getVelocity();
             Location loc2 = new Location(loc.getWorld(), loc.getX()+vec.getX() * 0.25f, loc.getY()+vec.getY() * 0.25f, loc.getZ()+vec.getZ() * 0.25f);
 			if (loc2.getBlock().getType() == Material.TNT) {
-				loc2.getWorld().createExplosion(loc2, 5);
+				loc2.getWorld().createExplosion(loc2, 2);
 			}
 			if (loc2.getBlock().getType() == Material.ENDER_CHEST) {
 				Random rnd = new Random();
@@ -606,7 +606,7 @@ public class SpleggWorld {
 					hp.mcPlayer.sendMessage(ChatColor.AQUA + "You have triggered a sheep bomb!");
 					new BukkitRunnable() {
 						public void run() {
-							loc2.getWorld().createExplosion(loc2, 10);
+							loc2.getWorld().createExplosion(loc2, 5);
 						}
 					}.runTaskLater(plugin, 100L);
 					break;
