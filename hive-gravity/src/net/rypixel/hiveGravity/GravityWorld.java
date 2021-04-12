@@ -494,8 +494,8 @@ public class GravityWorld {
 				hp.finished = true;
 				hp.mcPlayer.setAllowFlight(true);
 				finishTimes.put(hp, gameClock);
-				if (timeRemaining < 48000) {
-					timeRemaining = 48000;
+				if (timeRemaining < 1200) {
+					timeRemaining = 1200;
 				}
 				if (finished.size() == 0) {
 					chat(chatPrefix() + " " + ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GREEN + " just finished 1st! The game will end in 2 minutes");
