@@ -25,10 +25,10 @@ Blockparty
 - Cosmetics
 
 Gravity
-- Basic gameplay loop (still some bugs)
+- Basic gameplay loop
 
 Hide and Seek
-- Literally nothing
+- Almost complete with the basic gameplay loop
 
 What's not done: Literally everything else
 
