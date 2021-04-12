@@ -181,9 +181,8 @@ public class GravityWorld {
 					timeRemaining++;
 					
 					rankPlayers();
+					String time = DurationFormatUtils.formatDuration(600000 - (timeRemaining * 50), "mm:ss");
 					for (GravityPlayer hp : players) {	
-						String time = DurationFormatUtils.formatDuration(600000 - (timeRemaining * 50), "mm:ss");
-						int seconds = gameClock / 20;
 					     
 						hp.mcPlayer.setLevel(hp.mcPlayer.getLocation().getBlockY());
 						

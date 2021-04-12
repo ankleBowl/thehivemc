@@ -46,6 +46,7 @@ public class HideWorld {
 	public boolean starting = false;
 	public BukkitTask timer;
 	public int countDown = 0;
+	public int timeRemaining = 0;
 	
 	public ArrayList<HidePlayer> players = new ArrayList<HidePlayer>();
 	public HashMap<HidePlayer, Integer> votes = new HashMap<HidePlayer, Integer>();
@@ -116,6 +117,7 @@ public class HideWorld {
 	
 	public void initGame() {
 		loadingGame = true;
+		timeRemaining = 19200;
 		
 		canVote = false;
 		int[] votes = tallyVotes();
@@ -240,6 +242,7 @@ public class HideWorld {
 		if (inGame) {
 			if (event.getAction() == Action.LEFT_CLICK_BLOCK && hp.isHunter) {
 				if (hp.attackCooldown >= 10) {
+					hp.attackCooldown -= 10;
 					Location location = hp.mcPlayer.getTargetBlock((HashSet<Byte>) null, 5).getLocation();
 					for (HidePlayer hider : players) {
 						if (!hider.isHunter) {
@@ -399,6 +402,7 @@ public class HideWorld {
 						
 						if (countDown == 0) {
 							initGame();
+							cancel();
 						}
 						
 						if (countDown == 300) {
@@ -449,7 +453,6 @@ public class HideWorld {
 						if (hp.lastMoved < 100 && hp.solid) {
 							hp.solid = false;
 							hp.placedBlock.setType(Material.AIR);
-							//hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
 						}
 						
 						if (!hp.solid) {
@@ -459,8 +462,60 @@ public class HideWorld {
 						hp.attackCooldown++;
 					}
 				}
+				
+				int hiderCount = 0;
+				for (HidePlayer hp : players) {
+					if (!hp.isHunter) {
+						hiderCount++;
+					}
+				}
+				if (hiderCount == 0) {
+					gameEnding();
+				}
+				
+				String time = "";
+				if (timeRemaining < 600) {
+					time = DurationFormatUtils.formatDuration(30000 - (timeRemaining * 50), "mm:ss");
+				} else {
+					time = DurationFormatUtils.formatDuration(960000 - (timeRemaining * 50), "mm:ss");
+				}
+				int playersAlive = 0;
+				int playersDead = 0;
+				for (HidePlayer hp : players) {
+					if (hp.isHunter) {
+						playersDead++;
+					} else {
+						playersAlive++;
+					}
+				}
+				for (HidePlayer hp : players) {
+					hp.scoreboard.setTitle(ChatColor.AQUA + "Hide" + ChatColor.GREEN + "And" + ChatColor.YELLOW + "Seek");
+					hp.scoreboard.setSlot(15, "");
+					if (timeRemaining < 600) {
+						hp.scoreboard.setSlot(14, ChatColor.GREEN + "Warmup Left");
+					} else {
+						hp.scoreboard.setSlot(14, ChatColor.GREEN + "Time Remaining");
+					}
+					hp.scoreboard.setSlot(13, time);
+					hp.scoreboard.setSlot(12, "");
+					hp.scoreboard.setSlot(11, ChatColor.AQUA + "Players Alive");
+					hp.scoreboard.setSlot(10, String.valueOf(playersAlive) + ChatColor.GREEN + " Hiders");
+					hp.scoreboard.setSlot(9, String.valueOf(playersDead) + ChatColor.GREEN + " Seekers");
+					hp.scoreboard.setSlot(8, "");
+					hp.scoreboard.setSlot(7, ChatColor.GREEN + "My Round Stats");
+					hp.scoreboard.setSlot(6, "N/A" + ChatColor.GRAY + " Kills");
+					hp.scoreboard.setSlot(5, "N/A" + ChatColor.GRAY + " Points");
+					hp.scoreboard.setSlot(4, "");
+					hp.scoreboard.setSlot(3, ChatColor.GREEN + "Taunts Available");
+					hp.scoreboard.setSlot(2, ChatColor.GRAY + "-------------");
+					hp.scoreboard.setSlot(1, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
+				}
 			}
 		}.runTaskTimer(plugin, 0L, 2L);
+	}
+	
+	public void gameEnding() {
+		
 	}
 	
 	public String chatPrefix() {
