@@ -197,17 +197,6 @@ public class HideWorld {
 				blockTransform();
 			}
 		}.runTaskLater(plugin, 300L);
-		
-		new BukkitRunnable() {
-			public void run() {
-				for (HidePlayer hp : players) {
-					if (hp.isHunter) {
-						hp.mcPlayer.teleport(new Vector(0.5, 101, 0.5).toLocation(gameWorld));
-					}
-				}
-			}
-		}.runTaskLater(plugin, 800L);
-		
 	}
 	
 	public void onPlayerLeave(HidePlayer hp) {
@@ -527,6 +516,11 @@ public class HideWorld {
 					chat(chatPrefix() + ChatColor.RED + " Ready or not, here they come!");
 					for (HidePlayer hp : players) {
 						hp.mcPlayer.playSound(hp.mcPlayer.getLocation(), Sound.ENDERDRAGON_GROWL, 1, 1);
+					}
+					for (HidePlayer hp : players) {
+						if (hp.isHunter) {
+							hp.mcPlayer.teleport(new Vector(0.5, 101, 0.5).toLocation(gameWorld));
+						}
 					}
 				}
 				if (timeRemaining == 580) {
