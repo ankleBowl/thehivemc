@@ -276,6 +276,13 @@ public class SpleggWorld {
 					if (alivePlayers < 2 && !gameOver) {
 						gameOver = true;
 						winner.wins++;
+						switch (winner.activeCelebration) {
+						case "NETHER_STAR12":
+							winner.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 200, 5), false);
+							break;
+						default:
+							break;
+						}
 						for (SpleggPlayer hp : players) {
 							for (SpleggPlayer hp1 : players) {
 								hp.mcPlayer.showPlayer(hp1.mcPlayer);
