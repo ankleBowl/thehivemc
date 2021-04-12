@@ -23,6 +23,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -203,7 +204,7 @@ public class SpleggWorld {
 							hp.alive = false;
 							gameWorld.spawnEntity(hp.mcPlayer.getLocation(), EntityType.LIGHTNING);
 							hp.mcPlayer.teleport(new Vector(0, 100, 0).toLocation(gameWorld));
-							hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
+							hp.mcPlayer.setGameMode(GameMode.SURVIVAL);
 							hp.mcPlayer.setAllowFlight(true);
 							hp.mcPlayer.setFlying(true);
 							hp.mcPlayer.getInventory().remove(Material.IRON_SPADE);
@@ -421,7 +422,7 @@ public class SpleggWorld {
 		players.add(hp);
 		hp.mcPlayer.teleport(new Vector(0, 10, 0).toLocation(world));
 		hp.serverId = id;
-		hp.mcPlayer.setGameMode(GameMode.ADVENTURE);
+		hp.mcPlayer.setGameMode(GameMode.SURVIVAL);
 		hp.mcPlayer.setAllowFlight(false);
 		
 		Inventory inv = hp.mcPlayer.getInventory();
@@ -593,11 +594,11 @@ public class SpleggWorld {
 //			Location forward = eggLoc.add(e.getEntity().getVelocity());
             Location loc = e.getEntity().getLocation();
             Vector vec = e.getEntity().getVelocity();
-            Location loc2 = new Location(loc.getWorld(), loc.getX()+vec.getX(), loc.getY()+vec.getY(), loc.getZ()+vec.getZ());
-			if (loc2.getBlock().getType() == Material.ENDER_CHEST) {
-				Random rnd = new Random();
-			}
+            Location loc2 = new Location(loc.getWorld(), loc.getX()+vec.getX() * 0.25f, loc.getY()+vec.getY() * 0.25f, loc.getZ()+vec.getZ() * 0.25f);
 			if (loc2.getBlock().getType() == Material.TNT) {
+				loc2.getWorld().createExplosion(loc2, 5);
+			}
+			if (loc2.getBlock().getType() == Material.ENDER_CHEST) {
 				Random rnd = new Random();
 				int rndNum = rnd.nextInt(5);
 				switch (rndNum) {
@@ -731,7 +732,10 @@ public class SpleggWorld {
 	}
 	
 	public void onBlockPlace(BlockPlaceEvent event) {
-		
+        if (event.getBlock().getType() == Material.TNT) {
+            event.getBlock().setType(Material.AIR);
+            TNTPrimed tnt = gameWorld.spawn(event.getBlock().getLocation(), TNTPrimed.class);
+        }
 	}
 	
 	public String chatPrefix() {

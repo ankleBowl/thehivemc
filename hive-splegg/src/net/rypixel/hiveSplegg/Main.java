@@ -16,6 +16,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -237,7 +239,18 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	@EventHandler
+	public void onBlockPlace(BlockPlaceEvent event) {
+		SpleggPlayer hp = playerMap.get(event.getPlayer());
+		Functions.getWorldByID(worlds, hp.serverId).onBlockPlace(event);
+	}
+	
+	@EventHandler
 	public void onMobSpawn(EntitySpawnEvent event) {
+		event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onBlockBreak(BlockBreakEvent event) {
 		event.setCancelled(true);
 	}
 	
