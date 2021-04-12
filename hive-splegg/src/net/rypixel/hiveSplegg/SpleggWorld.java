@@ -22,7 +22,9 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Bat;
 import org.bukkit.entity.Egg;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.block.Action;
@@ -676,11 +678,16 @@ public class SpleggWorld {
 				int rndNum = rnd.nextInt(9);
 				switch (rndNum) {
 				case 0:
-					hp.mcPlayer.sendMessage(ChatColor.AQUA + "You have triggered a sheep bomb!");
+					hp.mcPlayer.sendMessage(ChatColor.AQUA + "You have triggered a bomb!");
 					Location loc = b.getLocation();
+					Entity bat = gameWorld.spawnEntity(loc, EntityType.BAT);
+					Entity bomb = gameWorld.spawnEntity(loc, Constants.entities.get(hp.activeMob).entity);
+					bat.setPassenger(bomb);
 					new BukkitRunnable() {
 						public void run() {
-							loc.getWorld().createExplosion(loc, 5);
+							bat.getWorld().createExplosion(bat.getLocation(), 5);
+							bat.remove();
+							bomb.remove();
 						}
 					}.runTaskLater(plugin, 100L);
 					break;
