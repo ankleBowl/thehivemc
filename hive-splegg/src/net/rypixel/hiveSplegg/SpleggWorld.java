@@ -266,6 +266,7 @@ public class SpleggWorld {
 						Vector playerLoc = hp.mcPlayer.getLocation().toVector();
 						Block b = gameWorld.getBlockAt(new Vector(playerLoc.getBlockX() + rnd.nextInt(10) - 5, playerLoc.getBlockY() + rnd.nextInt(5), playerLoc.getBlockZ() + rnd.nextInt(10) - 5).toLocation(gameWorld));
 						b.setType(Material.ENDER_CHEST);
+						chat(chatPrefix() + ChatColor.AQUA + " A powerup has spawned!");
 					}
 					
 					if (alivePlayers < 2 && !gameOver) {
@@ -491,6 +492,7 @@ public class SpleggWorld {
 						hp.mcPlayer.openInventory(voteInv());
 						break;
 					case YELLOW_FLOWER:
+						hp.mcPlayer.openInventory(Constants.shopGuns(hp));
 						break;
 					case SLIME_BALL:
 						Functions.sendToServer(hp.mcPlayer, "lobby0", plugin);
@@ -580,18 +582,41 @@ public class SpleggWorld {
 				break;
 			}
 		} else {
-			switch (e.getCurrentItem().getType()) {
-			case MAP:
-				if (canVote) {
-					int mapNumber = e.getSlot() / 9;
-					votes.put(hp, mapNumber);
-					hp.mcPlayer.openInventory(voteInv());
+			if (!e.getInventory().contains(Material.MAP)) {
+				if (e.getSlot() != 0 && e.getSlot() != 9 && e.getSlot() != 18 && e.getSlot() != 27) {
+					switch (e.getInventory().getContents()[53].getType()) {
+					case GOLD_SPADE:
+						CosmeticShop.gunShop(e, hp);
+						break;
+					case EGG:
+						//CosmeticShop.soundShop(e, hp);
+					default:
+						break;
+					}
 				} else {
-					hp.mcPlayer.sendMessage(ChatColor.RED + "You can no longer vote!");
+					switch (e.getCurrentItem().getType()) {
+					case GOLD_SPADE:
+						hp.mcPlayer.openInventory(Constants.shopGuns(hp));
+						break;
+//					case EGG:
+//						hp.mcPlayer.openInventory(Constants.shopSounds(hp));
+//						break;
+					}
 				}
-				break;
-			default:
-				break;
+			} else {
+				switch (e.getCurrentItem().getType()) {
+				case MAP:
+					if (canVote) {
+						int mapNumber = e.getSlot() / 9;
+						votes.put(hp, mapNumber);
+						hp.mcPlayer.openInventory(voteInv());
+					} else {
+						hp.mcPlayer.sendMessage(ChatColor.RED + "You can no longer vote!");
+					}
+					break;
+				default:
+					break;
+				}
 			}
 		}
 		e.setCancelled(true);

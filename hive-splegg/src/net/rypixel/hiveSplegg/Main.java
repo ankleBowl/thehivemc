@@ -130,10 +130,18 @@ public class Main extends JavaPlugin implements Listener {
 			hp.deaths = Integer.parseInt(SQL.get("deaths", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
 			hp.eggsFired = Integer.parseInt(SQL.get("eggsFired", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
 			hp.eggsLanded = Integer.parseInt(SQL.get("blocksbroken", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString());
-			
+			String cosmetics = SQL.get("cosmetics", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString();
+			hp.spleggCosmetics = Functions.ArrayToListConversion(cosmetics.split(","));
+			String activeCosmetics = SQL.get("activeCosmetics", "UUID", "=", event.getPlayer().getUniqueId().toString(), "splegg").toString();
+			String[] cos = activeCosmetics.split(",");
+			hp.activeGun = cos[0];
+			hp.activeMob = cos[1];
+			hp.activeCelebration = cos[2];
+			hp.activeTrails = cos[3];
 			MySQL.update("UPDATE playerInfo SET lobby=\"Splegg\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+			
 		} else {
-			MySQL.update("Insert into splegg values (\"" + event.getPlayer().getUniqueId().toString() + "\", 0, 0, 0, 0, 0, 0, 0, \"\");");
+			MySQL.update("Insert into splegg values (\"" + event.getPlayer().getUniqueId().toString() + "\", 0, 0, 0, 0, 0, 0, 0, \"\", \"\");");
 		}
 		
 		hp.scoreboard = ScoreHelper.createScore(hp.mcPlayer);
@@ -181,7 +189,8 @@ public class Main extends JavaPlugin implements Listener {
 		MySQL.update("UPDATE splegg SET deaths=\"" + String.valueOf(hp.deaths) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		MySQL.update("UPDATE splegg SET eggsFired=\"" + String.valueOf(hp.eggsFired) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
 		MySQL.update("UPDATE splegg SET blocksbroken=\"" + String.valueOf(hp.eggsLanded) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
-		MySQL.update("UPDATE splegg SET cosmetics=\"" + hp.spleggCosmetics + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE splegg SET cosmetics=\"" + Functions.ListToCSV(hp.spleggCosmetics) + "\" WHERE UUID=\"" + hp.mcPlayer.getUniqueId().toString()+ "\"");
+		MySQL.update("UPDATE splegg SET activeCosmetics=\"" + hp.activeGun + "," + hp.activeMob + "," + hp.activeTrails + "," + hp.activeCelebration + "\" WHERE UUID=\""+ hp.mcPlayer.getUniqueId().toString()+"\"");
 		
 		playerMap.remove(event.getPlayer());
 		ScoreHelper.removeScore(event.getPlayer());
@@ -263,6 +272,6 @@ public class Main extends JavaPlugin implements Listener {
 		Config.setPort("3306");
 		Config.setSSL(true);
 		MySQL.connect();
-		MySQL.update("CREATE TABLE IF NOT EXISTS splegg(UUID varchar(64) PRIMARY KEY, points int, played int, wins int, deaths int, eggsFired int, blocksbroken int, cosmetics varchar(9999));");
+		MySQL.update("CREATE TABLE IF NOT EXISTS splegg(UUID varchar(64) PRIMARY KEY, points int, played int, wins int, deaths int, eggsFired int, blocksbroken int, cosmetics varchar(9999), activeCosmetics(64));");
 	}
 }

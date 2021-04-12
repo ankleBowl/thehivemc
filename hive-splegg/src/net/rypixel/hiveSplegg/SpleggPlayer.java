@@ -1,5 +1,7 @@
 package net.rypixel.hiveSplegg;
 
+import java.util.ArrayList;
+
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -14,7 +16,12 @@ public class SpleggPlayer extends HivePlayer {
 	public int wins;
 	public int deaths;
 	
-	public String spleggCosmetics;
+	public String activeGun;
+	public String activeMob;
+	public String activeTrails;
+	public String activeCelebration;
+	
+	public ArrayList<String> spleggCosmetics;
 	
 	public String currentPowerup;
 	
