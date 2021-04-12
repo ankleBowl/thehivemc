@@ -20,9 +20,11 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -146,7 +148,7 @@ public class SpleggWorld {
 						hp.scoreboard.setSlot(4, ChatColor.DARK_AQUA + "Blocks Broken: " + ChatColor.AQUA + String.valueOf(hp.eggsLanded));
 						hp.scoreboard.setSlot(3, "");
 						hp.scoreboard.setSlot(2, ChatColor.DARK_GRAY + "----------------");
-						hp.scoreboard.setSlot(1, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
+						hp.scoreboard.setSlot(1, ChatColor.GREEN + "play." + ChatColor.AQUA + "dejavumc" + ChatColor.AQUA + ".net");
 					}
 					if (players.size() > 5 && !gameStarting) {
 						gameStarting = true;
@@ -208,6 +210,7 @@ public class SpleggWorld {
 							TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "YOU DIED!");
 							hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1, false, true));
 							hp.deaths++;
+							hp.mcPlayer.getInventory().clear();
 							hp.mcPlayer.getInventory().setItem(7, Constants.again);
 							hp.mcPlayer.getInventory().setItem(0, Constants.players);
 							hp.mcPlayer.getInventory().setItem(8, Constants.hub);
@@ -251,7 +254,16 @@ public class SpleggWorld {
 						hp.scoreboard.setSlot(4, ChatColor.RED + "No Powerups!");
 						hp.scoreboard.setSlot(3, "");
 						hp.scoreboard.setSlot(2, ChatColor.DARK_GRAY + "----------------");
-						hp.scoreboard.setSlot(1, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
+						hp.scoreboard.setSlot(1, ChatColor.GREEN + "play." + ChatColor.AQUA + "dejavumc" + ChatColor.GREEN + ".com");
+					}
+					
+					if (gameTimer % 50 == 0) {
+						Random rnd = new Random();
+						int rndNum = rnd.nextInt(players.size());
+						SpleggPlayer hp = players.get(rndNum);
+						Vector playerLoc = hp.mcPlayer.getLocation().toVector();
+						Block b = gameWorld.getBlockAt(new Vector(playerLoc.getBlockX() + rnd.nextInt(10) - 5, playerLoc.getBlockY() + rnd.nextInt(5), playerLoc.getBlockZ() + rnd.nextInt(10) - 5).toLocation(gameWorld));
+						b.setType(Material.ENDER_CHEST);
 					}
 					
 					if (alivePlayers < 2 && !gameOver) {
@@ -491,6 +503,17 @@ public class SpleggWorld {
 						Vector direction = hp.mcPlayer.getLocation().getDirection();
 						egg.setVelocity(direction.multiply(1.5));
 						eggMap.put(egg, hp);
+						if (hp.currentPowerup == "shotgun") {
+							Egg egg1 = hp.mcPlayer.launchProjectile(Egg.class);
+							Vector direction1 = hp.mcPlayer.getLocation().getDirection();
+							egg1.setVelocity(direction.multiply(1.5).add(new Vector(1, 0, 0)));
+							eggMap.put(egg1, hp);
+							
+							Egg egg2 = hp.mcPlayer.launchProjectile(Egg.class);
+							Vector direction2 = hp.mcPlayer.getLocation().getDirection();
+							egg2.setVelocity(direction.multiply(1.5).add(new Vector(1, 0, 0)));
+							eggMap.put(egg2, hp);
+						}
 						hp.eggsFired++;
 						hp.eggsFiredTemp++;
 						hp.mcPlayer.playSound(hp.mcPlayer.getLocation(), Sound.GHAST_FIREBALL, 1, 1);
@@ -565,14 +588,94 @@ public class SpleggWorld {
 	
 	public void onProjectileHit(ProjectileHitEvent e) {
 		if (e.getEntityType() == EntityType.EGG) {
-			Location eggLoc = e.getEntity().getLocation();
-			Location forward = eggLoc.add(e.getEntity().getVelocity());
-			forward.getBlock().setType(Material.AIR);
-			if (new Vector(0, 100, 0).toLocation(gameWorld).distance(eggLoc) < 50) {
-				eggMap.get((Egg) e.getEntity()).eggsLanded++;
-				eggMap.get((Egg) e.getEntity()).eggsLandedTemp++;
-				for (SpleggPlayer hp : players) {
-					hp.mcPlayer.playSound(hp.mcPlayer.getLocation(), Sound.ITEM_PICKUP, 1, 1);
+			SpleggPlayer hp = eggMap.get((Egg) e.getEntity());
+//			Location eggLoc = e.getEntity().getLocation();
+//			Location forward = eggLoc.add(e.getEntity().getVelocity());
+            Location loc = e.getEntity().getLocation();
+            Vector vec = e.getEntity().getVelocity();
+            Location loc2 = new Location(loc.getWorld(), loc.getX()+vec.getX(), loc.getY()+vec.getY(), loc.getZ()+vec.getZ());
+			if (loc2.getBlock().getType() == Material.ENDER_CHEST) {
+				Random rnd = new Random();
+			}
+			if (loc2.getBlock().getType() == Material.TNT) {
+				Random rnd = new Random();
+				int rndNum = rnd.nextInt(5);
+				switch (rndNum) {
+				case 0:
+					hp.mcPlayer.sendMessage(ChatColor.AQUA + "You have triggered a sheep bomb!");
+					new BukkitRunnable() {
+						public void run() {
+							loc2.getWorld().createExplosion(loc2, 10);
+						}
+					}.runTaskLater(plugin, 100L);
+					break;
+				case 1:
+					hp.mcPlayer.sendMessage(ChatColor.AQUA + "You have unlocked a shotgun for the next 10 seconds!");
+					hp.currentPowerup = "shotgun";
+					new BukkitRunnable() {
+						public void run() {
+							hp.currentPowerup = "";
+						}
+					}.runTaskLater(plugin, 200L);
+					break;
+				case 2:
+					hp.mcPlayer.sendMessage(ChatColor.AQUA + "You have recieved two pieces of TNT!");
+					hp.mcPlayer.getInventory().addItem(new ItemStack(Material.TNT, 2));
+					break;
+				case 3:
+					//Rapid fire
+					break;
+				case 4:
+					hp.currentPowerup = "boom";
+					new BukkitRunnable() {
+						public void run() {
+							hp.currentPowerup = "";
+						}
+					}.runTaskLater(plugin, 60L);
+					break;
+				case 5:
+					hp.mcPlayer.sendMessage(ChatColor.AQUA + "You can now jump higher for 15 seconds!");
+					hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 300, 2), false);
+					break;
+				case 6:
+					hp.mcPlayer.sendMessage(ChatColor.AQUA + "You are now invisible for 15 seconds!");
+					hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 300, 2), false);
+					break;
+				case 7:
+					hp.mcPlayer.sendMessage(ChatColor.AQUA + "You can now run faster for 15 seconds!");
+					hp.mcPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 300, 2), false);
+					break;
+				case 8:
+					hp.mcPlayer.sendMessage(ChatColor.AQUA + "Everyone now has a pumpkin head for 3 seconds!");
+					for (SpleggPlayer hp1 : players) {
+						if (hp1 != hp) {
+							ItemStack[] armor = new ItemStack[4];
+							armor[0] = new ItemStack(Material.PUMPKIN, 1);
+							armor[1] = new ItemStack(Material.PUMPKIN, 1);
+							armor[2] = new ItemStack(Material.PUMPKIN, 1);
+							armor[3] = new ItemStack(Material.PUMPKIN, 1);
+							hp1.mcPlayer.getInventory().setArmorContents(armor);
+						}
+					}
+					new BukkitRunnable() {
+						public void run() {
+							for (SpleggPlayer hp1 : players) {
+								hp1.mcPlayer.getInventory().setArmorContents(null);
+							}
+						}
+					}.runTaskLater(plugin, 60L);
+					break;
+				}
+			}
+            loc2.getBlock().setType(Material.AIR);
+            if (hp.currentPowerup == "boom") {
+            	loc2.getWorld().createExplosion(loc2, 5);
+            }
+			if (new Vector(0, 100, 0).toLocation(gameWorld).distance(loc2) < 50) {
+				hp.eggsLanded++;
+				hp.eggsLandedTemp++;
+				for (SpleggPlayer hp1 : players) {
+					hp.mcPlayer.playSound(hp1.mcPlayer.getLocation(), Sound.ITEM_PICKUP, 1, 1);
 				}
 			}
 		}
@@ -625,6 +728,10 @@ public class SpleggWorld {
 		SpleggPlayer hp = Main.playerMap.get(event.getPlayer());
 		votes.remove(hp);
 		players.remove(hp);
+	}
+	
+	public void onBlockPlace(BlockPlaceEvent event) {
+		
 	}
 	
 	public String chatPrefix() {
