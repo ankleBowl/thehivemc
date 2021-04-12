@@ -394,7 +394,7 @@ public class GravityWorld {
 			if (event.getItem() != null) {
 				switch (event.getItem().getType()) {
 				case DIAMOND:
-					voteInv();
+					hp.mcPlayer.openInventory(voteInv());
 					break;
 				case SLIME_BALL:
 					Functions.sendToServer(hp.mcPlayer, "lobby0", plugin);
