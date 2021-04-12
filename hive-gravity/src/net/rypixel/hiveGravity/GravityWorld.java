@@ -645,13 +645,13 @@ public class GravityWorld {
 					hp.mcPlayer.sendMessage(ChatColor.GRAY + "You played " + getMatchPlayedStr(hp) + ChatColor.GRAY + " stages and failed " + ChatColor.RED + String.valueOf(hp.fails) + ChatColor.GRAY + " times.");
 					if (hp.finished) {
 						if (finished.indexOf(hp) == 0) {
-							hp.mcPlayer.sendMessage(ChatColor.GRAY + "You placed " + ChatColor.YELLOW + String.valueOf(finished.indexOf(hp)) + "st" + ChatColor.GRAY + " with a time of " + "time");
+							hp.mcPlayer.sendMessage(ChatColor.GRAY + "You placed " + ChatColor.YELLOW + String.valueOf(finished.indexOf(hp) + 1) + "st" + ChatColor.GRAY + " with a time of " + "time");
 						} else if (finished.indexOf(hp) == 1) {
-							hp.mcPlayer.sendMessage(ChatColor.GRAY + "You placed " + ChatColor.YELLOW + String.valueOf(finished.indexOf(hp)) + "nd" + ChatColor.GRAY + " with a time of " + "time");
+							hp.mcPlayer.sendMessage(ChatColor.GRAY + "You placed " + ChatColor.YELLOW + String.valueOf(finished.indexOf(hp) + 1) + "nd" + ChatColor.GRAY + " with a time of " + "time");
 						} else if (finished.indexOf(hp) == 2) {
-							hp.mcPlayer.sendMessage(ChatColor.GRAY + "You placed " + ChatColor.YELLOW + String.valueOf(finished.indexOf(hp)) + "rd" + ChatColor.GRAY + " with a time of " + "time");
+							hp.mcPlayer.sendMessage(ChatColor.GRAY + "You placed " + ChatColor.YELLOW + String.valueOf(finished.indexOf(hp) + 1) + "rd" + ChatColor.GRAY + " with a time of " + "time");
 						} else {
-							hp.mcPlayer.sendMessage(ChatColor.GRAY + "You placed " + ChatColor.YELLOW + String.valueOf(finished.indexOf(hp)) + "th" + ChatColor.GRAY + " with a time of " + "time");
+							hp.mcPlayer.sendMessage(ChatColor.GRAY + "You placed " + ChatColor.YELLOW + String.valueOf(finished.indexOf(hp) + 1) + "th" + ChatColor.GRAY + " with a time of " + "time");
 						}
 					}
 				}
@@ -676,7 +676,7 @@ public class GravityWorld {
 				}
 				Main.worlds.remove(this);
 		    }
-		}.runTaskLater(plugin, 100L);
+		}.runTaskLater(plugin, 200L);
 	}
 	
 	public void sendToNewServer(GravityPlayer hp) {
