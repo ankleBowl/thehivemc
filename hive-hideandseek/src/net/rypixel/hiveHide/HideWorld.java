@@ -458,6 +458,18 @@ public class HideWorld {
 						if (!hp.solid) {
 							hp.blockEntity.teleport(hp.mcPlayer);
 						}
+						
+						if (hp.lastMoved > 20) {
+							if (hp.lastMoved > 80) {
+								TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.GREEN + ">>>>" + ChatColor.GRAY + ">");
+							} else if (hp.lastMoved > 60) {
+								TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.GREEN + ">>>" + ChatColor.GRAY + ">>");
+							} else if (hp.lastMoved > 40) {
+								TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.GREEN + ">>" + ChatColor.GRAY + ">>>");
+							} else if (hp.lastMoved > 20) {
+								TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.GREEN + ">" + ChatColor.GRAY + ">>>>");
+							}
+						}
 					} else {
 						hp.attackCooldown++;
 					}
@@ -500,7 +512,7 @@ public class HideWorld {
 					hp.scoreboard.setSlot(12, "");
 					hp.scoreboard.setSlot(11, ChatColor.AQUA + "Players Alive");
 					hp.scoreboard.setSlot(10, String.valueOf(playersAlive) + ChatColor.GREEN + " Hiders");
-					hp.scoreboard.setSlot(9, String.valueOf(playersDead) + ChatColor.GREEN + " Seekers");
+					hp.scoreboard.setSlot(9, String.valueOf(playersDead) + ChatColor.GREEN + " Seekers"); 
 					hp.scoreboard.setSlot(8, "");
 					hp.scoreboard.setSlot(7, ChatColor.GREEN + "My Round Stats");
 					hp.scoreboard.setSlot(6, "N/A" + ChatColor.GRAY + " Kills");
