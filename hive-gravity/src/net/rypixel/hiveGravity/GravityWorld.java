@@ -674,6 +674,7 @@ public class GravityWorld {
 					}
 					//TODO Catch IndexOutOfBounds Exception
 				}
+				timer.cancel();
 				Main.worlds.remove(this);
 		    }
 		}.runTaskLater(plugin, 200L);
@@ -699,6 +700,7 @@ public class GravityWorld {
 			w.welcomePlayer(hp);
 			sent = true;
 		}
+		players.remove(hp);
 	}
 	
 	public String getMatchPlayedStr(GravityPlayer hp) {
