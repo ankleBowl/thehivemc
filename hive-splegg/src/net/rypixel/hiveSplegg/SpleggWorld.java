@@ -39,6 +39,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
 import com.connorlinfoot.titleapi.TitleAPI;
@@ -258,7 +259,7 @@ public class SpleggWorld {
 						hp.scoreboard.setSlot(1, ChatColor.GREEN + "play." + ChatColor.AQUA + "dejavumc" + ChatColor.GREEN + ".com");
 					}
 					
-					if (gameTimer % 50 == 0) {
+					if (gameTimer % 600 == 0) {
 						Random rnd = new Random();
 						int rndNum = rnd.nextInt(players.size());
 						SpleggPlayer hp = players.get(rndNum);
@@ -507,13 +508,22 @@ public class SpleggWorld {
 						if (hp.currentPowerup == "shotgun") {
 							Egg egg1 = hp.mcPlayer.launchProjectile(Egg.class);
 							Vector direction1 = hp.mcPlayer.getLocation().getDirection();
-							egg1.setVelocity(direction.multiply(1.5).add(new Vector(1, 0, 0)));
+							egg1.setVelocity(direction.multiply(1.5).add(new Vector(-1, 0, 0)));
 							eggMap.put(egg1, hp);
 							
 							Egg egg2 = hp.mcPlayer.launchProjectile(Egg.class);
 							Vector direction2 = hp.mcPlayer.getLocation().getDirection();
 							egg2.setVelocity(direction.multiply(1.5).add(new Vector(1, 0, 0)));
 							eggMap.put(egg2, hp);
+						} else if (hp.currentPowerup == "rapid") {
+							new BukkitRunnable() {
+								public void run() {
+									Egg egg1 = hp.mcPlayer.launchProjectile(Egg.class);
+									Vector direction1 = hp.mcPlayer.getLocation().getDirection();
+									egg1.setVelocity(direction.multiply(1.5));
+									eggMap.put(egg1, hp);
+								}
+							}.runTaskLater(plugin, 2L);
 						}
 						hp.eggsFired++;
 						hp.eggsFiredTemp++;
@@ -591,22 +601,30 @@ public class SpleggWorld {
 		if (e.getEntityType() == EntityType.EGG) {
 			SpleggPlayer hp = eggMap.get((Egg) e.getEntity());
 //			Location eggLoc = e.getEntity().getLocation();
-//			Location forward = eggLoc.add(e.getEntity().getVelocity());
-            Location loc = e.getEntity().getLocation();
-            Vector vec = e.getEntity().getVelocity();
-            Location loc2 = new Location(loc.getWorld(), loc.getX()+vec.getX() * 0.25f, loc.getY()+vec.getY() * 0.25f, loc.getZ()+vec.getZ() * 0.25f);
-			if (loc2.getBlock().getType() == Material.TNT) {
-				loc2.getWorld().createExplosion(loc2, 2);
+//			Vector eggDirection = e.getEntity().getVelocity();
+//			Block b = eggLoc.add(eggDirection.normalize()).getBlock();
+			BlockIterator iterator = new BlockIterator(e.getEntity().getWorld(), e.getEntity().getLocation().toVector(), e.getEntity().getVelocity().normalize(), 0.0D, 4);
+			Block b = null;
+			while (iterator.hasNext()) {
+				b = iterator.next();
+				 
+				if (b.getType() != Material.AIR) {
+					break;
+				}
 			}
-			if (loc2.getBlock().getType() == Material.ENDER_CHEST) {
+			if (b.getType() == Material.TNT) {
+				b.getLocation().getWorld().createExplosion(b.getLocation(), 2);
+			}
+			if (b.getType() == Material.ENDER_CHEST) {
 				Random rnd = new Random();
-				int rndNum = rnd.nextInt(5);
+				int rndNum = rnd.nextInt(9);
 				switch (rndNum) {
 				case 0:
 					hp.mcPlayer.sendMessage(ChatColor.AQUA + "You have triggered a sheep bomb!");
+					Location loc = b.getLocation();
 					new BukkitRunnable() {
 						public void run() {
-							loc2.getWorld().createExplosion(loc2, 5);
+							loc.getWorld().createExplosion(loc, 5);
 						}
 					}.runTaskLater(plugin, 100L);
 					break;
@@ -624,9 +642,11 @@ public class SpleggWorld {
 					hp.mcPlayer.getInventory().addItem(new ItemStack(Material.TNT, 2));
 					break;
 				case 3:
-					//Rapid fire
+					hp.mcPlayer.sendMessage(ChatColor.AQUA + "You will shoot faster for the next 5 seconds!");
+					hp.currentPowerup = "rapid";
 					break;
 				case 4:
+					hp.mcPlayer.sendMessage(ChatColor.AQUA + "Your shots are now explosive for 3 seconds!");
 					hp.currentPowerup = "boom";
 					new BukkitRunnable() {
 						public void run() {
@@ -668,11 +688,11 @@ public class SpleggWorld {
 					break;
 				}
 			}
-            loc2.getBlock().setType(Material.AIR);
+            b.setType(Material.AIR);
             if (hp.currentPowerup == "boom") {
-            	loc2.getWorld().createExplosion(loc2, 5);
+            	b.getLocation().getWorld().createExplosion(b.getLocation(), 5);
             }
-			if (new Vector(0, 100, 0).toLocation(gameWorld).distance(loc2) < 50) {
+			if (new Vector(0, 100, 0).toLocation(gameWorld).distance(b.getLocation()) < 50) {
 				hp.eggsLanded++;
 				hp.eggsLandedTemp++;
 				for (SpleggPlayer hp1 : players) {
