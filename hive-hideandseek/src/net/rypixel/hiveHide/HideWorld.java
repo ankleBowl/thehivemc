@@ -12,6 +12,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
@@ -521,6 +522,30 @@ public class HideWorld {
 					hp.scoreboard.setSlot(3, ChatColor.GREEN + "Taunts Available");
 					hp.scoreboard.setSlot(2, ChatColor.GRAY + "-------------");
 					hp.scoreboard.setSlot(1, ChatColor.GOLD + "play." + ChatColor.YELLOW + "HiveMC" + ChatColor.GOLD + ".com");
+				}
+				if (timeRemaining == 600) {
+					chat(chatPrefix() + ChatColor.RED + " Ready or not, here they come!");
+					for (HidePlayer hp : players) {
+						hp.mcPlayer.playSound(hp.mcPlayer.getLocation(), Sound.ENDERDRAGON_GROWL, 1, 1);
+					}
+				}
+				if (timeRemaining == 580) {
+					chat(chatPrefix() + ChatColor.YELLOW + " Starting in " + ChatColor.WHITE + "1");
+					for (HidePlayer hp : players) {
+						hp.mcPlayer.playSound(hp.mcPlayer.getLocation(), Sound.NOTE_PIANO, 1, 1);
+					}
+				}
+				if (timeRemaining == 560) {
+					chat(chatPrefix() + ChatColor.YELLOW + " Starting in " + ChatColor.WHITE + "2");
+					for (HidePlayer hp : players) {
+						hp.mcPlayer.playSound(hp.mcPlayer.getLocation(), Sound.NOTE_PIANO, 1, 1);
+					}
+				}
+				if (timeRemaining == 540) {
+					chat(chatPrefix() + ChatColor.YELLOW + " Starting in " + ChatColor.WHITE + "3");
+					for (HidePlayer hp : players) {
+						hp.mcPlayer.playSound(hp.mcPlayer.getLocation(), Sound.NOTE_PIANO, 1, 1);
+					}
 				}
 			}
 		}.runTaskTimer(plugin, 0L, 2L);
