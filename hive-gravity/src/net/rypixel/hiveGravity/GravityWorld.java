@@ -620,10 +620,11 @@ public class GravityWorld {
 	}
 	
 	public void gameEnding() {
+		GravityPlayer winner = finished.get(0);
 		for (GravityPlayer hp : players) {
 			hp.mcPlayer.teleport(Constants.spawnLocations.get(maps[0]).toLocation(worlds[0]));
 			TitleAPI.sendTitle(hp.mcPlayer, 20, 20, 20, ChatColor.RED + "Game. OVER!");
-			TitleAPI.sendSubtitle(hp.mcPlayer, 20, 20, 20, ChatColor.BLUE + hp.mcPlayer.getDisplayName() + ChatColor.GRAY + " won the game");
+			TitleAPI.sendSubtitle(hp.mcPlayer, 20, 20, 20, ChatColor.BLUE + winner.mcPlayer.getDisplayName() + ChatColor.GRAY + " won the game");
 			for (GravityPlayer hp1 : players) {
 				hp.mcPlayer.showPlayer(hp1.mcPlayer);
 			}
